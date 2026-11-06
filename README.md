@@ -2,9 +2,7 @@
 
 **Loba** (« parle ! » en lingala) est une application web façon Duolingo pour apprendre le lingala, pensée pour la diaspora congolaise : celles et ceux qui comprennent la langue de la famille… mais n'osent pas la parler.
 
-👉 **Démo : https://christophembadu.github.io/loba/**
-
-<p align="center"><img src="screenshot.png" width="320" alt="Capture d'écran de Loba"></p>
+👉 **Essaie-la directement dans ton navigateur : https://christophembadu.github.io/loba/**
 
 ## Pourquoi Loba ?
 
