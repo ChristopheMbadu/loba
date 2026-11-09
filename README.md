@@ -1,43 +1,41 @@
-# 🇨🇩 Loba — Apprends le lingala de Kinshasa
+# 🇨🇩 Loba — Apprends le lingala et le swahili
 
-**Loba** (« parle ! » en lingala) est une application web façon Duolingo pour apprendre le lingala, pensée pour la diaspora congolaise : celles et ceux qui comprennent la langue de la famille… mais n'osent pas la parler.
+**Loba** (« parle ! » en lingala) est une application façon Duolingo pour apprendre le **lingala** de Kinshasa et le **swahili**, pensée pour la diaspora congolaise : celles et ceux qui comprennent la langue de la famille… mais n'osent pas la parler.
 
-👉 **Essaie-la directement dans ton navigateur : https://christophembadu.github.io/loba/**
+👉 **Démo : https://christophembadu.github.io/loba/** (installable sur téléphone : « Ajouter à l'écran d'accueil »)
 
-## Pourquoi Loba ?
-
-Des millions de jeunes Congolais à Paris, Bruxelles ou Montréal entendent le lingala à la maison sans jamais le parler. Les applis de langues classiques ne le proposent pas, ou l'enseignent comme une langue de manuel. Loba part de situations réelles.
+<p align="center"><img src="screenshot.png" width="320" alt="Capture d'écran de Loba"></p>
 
 ## Fonctionnalités
 
-- **Onboarding et test de placement** : selon ta motivation (famille, belle-famille, voyage à Kin…) et ton niveau, Loba débloque directement les unités que tu maîtrises.
-- **6 unités** : salutations, kit de survie (« Loba malembe » = parle doucement), famille, nourriture, nombres, verbes.
-- **Exercices variés** : QCM dans les deux sens, paires à associer, phrases à reconstruire.
-- **Situations réelles** façon WhatsApp : appel avec maman, marché (zando), arrivée à N'djili, rencontre avec la belle-famille.
-- **Message du jour** à envoyer à sa famille sur WhatsApp, en un clic.
-- **Machine à phrases** : on assemble pronom + verbe + temps + négation et on voit la mécanique du lingala (*na* + *zali* + *kolia* = « Nazali kolia »).
-- **Révision intelligente** : les mots ratés reviennent au bon moment.
-- **Gamification** : série de jours 🔥, XP, cœurs ❤️, gemmes 💎, coffres, quêtes du jour, Défi éclair de 60 secondes, badges.
+- **Deux langues à apprendre** : lingala et swahili, avec test de placement.
+- **Interface en français ou en anglais** (🇫🇷 / 🇬🇧), pour les francophones comme pour les anglophones (Kenya, Tanzanie, diaspora anglo-saxonne).
+- **Exercices variés** : QCM, paires, phrases à reconstruire, situations réelles façon WhatsApp (maman, marché, aéroport de N'djili…).
+- **Machine à phrases** : pronom + verbe + temps + négation, pour comprendre la mécanique de la langue.
+- **Gamification** : série 🔥, XP, cœurs ❤️, gemmes 💎, quêtes, Défi éclair, badges.
+- **Sauvegarde automatique** : la progression est enregistrée en continu, sur l'appareil et dans le cloud (compte anonyme). On peut lier un e-mail pour la retrouver sur un autre téléphone.
+- **100 % gratuit, sans publicité, sans traqueur.** Le projet vit grâce aux **dons** (PayPal pour la diaspora, Orange Money pour le Congo).
+- **Application installable (PWA)** et fonctionne hors connexion.
 
 ## Stack
 
-Un seul fichier `index.html` : HTML, CSS et JavaScript vanilla, sans dépendance ni build. La progression est sauvegardée dans le `localStorage` du navigateur. Les sons sont générés avec la Web Audio API.
+- Un seul `index.html` (HTML, CSS, JavaScript vanilla) généré par `build/build.py`.
+- `sw.js` + `manifest.webmanifest` : application installable et hors ligne.
+- **Supabase** (région UE) : authentification anonyme + table `progress` protégée par RLS (`supabase/migrations`).
+- Sons générés avec la Web Audio API.
 
-```bash
-git clone https://github.com/ChristopheMbadu/loba.git
-cd loba && open index.html
-```
+Voir [SECURITY.md](SECURITY.md) pour la revue de sécurité et [STORES.md](STORES.md) pour la publication sur Google Play et l'App Store. Politique de confidentialité : [privacy.html](privacy.html).
 
 ## Feuille de route
 
 - [ ] Audio enregistré par des locuteurs kinois
-- [ ] Application mobile (React Native / Expo) avec notifications de rappel
-- [ ] Comptes et classement entre amis
+- [ ] Publication sur Google Play puis l'App Store
+- [ ] Classement entre amis
 - [ ] Nouvelles unités : transport, santé, musique (rumba, ndombolo)
 
 ## Contribuer
 
-Tu parles lingala ? Les corrections de vocabulaire et les propositions de phrases sont les bienvenues : ouvre une *issue* ou une *pull request*.
+Tu parles lingala ou swahili ? Les corrections et propositions de phrases sont les bienvenues : ouvre une *issue* ou une *pull request*.
 
 ---
 

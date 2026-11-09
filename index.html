@@ -3,7 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Loba — Apprends le lingala</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://ovpcnnigwxqvqvhxtufe.supabase.co wss://ovpcnnigwxqvqvhxtufe.supabase.co; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>Loba — Lingala &amp; Swahili</title>
+<meta name="description" content="Apprends le lingala et le swahili du Congo, 5 minutes par jour. Learn Congolese Lingala and Swahili.">
+<meta name="theme-color" content="#1E8FE1">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -31,6 +38,42 @@ h1,h2,h3{font-family:'Baloo 2',sans-serif}
 .stat{display:flex;align-items:center;gap:4px;font-size:16px}
 .stat.fire{color:var(--fire)}.stat.gem{color:var(--sky)}.stat.heart{color:var(--red)}
 .stat.dim{filter:grayscale(1);opacity:.6}
+.langbtn{border:2px solid var(--line);border-bottom-width:4px;border-radius:12px;padding:4px 9px;font-weight:900;font-size:13px;background:#fff;color:var(--ink);white-space:nowrap}
+.top .stats{gap:10px}
+.langlist{display:grid;gap:12px;margin:6px 0 16px;text-align:left}
+.langlist .opt b{display:block}
+.langlist .opt .pr{font-size:12px;color:var(--muted);font-weight:800;margin-top:4px}
+.langlist .opt.cur{border-color:var(--sky);background:#e8f4fd}
+.stat.heart{cursor:pointer}
+.card.promo{margin-top:12px;display:flex;gap:12px;align-items:center;width:100%;text-align:left;background:linear-gradient(135deg,#2b2140,#4a2f7a);color:#fff;border:none}
+.promo .ic{font-size:30px}.promo b{display:block;font-weight:900}.promo small{opacity:.85;font-weight:700;font-size:13px}
+.promo .go{background:var(--sun);color:var(--ink);border-radius:12px;padding:8px 10px;font-weight:900;font-size:12px;white-space:nowrap}
+.pw{flex-direction:column;min-height:100vh;background:linear-gradient(180deg,#2b2140 0,#2b2140 260px,var(--bg) 260px)}
+.pw.on{display:flex}
+.pw-top{padding:18px;display:flex}.pw-top .close{color:rgba(255,255,255,.7)}
+.pw-hero{text-align:center;color:#fff;padding:0 20px 26px}
+.pw-hero .crown{font-size:64px;animation:bob 2s ease-in-out infinite}
+.pw-hero h2{font-size:32px;line-height:1}.pw-hero h2 span{color:var(--sun)}
+.pw-hero p{opacity:.85;font-weight:700;margin-top:6px}
+.pw-body{padding:0 18px 30px;flex:1}
+.perks{background:#fff;border:2px solid var(--line);border-radius:18px;padding:6px 16px;margin-bottom:16px}
+.perks>div{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);font-weight:800}
+.perks>div:last-child{border:none}.perks span{font-size:22px;width:28px;text-align:center}
+.perks small{display:block;color:var(--muted);font-weight:700;font-size:12px}
+.perks>div>div{flex:1}
+.btn.gold{background:var(--sun);color:var(--ink);box-shadow:0 5px 0 var(--sun-d)}
+.pw-note{text-align:center;color:var(--muted);font-weight:700;font-size:13px;margin-top:12px}
+.substat{display:flex;gap:12px;align-items:center}
+.substat .ic{font-size:30px}.substat .tx{flex:1;font-weight:800}.substat small{display:block;color:var(--muted);font-weight:700}
+.field{width:100%;padding:14px 16px;border:2px solid var(--line);border-radius:14px;font:inherit;font-weight:800;font-size:18px;margin:4px 0 12px;background:#fff;color:var(--ink)}
+.field:focus{outline:none;border-color:var(--purple)}
+.seg{display:flex;gap:8px;margin:4px 0 14px}.seg button{flex:1;border:2px solid var(--line);border-bottom-width:4px;border-radius:12px;padding:10px 6px;font-weight:900;font-size:14px;background:#fff}
+.seg button.on{border-color:var(--purple);background:#f6f2ff;color:var(--purple-d)}
+.sheet .err{color:var(--red-d);font-weight:800;font-size:14px;margin:-4px 0 10px;min-height:18px}
+.sheet .lbl2{text-align:left;font-weight:900;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
+.spin{width:54px;height:54px;border-radius:50%;border:6px solid var(--line);border-top-color:var(--purple);margin:6px auto 14px;animation:rot 1s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+.badge-lang{display:inline-block;background:#fff1e0;color:#b85f00;border-radius:99px;padding:2px 8px;font-size:11px;font-weight:900;margin-left:6px;vertical-align:middle}
 
 /* learn */
 .pad{padding:0 18px 110px}
@@ -290,6 +333,8 @@ h1,h2,h3{font-family:'Baloo 2',sans-serif}
 .sheet .btn+.btn{margin-top:12px}
 .toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(200px);background:var(--ink);color:#fff;padding:10px 18px;border-radius:16px;font-weight:800;transition:transform .3s;z-index:40;max-width:90%;text-align:center}
 .toast.on{transform:translateX(-50%) translateY(0)}
+
+.nav button b{font-weight:800}
 </style>
 </head>
 <body>
@@ -297,10 +342,11 @@ h1,h2,h3{font-family:'Baloo 2',sans-serif}
 
   <header class="top" id="topbar">
     <div class="logo"><div class="flag"></div>Loba</div>
+    <button class="langbtn" id="langBtn"></button>
     <div class="stats">
-      <div class="stat fire" id="tStreakW" title="Série de jours">🔥 <span id="tStreak">0</span></div>
-      <div class="stat gem" title="Gemmes">💎 <span id="tGems">0</span></div>
-      <div class="stat heart" title="Cœurs">❤️ <span id="tHearts">5</span></div>
+      <div class="stat fire" id="tStreakW" data-i18n-title="streak">🔥 <span id="tStreak">0</span></div>
+      <div class="stat gem" data-i18n-title="gems">💎 <span id="tGems">0</span></div>
+      <div class="stat heart" data-i18n-title="hearts">❤️ <span id="tHearts">5</span></div>
     </div>
   </header>
 
@@ -309,32 +355,41 @@ h1,h2,h3{font-family:'Baloo 2',sans-serif}
 
   <!-- SITUATIONS -->
   <section class="screen" id="sSit"><div class="pad">
-    <div class="hero" style="background:linear-gradient(135deg,#25D366,#128C7E)"><div class="big">💬</div><h2>Situations réelles</h2><p>Pas des listes de mots : de vraies conversations que tu vas vivre.</p></div>
+    <div class="hero" style="background:linear-gradient(135deg,#25D366,#128C7E)"><div class="big">💬</div><h2 data-i18n="sitTitle"></h2><p data-i18n="sitSub"></p></div>
     <div id="sits" style="margin-top:20px"></div>
   </div></section>
 
   <!-- DÉFIS -->
   <section class="screen" id="sQuests"><div class="pad">
-    <div class="hero" style="background:linear-gradient(135deg,var(--purple),var(--purple-d))"><div class="big">🎯</div><h2>Défis</h2><p>Relève les défis, gagne des 💎 et défie tes amis.</p></div>
-    <div class="sec">Défi éclair</div>
+    <div class="hero" style="background:linear-gradient(135deg,var(--purple),var(--purple-d))"><div class="big">🎯</div><h2 data-i18n="challenges"></h2><p data-i18n="challengesSub"></p></div>
+    <div class="sec" data-i18n="flashTitle"></div>
     <div class="flashcard">
-      <div class="best">Record<b id="fBest">0</b></div>
-      <h3>⏱️ 60 secondes</h3>
-      <p>Traduis un maximum de mots. Une erreur = −3 secondes.</p>
-      <button class="btn white" id="flashGo">Lancer le défi</button>
+      <div class="best"><span data-i18n="record"></span><b id="fBest">0</b></div>
+      <h3 data-i18n="flash60"></h3>
+      <p data-i18n="flashSub"></p>
+      <button class="btn white" id="flashGo" data-i18n="flashGo"></button>
     </div>
-    <div class="sec">Quêtes du jour <small id="qReset"></small></div>
+    <div class="sec"><span data-i18n="questsTitle"></span> <small id="qReset"></small></div>
     <div id="quests"></div>
   </div></section>
 
   <!-- PROFIL -->
   <section class="screen" id="sProfile"><div class="pad">
-    <div class="prof"><div class="avatar">🦜</div><div><h2>Mon profil</h2><small id="pMotive"></small></div></div>
-    <div class="sec">Statistiques</div><div class="grid" id="pStats"></div>
-    <div class="sec">Badges</div><div class="badges" id="pBadges"></div>
-    <div class="sec">Mes mots <small id="pWordsN" style="color:var(--muted)"></small></div><div class="card" id="pWords"></div>
-    <button class="btn ghost" id="resetBtn" style="margin-top:26px;color:var(--muted);font-size:13px">Réinitialiser ma progression</button>
+    <div class="prof"><div class="avatar">🦜</div><div><h2 data-i18n="myProfile"></h2><small id="pMotive"></small></div></div>
+    <div class="sec" data-i18n="settings"></div><div id="pSettings"></div>
+    <div class="sec" data-i18n="stats"></div><div class="grid" id="pStats"></div>
+    <div class="sec" data-i18n="badges"></div><div class="badges" id="pBadges"></div>
+    <div class="sec"><span data-i18n="myWords"></span> <small id="pWordsN" style="color:var(--muted)"></small></div><div class="card" id="pWords"></div>
+    <div class="pw-note" style="margin-top:22px"><a href="privacy.html" target="_blank" rel="noopener noreferrer" data-i18n="privacy"></a> · Loba</div>
+    <button class="btn ghost" id="resetBtn" style="margin-top:10px;color:var(--muted);font-size:13px" data-i18n="reset"></button>
   </div></section>
+
+  <!-- SOUTENIR -->
+  <section class="screen pw" id="don">
+    <div class="pw-top"><button class="close" id="donQuit" data-i18n-aria="close">✕</button></div>
+    <div class="pw-hero"><div class="crown">❤️</div><h2 data-i18n="donTitle"></h2><p data-i18n="donSub"></p></div>
+    <div class="pw-body" id="donBody"></div>
+  </section>
 
   <!-- ONBOARDING -->
   <section class="screen onb" id="onb"><div class="l-top" id="onbTop" style="visibility:hidden"><div class="prog"><div class="fill" id="onbProg"></div></div></div><div class="onb-body" id="onbBody"></div></section>
@@ -342,31 +397,31 @@ h1,h2,h3{font-family:'Baloo 2',sans-serif}
   <!-- LEÇON -->
   <section class="screen lesson" id="lesson">
     <div class="l-top">
-      <button class="close" id="quit" aria-label="Quitter">✕</button>
+      <button class="close" id="quit" data-i18n-aria="quit">✕</button>
       <div class="prog"><div class="fill" id="progFill"></div></div>
       <div class="l-hearts" id="lHearts">❤️ <span id="lHeartN">5</span></div>
     </div>
     <div class="combo" id="combo"></div>
     <div class="l-body" id="body"></div>
-    <div class="foot" id="foot"><div class="fb"><h3 id="fbTitle"></h3><p id="fbText"></p></div><button class="btn" id="checkBtn" disabled>Vérifier</button></div>
+    <div class="foot" id="foot"><div class="fb"><h3 id="fbTitle"></h3><p id="fbText"></p></div><button class="btn" id="checkBtn" disabled></button></div>
   </section>
 
   <!-- ÉCLAIR -->
   <section class="screen flash" id="flash">
-    <div class="f-top"><button class="close" id="fQuit" aria-label="Quitter">✕</button><div class="timer" id="timer"><i id="timerFill"></i></div><div class="fscore" id="fScore">0</div></div>
+    <div class="f-top"><button class="close" id="fQuit" data-i18n-aria="quit">✕</button><div class="timer" id="timer"><i id="timerFill"></i></div><div class="fscore" id="fScore">0</div></div>
     <div class="f-body" id="fBody"></div>
   </section>
 
   <!-- DIALOGUE -->
   <section class="screen dlg" id="dlg">
-    <div class="d-top"><button class="close" id="dQuit" aria-label="Quitter">✕</button><div class="av" id="dAv"></div><div class="who"><span id="dWho"></span><small id="dStatus">en ligne</small></div><button class="hint" id="dHint">🇫🇷 Aide</button></div>
+    <div class="d-top"><button class="close" id="dQuit" data-i18n-aria="quit">✕</button><div class="av" id="dAv"></div><div class="who"><span id="dWho"></span><small id="dStatus"></small></div><button class="hint" id="dHint"></button></div>
     <div class="chat" id="chat"></div>
     <div class="choices" id="choices"></div>
   </section>
 
   <!-- MACHINE -->
   <section class="screen mach" id="mach">
-    <div class="l-top"><button class="close" id="mQuit" aria-label="Fermer">✕</button><div style="flex:1;font-family:'Baloo 2';font-weight:800;font-size:22px">🧩 Machine à phrases</div></div>
+    <div class="l-top"><button class="close" id="mQuit" data-i18n-aria="close">✕</button><div style="flex:1;font-family:'Baloo 2';font-weight:800;font-size:22px">🧩 <span data-i18n="machine"></span></div></div>
     <div class="m-body" id="mBody"></div>
   </section>
 
@@ -377,147 +432,565 @@ h1,h2,h3{font-family:'Baloo 2',sans-serif}
     <div class="chips">
       <div class="chip a"><div class="h" id="eLabA"></div><div class="v" id="eA"></div></div>
       <div class="chip b"><div class="h" id="eLabB"></div><div class="v" id="eB"></div></div>
-      <div class="chip c"><div class="h">Série</div><div class="v" id="eC"></div></div>
+      <div class="chip c"><div class="h" data-i18n="streakShort"></div><div class="v" id="eC"></div></div>
     </div>
     <div class="extra" id="eExtra"></div>
     <div class="newq" id="eQuests"></div>
     <div class="share" id="shareTxt"></div>
-    <div class="btns"><button class="btn blue" id="copyBtn">Copier pour partager</button><button class="btn ghost" id="homeBtn">Continuer</button></div>
+    <div class="btns"><button class="btn blue" id="copyBtn" data-i18n="copyShare"></button><button class="btn ghost" id="homeBtn" data-i18n="continue"></button></div>
   </section>
 
   <nav class="nav" id="nav">
-    <button data-tab="sLearn"><span>🏠</span>Apprendre</button>
-    <button data-tab="sSit"><span>💬</span>Situations</button>
-    <button data-tab="sQuests" id="navQ"><span>🎯</span>Défis</button>
-    <button data-tab="sProfile"><span>🦜</span>Profil</button>
+    <button data-tab="sLearn"><span>🏠</span><b data-i18n="tabLearn"></b></button>
+    <button data-tab="sSit"><span>💬</span><b data-i18n="tabSit"></b></button>
+    <button data-tab="sQuests" id="navQ"><span>🎯</span><b data-i18n="tabChallenges"></b></button>
+    <button data-tab="sProfile"><span>🦜</span><b data-i18n="tabProfile"></b></button>
   </nav>
 </div>
-<div class="ov" id="ov"><div class="sheet" id="sheet"></div></div>
-<div class="toast" id="toast"></div>
+<div class="ov" id="ov"><div class="sheet" id="sheet" role="dialog" aria-modal="true"></div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div class="plus" id="plus"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js" crossorigin="anonymous"></script>
 <script>
-/* ======================= CONTENU ======================= */
-const UNITS=[
- {id:'mbote',title:'Mbote ! Saluer',color:'#1E8FE1',shadow:'#1670b3',icon:'👋',
-  tip:'<b>À Kinshasa</b>, on dit <b>« Kende malamu »</b> à celui qui part et <b>« Tikala malamu »</b> à celui qui reste.',
-  words:[['Mbote','Bonjour'],['Sango nini?','Quoi de neuf ?'],['Ozali malamu?','Tu vas bien ?'],['Nazali malamu','Je vais bien'],['Matondo','Merci'],['Kende malamu','Au revoir (à celui qui part)'],['Tikala malamu','Au revoir (à celui qui reste)'],['Nkombo na yo nani?','Comment tu t\'appelles ?']],
-  sentences:[['Je vais bien','Nazali malamu',['Ozali','yo']],['Comment tu t\'appelles ?','Nkombo na yo nani?',['ngai','malamu']],['Merci, je vais bien','Matondo nazali malamu',['Mbote','yo']]]},
- {id:'survie',title:'Loba malembe ! Survie',color:'#0FA3B1',shadow:'#0b7c87',icon:'🆘',
-  tip:'Tu comprends un peu mais on parle trop vite ? La phrase magique : <b>« Loba malembe »</b> (parle doucement).',
-  words:[['Loba malembe','Parle doucement'],['Loba lisusu','Répète'],['Nayoki te','Je ne comprends pas'],['Nayebi te','Je ne sais pas'],['Ee','Oui'],['Te','Non'],['Moke','Un peu'],['Nazali koyekola lingala','J\'apprends le lingala']],
-  sentences:[['Je ne comprends pas, répète','Nayoki te loba lisusu',['malembe','Ee']],['Un peu, j\'apprends le lingala','Moke nazali koyekola lingala',['te','mingi']]]},
- {id:'libota',title:'Libota — La famille',color:'#D7263D',shadow:'#a81b2e',icon:'👪',
-  tip:'<b>Ndeko</b> désigne un frère, une sœur… et souvent tout proche de la famille.',
-  words:[['Mama','Mère'],['Tata','Père'],['Ndeko','Frère / sœur'],['Moninga','Ami'],['Mwana','Enfant'],['Libota','Famille'],['Mobali','Homme / mari'],['Mwasi','Femme / épouse']],
-  sentences:[['Mon ami','Moninga na ngai',['yo','mama']],['Ta famille','Libota na yo',['ngai','tata']],['Mon enfant','Mwana na ngai',['yo','ndeko']]]},
- {id:'bilei',title:'Bilei — Manger',color:'#3BB273',shadow:'#2a8a57',icon:'🍲',
-  tip:'Le <b>pondu</b> (feuilles de manioc) avec du <b>mbisi</b> (poisson), un classique à Kin.',
-  words:[['Bilei','Nourriture'],['Mai','Eau'],['Mbisi','Poisson'],['Nyama','Viande'],['Pondu','Feuilles de manioc'],['Nazali na nzala','J\'ai faim'],['Nalingi kolia','Je veux manger'],['Komela','Boire']],
-  sentences:[['J\'ai faim','Nazali na nzala',['malamu','mai']],['Je veux manger du poisson','Nalingi kolia mbisi',['nyama','komela']]]},
- {id:'mituya',title:'Mituya — Compter',color:'#FFC93C',shadow:'#e0a812',icon:'🔢',dark:true,
-  tip:'Surprise : au marché de Kin, les gros prix se disent souvent… en français !',
-  words:[['Moko','1'],['Mibale','2'],['Misato','3'],['Minei','4'],['Mitano','5'],['Motoba','6'],['Nsambo','7'],['Zomi','10'],['Mbongo','Argent']],
-  sentences:[]},
- {id:'misala',title:'Misala — Les actions',color:'#7B5CD6',shadow:'#5b40ad',icon:'🏃🏾',
-  tip:'Les verbes à l\'infinitif commencent par <b>ko-</b> : kolia, komela, koloba… Teste-les dans la 🧩 Machine à phrases.',
-  words:[['Kokende','Aller'],['Koya','Venir'],['Kolala','Dormir'],['Kosala','Travailler / faire'],['Koloba','Parler'],['Koyeba','Savoir'],['Yaka!','Viens !'],['Zela!','Attends !']],
-  sentences:[['Je veux parler lingala','Nalingi koloba lingala',['kolala','yo']],['Je veux dormir','Nalingi kolala',['koya','malamu']]]}
-];
-const WORDMAP={};UNITS.forEach(u=>u.words.forEach(w=>WORDMAP[w[0]]=w));
+/* ======================= CONTENU : LANGUES ======================= */
+const LANGS={
+ ln:{code:'ln',name:'lingala',Name:'Lingala',short:'LN',region:'Kinshasa, Brazzaville et l\'Ouest',native:'Kinois',
+  good:'Malamu mingi !',strong:'Ozali makasi !',hi:'Mbote na bino !',voyage:'Je pars à Kinshasa',
+  praise:['Malamu mingi !','Ya solo ! Bravo','Bravo !','Malamu !','Ozali makasi ! 💪'],
+  units:[
+   {id:'mbote',title:'Mbote ! Saluer',color:'#1E8FE1',shadow:'#1670b3',icon:'👋',
+    tip:'<b>À Kinshasa</b>, on dit <b>« Kende malamu »</b> à celui qui part et <b>« Tikala malamu »</b> à celui qui reste.',
+    words:[['Mbote','Bonjour'],['Sango nini?','Quoi de neuf ?'],['Ozali malamu?','Tu vas bien ?'],['Nazali malamu','Je vais bien'],['Matondo','Merci'],['Kende malamu','Au revoir (à celui qui part)'],['Tikala malamu','Au revoir (à celui qui reste)'],['Nkombo na yo nani?','Comment tu t\'appelles ?']],
+    sentences:[['Je vais bien','Nazali malamu',['Ozali','yo']],['Comment tu t\'appelles ?','Nkombo na yo nani?',['ngai','malamu']],['Merci, je vais bien','Matondo nazali malamu',['Mbote','yo']]]},
+   {id:'survie',title:'Loba malembe ! Survie',color:'#0FA3B1',shadow:'#0b7c87',icon:'🆘',
+    tip:'Tu comprends un peu mais on parle trop vite ? La phrase magique : <b>« Loba malembe »</b> (parle doucement).',
+    words:[['Loba malembe','Parle doucement'],['Loba lisusu','Répète'],['Nayoki te','Je ne comprends pas'],['Nayebi te','Je ne sais pas'],['Ee','Oui'],['Te','Non'],['Moke','Un peu'],['Nazali koyekola lingala','J\'apprends le lingala']],
+    sentences:[['Je ne comprends pas, répète','Nayoki te loba lisusu',['malembe','Ee']],['Un peu, j\'apprends le lingala','Moke nazali koyekola lingala',['te','mingi']]]},
+   {id:'libota',title:'Libota — La famille',color:'#D7263D',shadow:'#a81b2e',icon:'👪',
+    tip:'<b>Ndeko</b> désigne un frère, une sœur… et souvent tout proche de la famille.',
+    words:[['Mama','Mère'],['Tata','Père'],['Ndeko','Frère / sœur'],['Moninga','Ami'],['Mwana','Enfant'],['Libota','Famille'],['Mobali','Homme / mari'],['Mwasi','Femme / épouse']],
+    sentences:[['Mon ami','Moninga na ngai',['yo','mama']],['Ta famille','Libota na yo',['ngai','tata']],['Mon enfant','Mwana na ngai',['yo','ndeko']]]},
+   {id:'bilei',title:'Bilei — Manger',color:'#3BB273',shadow:'#2a8a57',icon:'🍲',
+    tip:'Le <b>pondu</b> (feuilles de manioc) avec du <b>mbisi</b> (poisson), un classique à Kin.',
+    words:[['Bilei','Nourriture'],['Mai','Eau'],['Mbisi','Poisson'],['Nyama','Viande'],['Pondu','Feuilles de manioc'],['Nazali na nzala','J\'ai faim'],['Nalingi kolia','Je veux manger'],['Komela','Boire']],
+    sentences:[['J\'ai faim','Nazali na nzala',['malamu','mai']],['Je veux manger du poisson','Nalingi kolia mbisi',['nyama','komela']]]},
+   {id:'mituya',title:'Mituya — Compter',color:'#FFC93C',shadow:'#e0a812',icon:'🔢',dark:true,
+    tip:'Surprise : au marché de Kin, les gros prix se disent souvent… en français !',
+    words:[['Moko','1'],['Mibale','2'],['Misato','3'],['Minei','4'],['Mitano','5'],['Motoba','6'],['Nsambo','7'],['Zomi','10'],['Mbongo','Argent']],
+    sentences:[]},
+   {id:'misala',title:'Misala — Les actions',color:'#7B5CD6',shadow:'#5b40ad',icon:'🏃🏾',
+    tip:'Les verbes à l\'infinitif commencent par <b>ko-</b> : kolia, komela, koloba… Teste-les dans la 🧩 Machine à phrases.',
+    words:[['Kokende','Aller'],['Koya','Venir'],['Kolala','Dormir'],['Kosala','Travailler / faire'],['Koloba','Parler'],['Koyeba','Savoir'],['Yaka!','Viens !'],['Zela!','Attends !']],
+    sentences:[['Je veux parler lingala','Nalingi koloba lingala',['kolala','yo']],['Je veux dormir','Nalingi kolala',['koya','malamu']]]}
+  ],
+  sits:[
+   {id:'mama',ic:'📞',bg:'#e7f7ee',t:'Appel WhatsApp avec maman',d:'Prends des nouvelles, en lingala',who:'Mama',av:'👵🏾',
+    tip:'On dit « mama » et « tata » aux parents… et aussi aux aînés, par respect.',
+    steps:[
+     {li:'Mbote mwana na ngai! Ozali malamu?',fr:'Bonjour mon enfant ! Tu vas bien ?',opts:[['Nazali malamu, mama. Yo?','Je vais bien, maman. Et toi ?',1],['Ntalo boni?','C\'est combien ?'],['Kende malamu','Au revoir']]},
+     {li:'Nazali malamu. Sango nini?',fr:'Je vais bien. Quoi de neuf ?',opts:[['Nazali koyekola lingala!','J\'apprends le lingala !',1],['Mai ya malili','De l\'eau fraîche'],['Tikala malamu','Au revoir']]},
+     {li:'Eh! Nasepeli mingi!',fr:'Eh ! Je suis très contente !',opts:[['Nalingi yo, mama','Je t\'aime, maman',1],['Zela!','Attends !','Un peu sec pour ta maman qui est émue 😅'],['Nayebi te','Je ne sais pas']]},
+     {li:'Nzambe apambola yo, mwana na ngai.',fr:'Que Dieu te bénisse, mon enfant.',opts:[['Matondo mama. Tokomonana!','Merci maman. À bientôt !',1],['Kitisa ntalo','Baisse le prix'],['Ozali na nzala?','Tu as faim ?']]}]},
+   {id:'zando',ic:'🛒',bg:'#fff1e0',t:'Au marché (zando)',d:'Achète du poisson et négocie le prix',who:'La vendeuse',av:'👩🏾‍🦱',
+    tip:'Au marché, les prix se disent souvent en français. Négocier fait partie du jeu !',
+    steps:[
+     {li:'Mbote! Olingi nini?',fr:'Bonjour ! Tu veux quoi ?',opts:[['Nalingi mbisi','Je veux du poisson',1],['Nalingi yo','Je t\'aime','Euh… elle voulait juste savoir ce que tu achètes 😂'],['Boyei malamu','Bienvenue']]},
+     {li:'Mbisi oyo ezali malamu mingi.',fr:'Ce poisson est très bon.',opts:[['Ntalo boni?','C\'est combien ?',1],['Nazali malamu','Je vais bien'],['Kolala','Dormir']]},
+     {li:'Mille cinq cents francs.',fr:'Mille cinq cents francs.',opts:[['Ntalo makasi! Kitisa moke.','C\'est cher ! Baisse un peu.',1],['Nzambe apambola yo','Que Dieu te bénisse'],['Tokende!','Allons-y !']]},
+     {li:'Malamu, mille francs.',fr:'D\'accord, mille francs.',opts:[['Matondo! Pesa ngai mbisi.','Merci ! Donne-moi le poisson.',1],['Ozali malamu?','Tu vas bien ?'],['Mobali','Homme']]}]},
+   {id:'arrivee',ic:'✈️',bg:'#e8f4fd',t:'Arrivée à N\'djili',d:'Ton cousin t\'attend à l\'aéroport de Kinshasa',who:'Ton cousin',av:'🧑🏾',
+    tip:'« Oyei malamu » pour accueillir une personne, « Boyei malamu » pour plusieurs (ou par respect).',
+    steps:[
+     {li:'Oyei malamu, ndeko!',fr:'Bienvenue, frérot !',opts:[['Matondo! Nasepeli komona yo.','Merci ! Content de te voir.',1],['Ntalo makasi','C\'est cher'],['Kende malamu','Au revoir','Tu viens d\'arriver, pas de partir 😄']]},
+     {li:'Mobembo ezalaki malamu?',fr:'Le voyage s\'est bien passé ?',opts:[['Ee, malamu mingi.','Oui, très bien.',1],['Pesa ngai mbisi','Donne-moi du poisson'],['Nkombo na yo nani?','Comment tu t\'appelles ?','C\'est ton cousin, il serait vexé 😅']]},
+     {li:'Ozali na nzala?',fr:'Tu as faim ?',opts:[['Ee! Nalingi kolia pondu.','Oui ! Je veux manger du pondu.',1],['Nalingi kolala na zando','Je veux dormir au marché'],['Mama, nalingi yo','Maman, je t\'aime']]},
+     {li:'Malamu. Tokende!',fr:'Parfait. Allons-y !',opts:[['Tokende!','Allons-y !',1],['Tikala malamu','Au revoir (à celui qui reste)'],['Nayebi te','Je ne sais pas']]}]},
+   {id:'belle',ic:'💍',bg:'#fde9ec',t:'Rencontrer la belle-famille',d:'Fais bonne impression dès le premier mot',who:'Ta future belle-mère',av:'👩🏾',
+    tip:'Appeler les parents de ton/ta partenaire « mama » et « tata », c\'est la marque de respect qui fait toute la différence.',
+    steps:[
+     {li:'Mbote. Boyei malamu.',fr:'Bonjour. Soyez les bienvenus.',opts:[['Mbote mama. Matondo mingi.','Bonjour maman. Merci beaucoup.',1],['Sango nini, ndeko?','Quoi de neuf, frérot ?','Trop familier pour ta belle-mère 🙈'],['Ntalo boni?','C\'est combien ?']]},
+     {li:'Nkombo na yo nani?',fr:'Comment tu t\'appelles ?',opts:[['Nkombo na ngai … (ton prénom)','Je m\'appelle …',1],['Nazali na nzala','J\'ai faim'],['Yaka!','Viens !']]},
+     {li:'Oyebi lingala?',fr:'Tu connais le lingala ?',opts:[['Moke. Nazali koyekola. Loba malembe, mama.','Un peu. J\'apprends. Parle doucement, maman.',1],['Te! Nayebi te.','Non ! Je ne sais pas.','Correct… mais pas très chaleureux 😬'],['Kitisa ntalo','Baisse le prix']]},
+     {li:'Eh! Malamu mingi! Tozali libota moko.',fr:'Eh ! Très bien ! Nous sommes une seule famille.',opts:[['Matondo mama. Nzambe apambola bino.','Merci maman. Que Dieu vous bénisse.',1],['Kende malamu','Au revoir'],['Mai ya malili','De l\'eau fraîche']]}]}
+  ],
+  msgs:[['Mama, nalingi yo ❤️','Maman, je t\'aime'],['Bolamu? Nazali kokanisa yo.','Ça va ? Je pense à toi.'],['Mbote tata! Nazali koyekola lingala.','Bonjour papa ! J\'apprends le lingala.'],['Nzambe apambola yo.','Que Dieu te bénisse.'],['Tokomonana noki!','On se voit bientôt !'],['Ndeko, nazali kokanisa yo mingi.','Frère / sœur, je pense beaucoup à toi.'],['Libota na ngai, nalingi bino.','Ma famille, je vous aime.']],
+  mach:{
+   pron:[['na','Je'],['o','Tu'],['a','Il / Elle'],['to','Nous'],['bo','Vous'],['ba','Ils / Elles']],
+   tenses:[['prog','En ce moment','-zali ko-'],['fut','Futur proche','-ko-']],negHint:'… te',
+   verbs:[{v:'kolia',fr:'manger',c:[['mbisi','du poisson'],['pondu','du pondu'],['nyama','de la viande']]},{v:'komela',fr:'boire',c:[['mai','de l\'eau']]},{v:'kokende',fr:'aller',c:[['na zando','au marché'],['na ndako','à la maison']]},{v:'koya',fr:'venir',c:[['na ndako','à la maison']]},{v:'kolala',fr:'dormir',c:[]},{v:'kosala',fr:'travailler',c:[]},{v:'koloba',fr:'parler',c:[['lingala','lingala']]},{v:'koyekola',fr:'apprendre',c:[['lingala','le lingala']]}]}
+ },
+ sw:{code:'sw',name:'swahili',Name:'Swahili',short:'SW',region:'Lubumbashi, Goma, Bukavu, Kisangani… et toute l\'Afrique de l\'Est',native:'Lushois',
+  good:'Vizuri sana !',strong:'Wewe ni hodari !',hi:'Jambo !',voyage:'Je pars dans l\'Est (Lubumbashi, Goma…)',
+  praise:['Vizuri sana !','Hongera ! Bravo','Safi sana !','Vizuri !','Wewe ni hodari ! 💪'],
+  note:'Swahili standard. Au Congo, le swahili de l\'Est a ses propres mots et beaucoup d\'emprunts au français : tes corrections sont les bienvenues !',
+  units:[
+   {id:'salamu',title:'Jambo ! Saluer',color:'#1E8FE1',shadow:'#1670b3',icon:'👋',
+    tip:'À <b>« Habari gani ? »</b>, on répond presque toujours <b>« Nzuri »</b> (bien)… même quand ça ne va pas trop 😄',
+    words:[['Jambo','Bonjour'],['Habari gani?','Quoi de neuf ?'],['Habari yako?','Comment vas-tu ?'],['Nzuri','Bien'],['Asante','Merci'],['Karibu','Bienvenue'],['Kwaheri','Au revoir'],['Jina lako nani?','Comment tu t\'appelles ?']],
+    sentences:[['Merci beaucoup','Asante sana',['nzuri','wewe']],['Comment tu t\'appelles ?','Jina lako nani?',['langu','sana']],['Je m\'appelle Amani','Jina langu ni Amani',['lako','nani']]]},
+   {id:'msaada',title:'Polepole ! Survie',color:'#0FA3B1',shadow:'#0b7c87',icon:'🆘',
+    tip:'Le mot magique : <b>« polepole »</b> (doucement). <b>« Sema polepole »</b> = parle lentement.',
+    words:[['Sema polepole','Parle lentement'],['Rudia tafadhali','Répète, s\'il te plaît'],['Sielewi','Je ne comprends pas'],['Sijui','Je ne sais pas'],['Ndiyo','Oui'],['Hapana','Non'],['Kidogo','Un peu'],['Ninajifunza Kiswahili','J\'apprends le swahili']],
+    sentences:[['Je ne comprends pas, répète s\'il te plaît','Sielewi rudia tafadhali',['polepole','ndiyo']],['Un peu, j\'apprends le swahili','Kidogo ninajifunza Kiswahili',['hapana','sana']]]},
+   {id:'familia',title:'Familia — La famille',color:'#D7263D',shadow:'#a81b2e',icon:'👪',
+    tip:'<b>Ndugu</b> veut dire frère, sœur… et plus largement « proche », comme <i>ndeko</i> en lingala.',
+    words:[['Mama','Mère'],['Baba','Père'],['Ndugu','Frère / sœur'],['Rafiki','Ami'],['Mtoto','Enfant'],['Familia','Famille'],['Mume','Mari'],['Mke','Épouse']],
+    sentences:[['Mon ami','Rafiki yangu',['wako','mama']],['Ta famille','Familia yako',['yangu','baba']],['Mon enfant','Mtoto wangu',['wako','ndugu']]]},
+   {id:'chakula',title:'Chakula — Manger',color:'#3BB273',shadow:'#2a8a57',icon:'🍲',
+    tip:'L\'<b>ugali</b> (pâte de farine) s\'appelle souvent <b>bukari</b> à Lubumbashi.',
+    words:[['Chakula','Nourriture'],['Maji','Eau'],['Samaki','Poisson'],['Nyama','Viande'],['Bukari','Pâte de farine (ugali)'],['Nina njaa','J\'ai faim'],['Nataka kula','Je veux manger'],['Kunywa','Boire']],
+    sentences:[['J\'ai faim','Nina njaa',['maji','sana']],['Je veux manger du poisson','Nataka kula samaki',['nyama','kunywa']]]},
+   {id:'hesabu',title:'Hesabu — Compter',color:'#FFC93C',shadow:'#e0a812',icon:'🔢',dark:true,
+    tip:'Surprise : l\'heure swahilie commence au lever du soleil. 7 h du matin se dit <b>« saa moja »</b>, la 1re heure !',
+    words:[['Moja','1'],['Mbili','2'],['Tatu','3'],['Nne','4'],['Tano','5'],['Sita','6'],['Saba','7'],['Kumi','10'],['Pesa','Argent']],
+    sentences:[]},
+   {id:'vitendo',title:'Vitendo — Les actions',color:'#7B5CD6',shadow:'#5b40ad',icon:'🏃🏾',
+    tip:'Les verbes commencent par <b>ku-</b> : kula, kunywa, kwenda… Construis tes phrases dans la 🧩 Machine à phrases.',
+    words:[['Kwenda','Aller'],['Kuja','Venir'],['Kulala','Dormir'],['Kufanya kazi','Travailler'],['Kuzungumza','Parler'],['Kujua','Savoir'],['Njoo!','Viens !'],['Ngoja!','Attends !']],
+    sentences:[['Je veux parler swahili','Nataka kuzungumza Kiswahili',['kulala','wewe']],['Je veux dormir','Nataka kulala',['kuja','sana']]]}
+  ],
+  sits:[
+   {id:'mama',ic:'📞',bg:'#e7f7ee',t:'Appel WhatsApp avec maman',d:'Prends des nouvelles, en swahili',who:'Mama',av:'👵🏾',
+    tip:'On appelle les aînés « mama » et « baba » par respect.',
+    steps:[
+     {li:'Jambo mwanangu! Habari yako?',fr:'Bonjour mon enfant ! Comment vas-tu ?',opts:[['Nzuri mama. Na wewe?','Bien, maman. Et toi ?',1],['Bei gani?','C\'est combien ?'],['Kwaheri','Au revoir']]},
+     {li:'Mimi ni mzima. Habari gani?',fr:'Je vais bien. Quoi de neuf ?',opts:[['Ninajifunza Kiswahili!','J\'apprends le swahili !',1],['Maji baridi','De l\'eau fraîche'],['Kwaheri','Au revoir']]},
+     {li:'Eh! Nimefurahi sana!',fr:'Eh ! Je suis très contente !',opts:[['Nakupenda mama','Je t\'aime, maman',1],['Ngoja!','Attends !','Un peu sec pour ta maman qui est émue 😅'],['Sijui','Je ne sais pas']]},
+     {li:'Mungu akubariki, mwanangu.',fr:'Que Dieu te bénisse, mon enfant.',opts:[['Asante mama. Tutaonana!','Merci maman. À bientôt !',1],['Punguza bei','Baisse le prix'],['Una njaa?','Tu as faim ?']]}]},
+   {id:'zando',ic:'🛒',bg:'#fff1e0',t:'Au marché (sokoni)',d:'Achète du poisson et négocie le prix',who:'La vendeuse',av:'👩🏾‍🦱',
+    tip:'Au marché de Lubumbashi, on mélange volontiers swahili et français : « elfu mbili » ou « deux mille », tout le monde comprend.',
+    steps:[
+     {li:'Karibu! Unataka nini?',fr:'Bienvenue ! Tu veux quoi ?',opts:[['Nataka samaki','Je veux du poisson',1],['Nakupenda','Je t\'aime','Euh… elle voulait juste savoir ce que tu achètes 😂'],['Kwaheri','Au revoir']]},
+     {li:'Samaki huyu ni mzuri sana.',fr:'Ce poisson est très bon.',opts:[['Bei gani?','C\'est combien ?',1],['Mimi ni mzima','Je vais bien'],['Kulala','Dormir']]},
+     {li:'Elfu mbili.',fr:'Deux mille.',opts:[['Ghali sana! Punguza kidogo.','C\'est très cher ! Baisse un peu.',1],['Mungu akubariki','Que Dieu te bénisse'],['Twende!','Allons-y !']]},
+     {li:'Sawa, elfu moja.',fr:'D\'accord, mille.',opts:[['Asante! Nipe samaki.','Merci ! Donne-moi le poisson.',1],['Habari yako?','Comment vas-tu ?'],['Mume','Mari']]}]},
+   {id:'arrivee',ic:'✈️',bg:'#e8f4fd',t:'Arrivée à Lubumbashi',d:'Ton cousin t\'attend à l\'aéroport',who:'Ton cousin',av:'🧑🏾',
+    tip:'« Karibu » pour accueillir une personne, « Karibuni » pour plusieurs.',
+    steps:[
+     {li:'Karibu sana, ndugu!',fr:'Bienvenue, frérot !',opts:[['Asante! Nimefurahi kukuona.','Merci ! Content de te voir.',1],['Ghali sana','C\'est très cher'],['Kwaheri','Au revoir','Tu viens d\'arriver, pas de partir 😄']]},
+     {li:'Safari ilikuwa nzuri?',fr:'Le voyage s\'est bien passé ?',opts:[['Ndiyo, nzuri sana.','Oui, très bien.',1],['Nipe samaki','Donne-moi du poisson'],['Jina lako nani?','Comment tu t\'appelles ?','C\'est ton cousin, il serait vexé 😅']]},
+     {li:'Una njaa?',fr:'Tu as faim ?',opts:[['Ndiyo! Nataka kula bukari.','Oui ! Je veux manger du bukari.',1],['Nataka kulala sokoni','Je veux dormir au marché'],['Mama, nakupenda','Maman, je t\'aime']]},
+     {li:'Sawa. Twende!',fr:'Parfait. Allons-y !',opts:[['Twende!','Allons-y !',1],['Kwaheri','Au revoir'],['Sijui','Je ne sais pas']]}]},
+   {id:'belle',ic:'💍',bg:'#fde9ec',t:'Rencontrer la belle-famille',d:'Fais bonne impression dès le premier mot',who:'Ta future belle-mère',av:'👩🏾',
+    tip:'« Mama » et « baba » pour les parents de ton/ta partenaire : le respect avant tout.',
+    steps:[
+     {li:'Karibuni nyumbani.',fr:'Soyez les bienvenus à la maison.',opts:[['Asante sana, mama.','Merci beaucoup, maman.',1],['Mambo vipi?','Ça roule ?','Trop familier pour ta belle-mère 🙈'],['Bei gani?','C\'est combien ?']]},
+     {li:'Jina lako nani?',fr:'Comment tu t\'appelles ?',opts:[['Jina langu ni … (ton prénom)','Je m\'appelle …',1],['Nina njaa','J\'ai faim'],['Njoo!','Viens !']]},
+     {li:'Unajua Kiswahili?',fr:'Tu connais le swahili ?',opts:[['Kidogo. Ninajifunza. Sema polepole, mama.','Un peu. J\'apprends. Parle lentement, maman.',1],['Hapana! Sijui.','Non ! Je ne sais pas.','Correct… mais pas très chaleureux 😬'],['Punguza bei','Baisse le prix']]},
+     {li:'Vizuri sana! Sisi ni familia moja.',fr:'Très bien ! Nous sommes une seule famille.',opts:[['Asante mama. Mungu awabariki.','Merci maman. Que Dieu vous bénisse.',1],['Kwaheri','Au revoir'],['Maji baridi','De l\'eau fraîche']]}]}
+  ],
+  msgs:[['Mama, nakupenda ❤️','Maman, je t\'aime'],['Habari? Nakukumbuka.','Ça va ? Tu me manques.'],['Jambo baba! Ninajifunza Kiswahili.','Bonjour papa ! J\'apprends le swahili.'],['Mungu akubariki.','Que Dieu te bénisse.'],['Tutaonana hivi karibuni!','On se voit bientôt !'],['Ndugu, nakukumbuka sana.','Frère / sœur, tu me manques beaucoup.'],['Familia yangu, nawapenda.','Ma famille, je vous aime.']],
+  mach:{
+   pron:[['ni','Je'],['u','Tu'],['a','Il / Elle'],['tu','Nous'],['m','Vous'],['wa','Ils / Elles']],neg:['si','hu','ha','hatu','ham','hawa'],
+   tenses:[['prog','Présent','-na-'],['fut','Futur','-ta-']],negHint:'si- / ha-…',
+   verbs:[{v:'kula',fr:'manger',st:'kula',ng:'li',c:[['samaki','du poisson'],['nyama','de la viande'],['bukari','du bukari']]},{v:'kunywa',fr:'boire',st:'kunywa',ng:'nywi',c:[['maji','de l\'eau']]},{v:'kwenda',fr:'aller',st:'kwenda',ng:'endi',c:[['sokoni','au marché'],['nyumbani','à la maison']]},{v:'kuja',fr:'venir',st:'kuja',ng:'ji',c:[['nyumbani','à la maison']]},{v:'kulala',fr:'dormir',st:'lala',ng:'lali',c:[]},{v:'kufanya kazi',fr:'travailler',st:'fanya kazi',ng:'fanyi kazi',c:[]},{v:'kuzungumza',fr:'parler',st:'zungumza',ng:'zungumzi',c:[['Kiswahili','swahili']]},{v:'kujifunza',fr:'apprendre',st:'jifunza',ng:'jifunzi',c:[['Kiswahili','le swahili']]}]}
+ }
+};
 
-const SITS=[
- {id:'mama',ic:'📞',bg:'#e7f7ee',t:'Appel WhatsApp avec maman',d:'Prends des nouvelles, en lingala',who:'Mama',av:'👵🏾',
-  tip:'On dit « mama » et « tata » aux parents… et aussi aux aînés, par respect.',
-  steps:[
-   {li:'Mbote mwana na ngai! Ozali malamu?',fr:'Bonjour mon enfant ! Tu vas bien ?',opts:[['Nazali malamu, mama. Yo?','Je vais bien, maman. Et toi ?',1],['Ntalo boni?','C\'est combien ?'],['Kende malamu','Au revoir']]},
-   {li:'Nazali malamu. Sango nini?',fr:'Je vais bien. Quoi de neuf ?',opts:[['Nazali koyekola lingala!','J\'apprends le lingala !',1],['Mai ya malili','De l\'eau fraîche'],['Tikala malamu','Au revoir']]},
-   {li:'Eh! Nasepeli mingi!',fr:'Eh ! Je suis très contente !',opts:[['Nalingi yo, mama','Je t\'aime, maman',1],['Zela!','Attends !','Un peu sec pour ta maman qui est émue 😅'],['Nayebi te','Je ne sais pas']]},
-   {li:'Nzambe apambola yo, mwana na ngai.',fr:'Que Dieu te bénisse, mon enfant.',opts:[['Matondo mama. Tokomonana!','Merci maman. À bientôt !',1],['Kitisa ntalo','Baisse le prix'],['Ozali na nzala?','Tu as faim ?']]}]},
- {id:'zando',ic:'🛒',bg:'#fff1e0',t:'Au marché (zando)',d:'Achète du poisson et négocie le prix',who:'La vendeuse',av:'👩🏾‍🦱',
-  tip:'Au marché, les prix se disent souvent en français. Négocier fait partie du jeu !',
-  steps:[
-   {li:'Mbote! Olingi nini?',fr:'Bonjour ! Tu veux quoi ?',opts:[['Nalingi mbisi','Je veux du poisson',1],['Nalingi yo','Je t\'aime','Euh… elle voulait juste savoir ce que tu achètes 😂'],['Boyei malamu','Bienvenue']]},
-   {li:'Mbisi oyo ezali malamu mingi.',fr:'Ce poisson est très bon.',opts:[['Ntalo boni?','C\'est combien ?',1],['Nazali malamu','Je vais bien'],['Kolala','Dormir']]},
-   {li:'Mille cinq cents francs.',fr:'Mille cinq cents francs.',opts:[['Ntalo makasi! Kitisa moke.','C\'est cher ! Baisse un peu.',1],['Nzambe apambola yo','Que Dieu te bénisse'],['Tokende!','Allons-y !']]},
-   {li:'Malamu, mille francs.',fr:'D\'accord, mille francs.',opts:[['Matondo! Pesa ngai mbisi.','Merci ! Donne-moi le poisson.',1],['Ozali malamu?','Tu vas bien ?'],['Mobali','Homme']]}]},
- {id:'ndjili',ic:'✈️',bg:'#e8f4fd',t:'Arrivée à N\'djili',d:'Ton cousin t\'attend à l\'aéroport',who:'Ton cousin',av:'🧑🏾',
-  tip:'« Oyei malamu » pour accueillir une personne, « Boyei malamu » pour plusieurs (ou par respect).',
-  steps:[
-   {li:'Oyei malamu, ndeko!',fr:'Bienvenue, frérot !',opts:[['Matondo! Nasepeli komona yo.','Merci ! Content de te voir.',1],['Ntalo makasi','C\'est cher'],['Kende malamu','Au revoir','Tu viens d\'arriver, pas de partir 😄']]},
-   {li:'Mobembo ezalaki malamu?',fr:'Le voyage s\'est bien passé ?',opts:[['Ee, malamu mingi.','Oui, très bien.',1],['Pesa ngai mbisi','Donne-moi du poisson'],['Nkombo na yo nani?','Comment tu t\'appelles ?','C\'est ton cousin, il serait vexé 😅']]},
-   {li:'Ozali na nzala?',fr:'Tu as faim ?',opts:[['Ee! Nalingi kolia pondu.','Oui ! Je veux manger du pondu.',1],['Nalingi kolala na zando','Je veux dormir au marché'],['Mama, nalingi yo','Maman, je t\'aime']]},
-   {li:'Malamu. Tokende!',fr:'Parfait. Allons-y !',opts:[['Tokende!','Allons-y !',1],['Tikala malamu','Au revoir (à celui qui reste)'],['Nayebi te','Je ne sais pas']]}]},
- {id:'belle',ic:'💍',bg:'#fde9ec',t:'Rencontrer la belle-famille',d:'Fais bonne impression dès le premier mot',who:'Ta future belle-mère',av:'👩🏾',
-  tip:'Appeler les parents de ton/ta partenaire « mama » et « tata », c\'est la marque de respect qui fait toute la différence.',
-  steps:[
-   {li:'Mbote. Boyei malamu.',fr:'Bonjour. Soyez les bienvenus.',opts:[['Mbote mama. Matondo mingi.','Bonjour maman. Merci beaucoup.',1],['Sango nini, ndeko?','Quoi de neuf, frérot ?','Trop familier pour ta belle-mère 🙈'],['Ntalo boni?','C\'est combien ?']]},
-   {li:'Nkombo na yo nani?',fr:'Comment tu t\'appelles ?',opts:[['Nkombo na ngai … (ton prénom)','Je m\'appelle …',1],['Nazali na nzala','J\'ai faim'],['Yaka!','Viens !']]},
-   {li:'Oyebi lingala?',fr:'Tu connais le lingala ?',opts:[['Moke. Nazali koyekola. Loba malembe, mama.','Un peu. J\'apprends. Parle doucement, maman.',1],['Te! Nayebi te.','Non ! Je ne sais pas.','Correct… mais pas très chaleureux 😬'],['Kitisa ntalo','Baisse le prix']]},
-   {li:'Eh! Malamu mingi! Tozali libota moko.',fr:'Eh ! Très bien ! Nous sommes une seule famille.',opts:[['Matondo mama. Nzambe apambola bino.','Merci maman. Que Dieu vous bénisse.',1],['Kende malamu','Au revoir'],['Mai ya malili','De l\'eau fraîche']]}]}
-];
+/* ======================= TRADUCTION ANGLAISE DU CONTENU ======================= */
+// Clé = texte français du contenu, valeur = anglais. Absent = le français s'affiche.
+const EN={
+"Kinshasa, Brazzaville et l'Ouest":"Kinshasa, Brazzaville and the West",
+"Je pars à Kinshasa":"I'm going to Kinshasa",
+"Mbote ! Saluer":"Mbote! Greetings",
+"<b>À Kinshasa</b>, on dit <b>« Kende malamu »</b> à celui qui part et <b>« Tikala malamu »</b> à celui qui reste.":"<b>In Kinshasa</b>, you say <b>“Kende malamu”</b> to the person leaving and <b>“Tikala malamu”</b> to the person staying.",
+"Bonjour":"Hello","Quoi de neuf ?":"What's new?","Tu vas bien ?":"Are you well?","Je vais bien":"I'm fine","Merci":"Thank you",
+"Au revoir (à celui qui part)":"Goodbye (to the one leaving)","Au revoir (à celui qui reste)":"Goodbye (to the one staying)",
+"Comment tu t'appelles ?":"What's your name?","Merci, je vais bien":"Thank you, I'm fine",
+"Loba malembe ! Survie":"Loba malembe! Survival kit",
+"Tu comprends un peu mais on parle trop vite ? La phrase magique : <b>« Loba malembe »</b> (parle doucement).":"You understand a bit but people talk too fast? The magic phrase: <b>“Loba malembe”</b> (speak slowly).",
+"Parle doucement":"Speak slowly","Répète":"Repeat","Je ne comprends pas":"I don't understand","Je ne sais pas":"I don't know",
+"Oui":"Yes","Non":"No","Un peu":"A little","J'apprends le lingala":"I'm learning Lingala",
+"Je ne comprends pas, répète":"I don't understand, repeat","Un peu, j'apprends le lingala":"A little, I'm learning Lingala",
+"Libota — La famille":"Libota — Family",
+"<b>Ndeko</b> désigne un frère, une sœur… et souvent tout proche de la famille.":"<b>Ndeko</b> means brother, sister… and often any close relative.",
+"Mère":"Mother","Père":"Father","Frère / sœur":"Brother / sister","Ami":"Friend","Enfant":"Child","Famille":"Family",
+"Homme / mari":"Man / husband","Femme / épouse":"Woman / wife","Mon ami":"My friend","Ta famille":"Your family","Mon enfant":"My child",
+"Bilei — Manger":"Bilei — Food",
+"Le <b>pondu</b> (feuilles de manioc) avec du <b>mbisi</b> (poisson), un classique à Kin.":"<b>Pondu</b> (cassava leaves) with <b>mbisi</b> (fish): a Kinshasa classic.",
+"Nourriture":"Food","Eau":"Water","Poisson":"Fish","Viande":"Meat","Feuilles de manioc":"Cassava leaves",
+"J'ai faim":"I'm hungry","Je veux manger":"I want to eat","Boire":"To drink","Je veux manger du poisson":"I want to eat fish",
+"Mituya — Compter":"Mituya — Numbers",
+"Surprise : au marché de Kin, les gros prix se disent souvent… en français !":"Surprise: at Kinshasa markets, big prices are often said… in French!",
+"Argent":"Money","Misala — Les actions":"Misala — Actions",
+"Les verbes à l'infinitif commencent par <b>ko-</b> : kolia, komela, koloba… Teste-les dans la 🧩 Machine à phrases.":"Verbs in the infinitive start with <b>ko-</b>: kolia, komela, koloba… Try them in the 🧩 Sentence machine.",
+"Aller":"To go","Venir":"To come","Dormir":"To sleep","Travailler / faire":"To work / to do","Parler":"To speak","Savoir":"To know",
+"Viens !":"Come!","Attends !":"Wait!","Je veux parler lingala":"I want to speak Lingala","Je veux dormir":"I want to sleep",
+"Appel WhatsApp avec maman":"WhatsApp call with mum","Prends des nouvelles, en lingala":"Catch up with her, in Lingala","Mama":"Mama",
+"On dit « mama » et « tata » aux parents… et aussi aux aînés, par respect.":"You say “mama” and “tata” to your parents… and to elders too, out of respect.",
+"Bonjour mon enfant ! Tu vas bien ?":"Hello my child! Are you well?","Je vais bien, maman. Et toi ?":"I'm fine, mum. And you?",
+"C'est combien ?":"How much is it?","Au revoir":"Goodbye","Je vais bien. Quoi de neuf ?":"I'm fine. What's new?",
+"J'apprends le lingala !":"I'm learning Lingala!","De l'eau fraîche":"Cold water","Eh ! Je suis très contente !":"Eh! I'm so happy!",
+"Je t'aime, maman":"I love you, mum","Que Dieu te bénisse, mon enfant.":"God bless you, my child.",
+"Merci maman. À bientôt !":"Thank you mum. See you soon!","Baisse le prix":"Lower the price","Tu as faim ?":"Are you hungry?",
+"Un peu sec pour ta maman qui est émue 😅":"A bit blunt for your emotional mum 😅",
+"Au marché (zando)":"At the market (zando)","Achète du poisson et négocie le prix":"Buy fish and haggle over the price","La vendeuse":"The seller",
+"Au marché, les prix se disent souvent en français. Négocier fait partie du jeu !":"At the market, prices are often said in French. Haggling is part of the game!",
+"Bonjour ! Tu veux quoi ?":"Hello! What do you want?","Je veux du poisson":"I want some fish","Je t'aime":"I love you","Bienvenue":"Welcome",
+"Euh… elle voulait juste savoir ce que tu achètes 😂":"Erm… she just wanted to know what you're buying 😂",
+"Ce poisson est très bon.":"This fish is very good.","Mille cinq cents francs.":"One thousand five hundred francs.",
+"C'est cher ! Baisse un peu.":"That's expensive! Lower it a bit.","Que Dieu te bénisse":"God bless you","Allons-y !":"Let's go!",
+"D'accord, mille francs.":"OK, one thousand francs.","Merci ! Donne-moi le poisson.":"Thanks! Give me the fish.","Homme":"Man",
+"Arrivée à N'djili":"Arriving at N'djili","Ton cousin t'attend à l'aéroport de Kinshasa":"Your cousin is waiting at Kinshasa airport","Ton cousin":"Your cousin",
+"« Oyei malamu » pour accueillir une personne, « Boyei malamu » pour plusieurs (ou par respect).":"“Oyei malamu” to welcome one person, “Boyei malamu” for several (or out of respect).",
+"Bienvenue, frérot !":"Welcome, bro!","Merci ! Content de te voir.":"Thanks! Good to see you.","C'est cher":"It's expensive",
+"Tu viens d'arriver, pas de partir 😄":"You just arrived, you're not leaving 😄",
+"Le voyage s'est bien passé ?":"Did you have a good trip?","Oui, très bien.":"Yes, very good.","Donne-moi du poisson":"Give me some fish",
+"C'est ton cousin, il serait vexé 😅":"He's your cousin, he'd be offended 😅",
+"Oui ! Je veux manger du pondu.":"Yes! I want to eat pondu.","Je veux dormir au marché":"I want to sleep at the market",
+"Maman, je t'aime":"Mum, I love you","Parfait. Allons-y !":"Perfect. Let's go!",
+"Rencontrer la belle-famille":"Meeting the in-laws","Fais bonne impression dès le premier mot":"Make a good impression from the first word",
+"Ta future belle-mère":"Your future mother-in-law",
+"Appeler les parents de ton/ta partenaire « mama » et « tata », c'est la marque de respect qui fait toute la différence.":"Calling your partner's parents “mama” and “tata” is the sign of respect that makes all the difference.",
+"Bonjour. Soyez les bienvenus.":"Hello. You are welcome.","Bonjour maman. Merci beaucoup.":"Hello mum. Thank you very much.",
+"Quoi de neuf, frérot ?":"What's up, bro?","Trop familier pour ta belle-mère 🙈":"Too casual for your mother-in-law 🙈",
+"Je m'appelle …":"My name is …","Tu connais le lingala ?":"Do you know Lingala?",
+"Un peu. J'apprends. Parle doucement, maman.":"A little. I'm learning. Speak slowly, mum.","Non ! Je ne sais pas.":"No! I don't know.",
+"Correct… mais pas très chaleureux 😬":"Correct… but not very warm 😬",
+"Eh ! Très bien ! Nous sommes une seule famille.":"Eh! Very good! We are one family.","Merci maman. Que Dieu vous bénisse.":"Thank you mum. God bless you all.",
+"Ça va ? Je pense à toi.":"How are you? I'm thinking of you.","Bonjour papa ! J'apprends le lingala.":"Hello dad! I'm learning Lingala.",
+"Que Dieu te bénisse.":"God bless you.","On se voit bientôt !":"See you soon!","Frère / sœur, je pense beaucoup à toi.":"Brother / sister, I think of you a lot.",
+"Ma famille, je vous aime.":"My family, I love you all.",
+"du poisson":"fish","du pondu":"pondu","de la viande":"meat","de l'eau":"water","au marché":"to the market","à la maison":"home","lingala":"Lingala","le lingala":"Lingala",
+"Lubumbashi, Goma, Bukavu, Kisangani… et toute l'Afrique de l'Est":"Lubumbashi, Goma, Bukavu, Kisangani… and all of East Africa",
+"Je pars dans l'Est (Lubumbashi, Goma…)":"I'm going to eastern DRC (Lubumbashi, Goma…)",
+"Swahili standard. Au Congo, le swahili de l'Est a ses propres mots et beaucoup d'emprunts au français : tes corrections sont les bienvenues !":"Standard Swahili. In Congo, eastern Swahili has its own words and many French borrowings: your corrections are welcome!",
+"Jambo ! Saluer":"Jambo! Greetings",
+"À <b>« Habari gani ? »</b>, on répond presque toujours <b>« Nzuri »</b> (bien)… même quand ça ne va pas trop 😄":"To <b>“Habari gani?”</b> people almost always answer <b>“Nzuri”</b> (good)… even when things aren't great 😄",
+"Comment vas-tu ?":"How are you?","Bien":"Good","Merci beaucoup":"Thank you very much","Je m'appelle Amani":"My name is Amani",
+"Polepole ! Survie":"Polepole! Survival kit",
+"Le mot magique : <b>« polepole »</b> (doucement). <b>« Sema polepole »</b> = parle lentement.":"The magic word: <b>“polepole”</b> (slowly). <b>“Sema polepole”</b> = speak slowly.",
+"Parle lentement":"Speak slowly","Répète, s'il te plaît":"Please repeat","J'apprends le swahili":"I'm learning Swahili",
+"Je ne comprends pas, répète s'il te plaît":"I don't understand, please repeat","Un peu, j'apprends le swahili":"A little, I'm learning Swahili",
+"Familia — La famille":"Familia — Family",
+"<b>Ndugu</b> veut dire frère, sœur… et plus largement « proche », comme <i>ndeko</i> en lingala.":"<b>Ndugu</b> means brother, sister… and more broadly “relative”, like <i>ndeko</i> in Lingala.",
+"Mari":"Husband","Épouse":"Wife","Chakula — Manger":"Chakula — Food",
+"L'<b>ugali</b> (pâte de farine) s'appelle souvent <b>bukari</b> à Lubumbashi.":"<b>Ugali</b> (stiff porridge) is often called <b>bukari</b> in Lubumbashi.",
+"Pâte de farine (ugali)":"Stiff porridge (ugali)","Hesabu — Compter":"Hesabu — Numbers",
+"Surprise : l'heure swahilie commence au lever du soleil. 7 h du matin se dit <b>« saa moja »</b>, la 1re heure !":"Surprise: Swahili time starts at sunrise. 7 a.m. is <b>“saa moja”</b>, the 1st hour!",
+"Vitendo — Les actions":"Vitendo — Actions",
+"Les verbes commencent par <b>ku-</b> : kula, kunywa, kwenda… Construis tes phrases dans la 🧩 Machine à phrases.":"Verbs start with <b>ku-</b>: kula, kunywa, kwenda… Build your own sentences in the 🧩 Sentence machine.",
+"Travailler":"To work","Je veux parler swahili":"I want to speak Swahili","Prends des nouvelles, en swahili":"Catch up with her, in Swahili",
+"On appelle les aînés « mama » et « baba » par respect.":"Elders are called “mama” and “baba” out of respect.",
+"Bonjour mon enfant ! Comment vas-tu ?":"Hello my child! How are you?","Bien, maman. Et toi ?":"Good, mum. And you?","J'apprends le swahili !":"I'm learning Swahili!",
+"Au marché (sokoni)":"At the market (sokoni)",
+"Au marché de Lubumbashi, on mélange volontiers swahili et français : « elfu mbili » ou « deux mille », tout le monde comprend.":"At Lubumbashi markets people happily mix Swahili and French: “elfu mbili” or “deux mille”, everyone understands.",
+"Bienvenue ! Tu veux quoi ?":"Welcome! What do you want?","Deux mille.":"Two thousand.","C'est très cher ! Baisse un peu.":"That's very expensive! Lower it a bit.",
+"D'accord, mille.":"OK, one thousand.","Arrivée à Lubumbashi":"Arriving in Lubumbashi","Ton cousin t'attend à l'aéroport":"Your cousin is waiting at the airport",
+"« Karibu » pour accueillir une personne, « Karibuni » pour plusieurs.":"“Karibu” to welcome one person, “Karibuni” for several.",
+"C'est très cher":"It's very expensive","Oui ! Je veux manger du bukari.":"Yes! I want to eat bukari.",
+"« Mama » et « baba » pour les parents de ton/ta partenaire : le respect avant tout.":"“Mama” and “baba” for your partner's parents: respect comes first.",
+"Soyez les bienvenus à la maison.":"Welcome to our home.","Merci beaucoup, maman.":"Thank you very much, mum.","Ça roule ?":"What's up?",
+"Tu connais le swahili ?":"Do you know Swahili?","Un peu. J'apprends. Parle lentement, maman.":"A little. I'm learning. Speak slowly, mum.",
+"Très bien ! Nous sommes une seule famille.":"Very good! We are one family.","Ça va ? Tu me manques.":"How are you? I miss you.",
+"Bonjour papa ! J'apprends le swahili.":"Hello dad! I'm learning Swahili.","Frère / sœur, tu me manques beaucoup.":"Brother / sister, I miss you so much.",
+"du bukari":"bukari","swahili":"Swahili","le swahili":"Swahili"
+};
 
-const MSGS=[['Mama, nalingi yo ❤️','Maman, je t\'aime'],['Bolamu? Nazali kokanisa yo.','Ça va ? Je pense à toi.'],['Mbote tata! Nazali koyekola lingala.','Bonjour papa ! J\'apprends le lingala.'],['Nzambe apambola yo.','Que Dieu te bénisse.'],['Tokomonana noki!','On se voit bientôt !'],['Ndeko, nazali kokanisa yo mingi.','Frère / sœur, je pense beaucoup à toi.'],['Libota na ngai, nalingi bino.','Ma famille, je vous aime.']];
+/* ======================= INTERFACE : FRANÇAIS / ANGLAIS ======================= */
+const UI={
+fr:{
+ streak:'Série de jours',gems:'Gemmes',hearts:'Cœurs',close:'Fermer',quit:'Quitter',
+ sitTitle:'Situations réelles',sitSub:'Pas des listes de mots : de vraies conversations que tu vas vivre.',
+ challenges:'Défis',challengesSub:'Relève les défis, gagne des 💎 et défie tes amis.',flashTitle:'Défi éclair',record:'Record',
+ flash60:'⏱️ 60 secondes',flashSub:'Traduis un maximum de mots. Une erreur = −3 secondes.',flashGo:'Lancer le défi',questsTitle:'Quêtes du jour',
+ hoursLeft:'⏳ {n} h restantes',myProfile:'Mon profil',settings:'Réglages',stats:'Statistiques',badges:'Badges',myWords:'Mes mots',
+ privacy:'Confidentialité',reset:'Réinitialiser ma progression',machine:'Machine à phrases',streakShort:'Série',copyShare:'Copier pour partager',
+ continue:'Continuer',tabLearn:'Apprendre',tabSit:'Situations',tabChallenges:'Défis',tabProfile:'Profil',
+ donTitle:'Soutenir Loba',donSub:'Loba est gratuit et sans pub. Tes dons financent l\'audio, de nouvelles langues et les serveurs.',
+ // onboarding
+ helloTitle:'Mbote ! Jambo !<br>Moi c\'est Koko.',helloSub:'Le perroquet gris du Congo qui va te faire parler les langues du pays, 5 minutes par jour.',
+ go:'C\'est parti',appLangQ:'Dans quelle langue veux-tu utiliser l\'appli ?',whichLang:'Quelle langue veux-tu apprendre ?',
+ whyLearn:'Pourquoi tu apprends le {lang} ?',whereAt:'Tu en es où avec le {lang} ?',howLong:'Combien de temps par jour ?',
+ mFamille:'Parler avec ma famille',mRacines:'Renouer avec mes racines',mBelle:'Ma belle-famille est congolaise',mCurio:'Par curiosité',
+ lZero:'Je pars de zéro',lPassif:'Je comprends un peu, mais je ne parle pas',lMoyen:'Je me débrouille déjà',
+ g20:'5 min / jour',g20s:'Tranquille',g40:'10 min / jour',g40s:'Sérieux',g60:'15 min / jour',g60s:'Intense',
+ testPassif:'Beaucoup de gens comprennent sans oser parler. On va voir ce que tu sais déjà !',testOther:'Montre-moi ce que tu sais déjà !',
+ testCard:'📝 10 questions rapides<br>❤️ Aucun cœur perdu<br>🔓 Je débloque les unités que tu maîtrises',doTest:'Faire le test',skipTest:'Passer, je commence au début',
+ whatMeans:'Que veut dire…',dunno:'Je ne sais pas',ready:'Ton parcours de {lang} est prêt !',goal:'Objectif : {m}',
+ unlockedN:'{n} unité(s) débloquée(s) grâce au test',basics:'On commence par les bases',recoSit:'Situation recommandée : {s}',
+ xpPerDay:'{n} XP par jour',loveUnit:'Tu vas adorer l\'unité « {u} »',start:'Commencer',
+ // home
+ dailyQuests:'Quêtes du jour',rewardsReady:'{n} récompense(s) à récupérer !',questsDone:'{a} / {b} terminées',xpToday:'{a} / {b} XP aujourd\'hui',
+ msgOfDay:'💌 Message du jour pour ta famille',sendWA:'Envoyer sur WhatsApp',copy:'Copier',sent:'✓ Envoyé',familyLove:'💌 Ta famille va adorer ! Quête accomplie',
+ smartReview:'Révision intelligente',reviewHard:'Tes mots difficiles · +1 ❤️',reviewFill:'Se remplit avec tes erreurs',buildOwn:'Crée tes propres phrases',
+ reviewWait:'Fais quelques leçons : tes erreurs reviendront ici au bon moment.',supportCard:'Soutenir Loba',supportCardSub:'Gratuit, sans pub, grâce à vous',give:'Faire un don',
+ unit:'Unité',startBub:'COMMENCER',lessonN:'LEÇON {n}',chestOpened:'Coffre déjà ouvert',chestLocked:'Termine les 4 leçons pour l\'ouvrir',notYet:'Pas encore débloqué',
+ chestTitle:'Coffre ouvert !',chestText:'Unité « {u} » terminée.<br>Tu gagnes <b style="color:var(--sky)">💎 {g}</b>',great:'Super !',
+ // situations
+ recoForYou:'⭐ Recommandé pour toi',online:'en ligne',typing:'en train d\'écrire…',help:'🌐 Aide',tryAgain:'« {a} » = « {b} ». Essaie encore !',
+ convDone:'Conversation réussie !',errors:'{n} erreur(s)',xpWon:'XP gagnés',stars:'Étoiles',keyPhrases:'📌 Tes phrases à retenir',
+ shareSit:'💬 Je viens de tenir une conversation en {lang} sur Loba : « {s} » {st}\nProchaine étape : le vrai appel à la famille 🇨🇩',
+ // machine
+ who:'Qui ?',doesWhat:'Fait quoi ?',complement:'Complément',when:'Quand ?',none:'aucun',negative:'Négatif',otherChallenge:'Autre défi',
+ buildIn:'🎯 Défi : construis en {lang}',bravo5:'✅ Bravo ! +5 XP',
+ // quests & badges
+ qXp:'Gagne {n} XP',qLes:'Termine 2 leçons ou situations',qMsg:'Envoie un message à un proche dans sa langue',qCombo:'Enchaîne 5 bonnes réponses',qFlash:'Marque 10 points au Défi éclair',
+ received:'✓ Reçu',
+ b1:'Premier pas',b1d:'1re leçon',b2:'Sur la lancée',b2d:'Série de 3 jours',b3:'Sans faute',b3d:'Leçon parfaite',b4:'Bavard',b4d:'1re conversation',
+ b5:'Mwana malamu',b5d:'Message envoyé',b6:'Mémoire',b6d:'1re révision',b7:'Éclair',b7d:'15 au Défi éclair',b8:'Unité finie',b8d:'Ouvre un coffre',
+ b9:'Polyglotte',b9d:'2 langues commencées',b10:'Motema',b10d:'A soutenu Loba',
+ sStreak:'Série actuelle',sXp:'XP au total',sLessons:'Leçons',sConv:'Conversations',sFlash:'Record éclair',sBadges:'Badges',
+ wordsSeen:'{l} · {a} vus · {b} maîtrisés',noWords:'Fais ta première leçon pour remplir ton carnet.',
+ appLanguage:'Langue de l\'appli',learning:'Langue apprise',save:'Sauvegarde',saveLocal:'Sur cet appareil',saveCloud:'☁️ Synchronisée',saveCloudAgo:'☁️ Synchronisée {t}',
+ saveOff:'Locale uniquement',secure:'Récupérer ma progression sur un autre appareil',justNow:'à l\'instant',
+ resetTitle:'Tout recommencer ?',resetText:'Ta série, tes XP, tes gemmes et tes carnets (toutes langues) seront effacés.',resetYes:'Oui, réinitialiser',cancel:'Annuler',
+ // lesson
+ check:'Vérifier',translateSentence:'Traduis cette phrase',howSay:'Comment dit-on en {lang}…',pairs:'Associe les paires',
+ notQuite:'Pas tout à fait…',minusHeart:' −1 ❤️',goodAnswer:'Bonne réponse : {a}',willReview:' · ce mot reviendra en révision 🧠',
+ pairsRetry:'Tu y es arrivé, on la revoit à la fin.',allPairs:'Toutes les paires du premier coup.',inARow:'🔥 {n} d\'affilée !',
+ leaveTitle:'Tu pars déjà ?',leaveText:'Ta progression dans cette leçon sera perdue.',keepGoing:'Continuer la leçon',
+ noHeartsTitle:'Plus de cœurs !',noHeartsText:'Un cœur revient toutes les 30 min.<br>Tu peux aussi réviser ou utiliser tes gemmes.',
+ refill:'Recharger ❤️ ×5 — 💎 {n}',reviewHeart:'🧠 Réviser pour regagner un cœur',later:'Plus tard',reviewToast:'🧠 Révision : pas de cœur perdu, +1 ❤️ à la fin',
+ reviewDone:'Révision terminée !',reviewGain:'Tu regagnes 1 ❤️. Ta mémoire te remercie.',reviewMax:'Tes cœurs sont déjà au max 💪',precision:'Précision',
+ lessonPerfect:'Leçon parfaite !',lessonDone:'Leçon terminée !',perfectSub:'Sans faute ! {s} 💪',doneSub:'{g} Continue demain.',
+ shareLesson:'🔥 Jour {d} sur Loba\nJ\'apprends le {lang} : « {u} » ({p} % de précision).\n{hi} 🇨🇩',
+ shareReview:'🧠 Révision de {lang} faite sur Loba ({p} %). Les mots difficiles ne m\'échappent plus 🇨🇩',
+ questDone:'🎯 Quête accomplie : {q} → récupère 💎 {r}',copied:'Copié ✅',copyBlocked:'Copie bloquée ici : sélectionne le texte à la main',
+ // flash
+ newRecord:'Nouveau record !',timeUp:'Temps écoulé !',flashStrong:'{s} Vrai {n}.',flashRetry:'Recommence pour battre ton record.',score:'Score',
+ shareFlash:'⚡ J\'ai fait {n} points au Défi éclair de {lang} sur Loba en 60 secondes.\nTu parles {lang} ? Bats-moi si tu peux 😏🇨🇩',
+ // langues
+ whichLangSheet:'Quelle langue ?',sharedStats:'Ta série, tes XP et tes gemmes sont communs à toutes les langues.',newBadge:'Nouveau',
+ unitsDone:'{a} / {b} unités terminées',notStarted:'Pas encore commencé',resume:'{l} : on reprend où tu t\'étais arrêté !',
+ // dons
+ donDiaspora:'🌍 Depuis l\'étranger',donDiasporaSub:'Par PayPal, en carte ou avec ton solde PayPal.',donPaypal:'Donner avec PayPal',
+ donRdc:'🇨🇩 Depuis la RDC',donRdcSub:'Par Orange Money, en transfert vers ce numéro :',donCopyNum:'Copier le numéro',
+ donSteps:'Ouvre Orange Money (appli ou menu), choisis « Transfert », colle ce numéro et le montant de ton choix.',
+ donName:'Au nom de : {n}',donDone:'J\'ai fait un don ❤️',donThanks:'Matondo mingi ! Asante sana !',donThanksText:'Merci de faire vivre Loba. Le badge Motema est à toi.',
+ donSoon:'Bientôt disponible.',donUse:'À quoi servent les dons ?',donUse1:'🎙️ Enregistrer l\'audio avec des locuteurs',donUse2:'🌍 Ajouter le kikongo et le tshiluba',donUse3:'☁️ Payer les serveurs de sauvegarde',
+ donStoreNote:'Merci d\'utiliser Loba ! 🙏🏾',donAsk:'Loba t\'aide ? Un petit don le fait grandir ❤️',
+ // compte / sauvegarde
+ accTitle:'Ta progression, partout',accText:'Ajoute ton e-mail : ta progression sera rattachée à ton compte et tu pourras la récupérer sur un autre téléphone.',
+ accSave:'Rattacher mon e-mail',accRestore:'Récupérer ma progression',accCheck:'Vérifie ta boîte mail pour confirmer ✅',accLink:'Lien de connexion envoyé : ouvre-le sur cet appareil ✅',
+ badEmail:'E-mail invalide.',accEmailFirst:'Entre l\'e-mail de ton compte.',restored:'☁️ Progression récupérée !',
+ // mots génériques
+ day:'Jour'
+},
+en:{
+ streak:'Day streak',gems:'Gems',hearts:'Hearts',close:'Close',quit:'Quit',
+ sitTitle:'Real-life situations',sitSub:'Not word lists: real conversations you are going to have.',
+ challenges:'Challenges',challengesSub:'Take on challenges, earn 💎 and challenge your friends.',flashTitle:'Lightning challenge',record:'Best',
+ flash60:'⏱️ 60 seconds',flashSub:'Translate as many words as you can. A mistake = −3 seconds.',flashGo:'Start the challenge',questsTitle:'Daily quests',
+ hoursLeft:'⏳ {n} h left',myProfile:'My profile',settings:'Settings',stats:'Statistics',badges:'Badges',myWords:'My words',
+ privacy:'Privacy',reset:'Reset my progress',machine:'Sentence machine',streakShort:'Streak',copyShare:'Copy to share',
+ continue:'Continue',tabLearn:'Learn',tabSit:'Situations',tabChallenges:'Challenges',tabProfile:'Profile',
+ donTitle:'Support Loba',donSub:'Loba is free and ad-free. Your donations fund audio, new languages and servers.',
+ helloTitle:'Mbote! Jambo!<br>I\'m Koko.',helloSub:'The Congolese grey parrot who will get you speaking the country\'s languages, 5 minutes a day.',
+ go:'Let\'s go',appLangQ:'Which language do you want the app in?',whichLang:'Which language do you want to learn?',
+ whyLearn:'Why are you learning {lang}?',whereAt:'How much {lang} do you know?',howLong:'How much time per day?',
+ mFamille:'To talk with my family',mRacines:'To reconnect with my roots',mBelle:'My in-laws are Congolese',mCurio:'Out of curiosity',
+ lZero:'I\'m starting from scratch',lPassif:'I understand a bit, but I don\'t speak',lMoyen:'I can already get by',
+ g20:'5 min / day',g20s:'Casual',g40:'10 min / day',g40s:'Regular',g60:'15 min / day',g60s:'Intense',
+ testPassif:'Many people understand without daring to speak. Let\'s see what you already know!',testOther:'Show me what you already know!',
+ testCard:'📝 10 quick questions<br>❤️ No hearts lost<br>🔓 I unlock the units you already master',doTest:'Take the test',skipTest:'Skip, start from the beginning',
+ whatMeans:'What does this mean…',dunno:'I don\'t know',ready:'Your {lang} path is ready!',goal:'Goal: {m}',
+ unlockedN:'{n} unit(s) unlocked by the test',basics:'Starting with the basics',recoSit:'Recommended situation: {s}',
+ xpPerDay:'{n} XP per day',loveUnit:'You\'ll love the “{u}” unit',start:'Start',
+ dailyQuests:'Daily quests',rewardsReady:'{n} reward(s) to collect!',questsDone:'{a} / {b} completed',xpToday:'{a} / {b} XP today',
+ msgOfDay:'💌 Message of the day for your family',sendWA:'Send on WhatsApp',copy:'Copy',sent:'✓ Sent',familyLove:'💌 Your family will love it! Quest complete',
+ smartReview:'Smart review',reviewHard:'Your tricky words · +1 ❤️',reviewFill:'Fills up with your mistakes',buildOwn:'Build your own sentences',
+ reviewWait:'Do a few lessons: your mistakes will come back here at the right time.',supportCard:'Support Loba',supportCardSub:'Free and ad-free thanks to you',give:'Donate',
+ unit:'Unit',startBub:'START',lessonN:'LESSON {n}',chestOpened:'Chest already opened',chestLocked:'Finish the 4 lessons to open it',notYet:'Not unlocked yet',
+ chestTitle:'Chest opened!',chestText:'Unit “{u}” completed.<br>You win <b style="color:var(--sky)">💎 {g}</b>',great:'Great!',
+ recoForYou:'⭐ Recommended for you',online:'online',typing:'typing…',help:'🌐 Help',tryAgain:'“{a}” = “{b}”. Try again!',
+ convDone:'Conversation complete!',errors:'{n} mistake(s)',xpWon:'XP earned',stars:'Stars',keyPhrases:'📌 Phrases to remember',
+ shareSit:'💬 I just held a conversation in {lang} on Loba: “{s}” {st}\nNext step: the real call with the family 🇨🇩',
+ who:'Who?',doesWhat:'Does what?',complement:'Object',when:'When?',none:'none',negative:'Negative',otherChallenge:'New challenge',
+ buildIn:'🎯 Challenge: build it in {lang}',bravo5:'✅ Well done! +5 XP',
+ qXp:'Earn {n} XP',qLes:'Finish 2 lessons or situations',qMsg:'Send a message to a loved one in their language',qCombo:'Get 5 right answers in a row',qFlash:'Score 10 in the Lightning challenge',
+ received:'✓ Collected',
+ b1:'First step',b1d:'1st lesson',b2:'On a roll',b2d:'3-day streak',b3:'Flawless',b3d:'Perfect lesson',b4:'Chatterbox',b4d:'1st conversation',
+ b5:'Mwana malamu',b5d:'Message sent',b6:'Memory',b6d:'1st review',b7:'Lightning',b7d:'15 in Lightning',b8:'Unit done',b8d:'Open a chest',
+ b9:'Polyglot',b9d:'2 languages started',b10:'Motema',b10d:'Supported Loba',
+ sStreak:'Current streak',sXp:'Total XP',sLessons:'Lessons',sConv:'Conversations',sFlash:'Lightning best',sBadges:'Badges',
+ wordsSeen:'{l} · {a} seen · {b} mastered',noWords:'Do your first lesson to fill your notebook.',
+ appLanguage:'App language',learning:'Learning',save:'Backup',saveLocal:'On this device',saveCloud:'☁️ Synced',saveCloudAgo:'☁️ Synced {t}',
+ saveOff:'Local only',secure:'Get my progress on another device',justNow:'just now',
+ resetTitle:'Start over?',resetText:'Your streak, XP, gems and notebooks (all languages) will be erased.',resetYes:'Yes, reset',cancel:'Cancel',
+ check:'Check',translateSentence:'Translate this sentence',howSay:'How do you say it in {lang}…',pairs:'Match the pairs',
+ notQuite:'Not quite…',minusHeart:' −1 ❤️',goodAnswer:'Correct answer: {a}',willReview:' · this word will come back in review 🧠',
+ pairsRetry:'You got there, we\'ll see it again at the end.',allPairs:'All pairs on the first try.',inARow:'🔥 {n} in a row!',
+ leaveTitle:'Leaving already?',leaveText:'Your progress in this lesson will be lost.',keepGoing:'Keep going',
+ noHeartsTitle:'Out of hearts!',noHeartsText:'A heart comes back every 30 min.<br>You can also review or use your gems.',
+ refill:'Refill ❤️ ×5 — 💎 {n}',reviewHeart:'🧠 Review to earn a heart back',later:'Later',reviewToast:'🧠 Review: no hearts lost, +1 ❤️ at the end',
+ reviewDone:'Review complete!',reviewGain:'You get 1 ❤️ back. Your memory thanks you.',reviewMax:'Your hearts are already full 💪',precision:'Accuracy',
+ lessonPerfect:'Perfect lesson!',lessonDone:'Lesson complete!',perfectSub:'Flawless! {s} 💪',doneSub:'{g} See you tomorrow.',
+ shareLesson:'🔥 Day {d} on Loba\nI\'m learning {lang}: “{u}” ({p}% accuracy).\n{hi} 🇨🇩',
+ shareReview:'🧠 {lang} review done on Loba ({p}%). Tricky words don\'t escape me anymore 🇨🇩',
+ questDone:'🎯 Quest complete: {q} → collect 💎 {r}',copied:'Copied ✅',copyBlocked:'Copy blocked here: select the text manually',
+ newRecord:'New record!',timeUp:'Time\'s up!',flashStrong:'{s} A true {n}.',flashRetry:'Try again to beat your record.',score:'Score',
+ shareFlash:'⚡ I scored {n} points in Loba\'s {lang} Lightning challenge in 60 seconds.\nDo you speak {lang}? Beat me if you can 😏🇨🇩',
+ whichLangSheet:'Which language?',sharedStats:'Your streak, XP and gems are shared across all languages.',newBadge:'New',
+ unitsDone:'{a} / {b} units completed',notStarted:'Not started yet',resume:'{l}: picking up where you left off!',
+ donDiaspora:'🌍 From abroad',donDiasporaSub:'With PayPal, by card or with your PayPal balance.',donPaypal:'Donate with PayPal',
+ donRdc:'🇨🇩 From the DRC',donRdcSub:'With Orange Money, by transfer to this number:',donCopyNum:'Copy the number',
+ donSteps:'Open Orange Money (app or menu), choose “Transfer”, paste this number and the amount of your choice.',
+ donName:'Name: {n}',donDone:'I made a donation ❤️',donThanks:'Matondo mingi! Asante sana!',donThanksText:'Thank you for keeping Loba alive. The Motema badge is yours.',
+ donSoon:'Coming soon.',donUse:'What are donations for?',donUse1:'🎙️ Recording audio with native speakers',donUse2:'🌍 Adding Kikongo and Tshiluba',donUse3:'☁️ Paying for backup servers',
+ donStoreNote:'Thank you for using Loba! 🙏🏾',donAsk:'Is Loba helping you? A small donation helps it grow ❤️',
+ accTitle:'Your progress, everywhere',accText:'Add your email: your progress will be linked to your account and you can get it back on another phone.',
+ accSave:'Link my email',accRestore:'Recover my progress',accCheck:'Check your inbox to confirm ✅',accLink:'Sign-in link sent: open it on this device ✅',
+ badEmail:'Invalid email.',accEmailFirst:'Enter your account email.',restored:'☁️ Progress recovered!',
+ day:'Day'
+}};
+// Libellés de contenu propres à l'interface (motivations, voyage…)
+const LANG_NAMES={fr:{ln:'lingala',sw:'swahili'},en:{ln:'Lingala',sw:'Swahili'}};
 
-const MOTIVES={famille:['🏠','Parler avec ma famille','mama'],racines:['🌳','Renouer avec mes racines','mama'],belle:['💍','Ma belle-famille est congolaise','belle'],voyage:['✈️','Je pars à Kinshasa','ndjili'],curio:['🧠','Par curiosité','zando']};
-const LEVELS={zero:['🌱','Je pars de zéro'],passif:['👂🏾','Je comprends un peu, mais je ne parle pas'],moyen:['💬','Je me débrouille déjà']};
-const GOALS=[[20,'5 min / jour','Tranquille'],[40,'10 min / jour','Sérieux'],[60,'15 min / jour','Intense']];
+/* ======================= CONFIGURATION ======================= */
+// Dons : renseigne ton lien PayPal.me et ton numéro Orange Money. Laisse vide pour masquer.
+const DONATE={
+ paypalMe:"https://www.paypal.com/qrcodes/managed/6e8f32ab-1594-49a0-837a-af96dcb6c0fe",        // ex. 'christophembadu' → https://www.paypal.com/paypalme/christophembadu
+ orangeNumber:"+243 85 255 24 16",    // ex. '+243 89 000 00 00'
+ orangeName:"Christophe Mbadu"       // nom affiché du titulaire, ex. 'Christophe M.'
+};
+// Sauvegarde dans le cloud (Supabase). Clé "anon" publique : c'est normal qu'elle soit ici.
+const BACKEND={url:"https://ovpcnnigwxqvqvhxtufe.supabase.co",anonKey:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im92cGNubmlnd3hxdnF2aHh0dWZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQwODY0ODYsImV4cCI6MjEwOTY2MjQ4Nn0.OlQLatIDr6--xCqPoA0wlzlPGBFa0aaO5fSOlhs0SBU"};
+// Version publiée sur Google Play / App Store : ouverte avec ?app=1 (pas de liens de dons, exigence des stores).
+const STORE_BUILD=(()=>{try{if(new URLSearchParams(location.search).has('app'))localStorage.setItem('loba-store','1');return localStorage.getItem('loba-store')==='1'}catch(e){return false}})();
 
-const LPU=4,MAXH=5,REGEN=30*60*1000,REFILL=50;
-const QUESTS=[
- {id:'xp',ic:'⚡',t:()=>`Gagne ${S.goal} XP`,goal:()=>S.goal,val:()=>S.q.xp,r:15},
- {id:'les',ic:'📘',t:()=>'Termine 2 leçons ou situations',goal:()=>2,val:()=>S.q.lessons,r:15},
- {id:'msg',ic:'💌',t:()=>'Envoie un message en lingala à un proche',goal:()=>1,val:()=>S.q.sent,r:10},
- {id:'combo',ic:'🔥',t:()=>'Enchaîne 5 bonnes réponses',goal:()=>5,val:()=>S.q.comboMax,r:20},
- {id:'flash',ic:'⏱️',t:()=>'Marque 10 points au Défi éclair',goal:()=>10,val:()=>S.q.flashBest,r:20},
-];
-const BADGES=[
- {ic:'🌱',t:'Premier pas',d:'1re leçon',ok:()=>S.total>=1},
- {ic:'🔥',t:'Sur la lancée',d:'Série de 3 jours',ok:()=>S.bestStreak>=3},
- {ic:'🎯',t:'Sans faute',d:'Leçon parfaite',ok:()=>S.perfect>=1},
- {ic:'💬',t:'Bavard',d:'1re conversation',ok:()=>S.sitDone>=1},
- {ic:'💌',t:'Mwana malamu',d:'Message envoyé',ok:()=>S.sentTotal>=1},
- {ic:'🧠',t:'Mémoire',d:'1re révision',ok:()=>S.reviews>=1},
- {ic:'⚡',t:'Éclair',d:'15 au Défi éclair',ok:()=>S.flashBest>=15},
- {ic:'🏆',t:'Unité finie',d:'Ouvre un coffre',ok:()=>Object.keys(S.chests).length>=1},
- {ic:'💎',t:'Mozwi',d:'200 gemmes',ok:()=>S.gems>=200},
-];
-
-/* ======================= ÉTAT ======================= */
-const KEY='loba-state-v3';
+/* ======================= OUTILS DE BASE ======================= */
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const pick=(a,n)=>shuffle(a).slice(0,n);
+const norm=s=>s.toLowerCase().replace(/[?!.,…]/g,'').replace(/\s+/g,' ').trim();
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1)}
 const today=()=>new Date().toDateString();
 const yesterday=()=>{const d=new Date();d.setDate(d.getDate()-1);return d.toDateString()};
+const dayIdx=()=>Math.floor(Date.now()/864e5);
+
+/* ======================= TRADUCTION ======================= */
+const t=(k,v={})=>{let s=(UI[S.ui]&&UI[S.ui][k])??UI.fr[k]??k;for(const x in v)s=s.split('{'+x+'}').join(v[x]);return s};
+const tr=s=>S.ui==='en'&&EN[s]!==undefined?EN[s]:s;      // contenu (sens des mots, dialogues, astuces)
+const lname=c=>LANG_NAMES[S.ui][c||S.lang];
+function applyStatic(){
+ document.documentElement.lang=S.ui;
+ document.querySelectorAll('[data-i18n]').forEach(e=>e.innerHTML=t(e.dataset.i18n));
+ document.querySelectorAll('[data-i18n-title]').forEach(e=>e.title=t(e.dataset.i18nTitle));
+ document.querySelectorAll('[data-i18n-aria]').forEach(e=>e.setAttribute('aria-label',t(e.dataset.i18nAria)));
+}
+
+/* ======================= DONNÉES DE JEU ======================= */
+Object.values(LANGS).forEach(l=>{l.wm={};l.units.forEach(u=>u.words.forEach(w=>l.wm[w[0]]=w))});
+const MOTIVES={famille:['🏠','mFamille','mama'],racines:['🌳','mRacines','mama'],belle:['💍','mBelle','belle'],voyage:['✈️',null,'arrivee'],curio:['🧠','mCurio','zando']};
+const motiveLabel=k=>MOTIVES[k][1]?t(MOTIVES[k][1]):tr(LG.voyage);
+const LEVELS={zero:['🌱','lZero'],passif:['👂🏾','lPassif'],moyen:['💬','lMoyen']};
+const GOALS=[[20,'g20','g20s'],[40,'g40','g40s'],[60,'g60','g60s']];
+const LPU=4,MAXH=5,REGEN=30*60*1000,REFILL=50;
+const QUESTS=[
+ {id:'xp',ic:'⚡',t:()=>t('qXp',{n:S.goal}),goal:()=>S.goal,val:()=>S.q.xp,r:15},
+ {id:'les',ic:'📘',t:()=>t('qLes'),goal:()=>2,val:()=>S.q.lessons,r:15},
+ {id:'msg',ic:'💌',t:()=>t('qMsg'),goal:()=>1,val:()=>S.q.sent,r:10},
+ {id:'combo',ic:'🔥',t:()=>t('qCombo'),goal:()=>5,val:()=>S.q.comboMax,r:20},
+ {id:'flash',ic:'⏱️',t:()=>t('qFlash'),goal:()=>10,val:()=>S.q.flashBest,r:20},
+];
+const anyLang=f=>Object.values(S.per).some(f);
+const BADGES=[
+ ['🌱','b1',()=>S.total>=1],['🔥','b2',()=>S.bestStreak>=3],['🎯','b3',()=>S.perfect>=1],['💬','b4',()=>S.sitDone>=1],
+ ['💌','b5',()=>S.sentTotal>=1],['🧠','b6',()=>S.reviews>=1],['⚡','b7',()=>S.flashBest>=15],
+ ['🏆','b8',()=>anyLang(p=>Object.keys(p.chests).length>=1)],['🌍','b9',()=>Object.values(S.per).filter(p=>p.started).length>=2],
+ ['❤️','b10',()=>S.donated],
+];
+
+/* ======================= ÉTAT + SAUVEGARDE ======================= */
+const KEY='loba-state-v4';
 const newQ=()=>({day:today(),xp:0,lessons:0,comboMax:0,flashBest:0,sent:0,claimed:[]});
-const fresh=()=>({onboarded:false,motive:'famille',level:'zero',goal:40,hints:true,xp:0,gems:50,hearts:MAXH,heartTs:null,streak:0,bestStreak:0,lastDay:null,prog:{},chests:{},total:0,perfect:0,flashBest:0,sit:{},sitDone:0,sentTotal:0,reviews:0,words:{},q:newQ()});
-let S=fresh();
-try{const r=localStorage.getItem(KEY);if(r)S=Object.assign(fresh(),JSON.parse(r))}catch(e){}
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const freshLang=()=>({started:false,level:'zero',prog:{},chests:{},words:{},sit:{}});
+const detectUi=()=>((navigator.language||'fr').toLowerCase().startsWith('fr')?'fr':'en');
+const fresh=()=>({v:5,savedAt:0,ui:detectUi(),onboarded:false,lang:'ln',motive:'famille',goal:40,hints:true,xp:0,gems:50,hearts:MAXH,heartTs:null,streak:0,bestStreak:0,lastDay:null,total:0,perfect:0,flashBest:0,sitDone:0,sentTotal:0,reviews:0,donated:false,q:newQ(),per:{ln:freshLang(),sw:freshLang()}});
+
+// Nettoie un état venant du stockage ou du cloud : types attendus, valeurs bornées.
+function sanitize(o){
+ const S0=fresh();if(!o||typeof o!=='object')return S0;
+ const num=(v,d,min=0,max=1e9)=>Number.isFinite(+v)?Math.min(max,Math.max(min,+v)):d;
+ const out={...S0};
+ for(const k of ['xp','gems','streak','bestStreak','total','perfect','flashBest','sitDone','sentTotal','reviews'])out[k]=num(o[k],S0[k]);
+ out.savedAt=num(o.savedAt,0,0,1e15);out.hearts=num(o.hearts,MAXH,0,MAXH);out.heartTs=o.heartTs?num(o.heartTs,null,0,1e15):null;out.goal=[20,40,60].includes(+o.goal)?+o.goal:40;
+ out.ui=o.ui==='en'?'en':o.ui==='fr'?'fr':S0.ui;out.lang=o.lang in LANGS?o.lang:'ln';out.motive=o.motive in MOTIVES?o.motive:'famille';
+ out.onboarded=!!o.onboarded;out.hints=o.hints!==false;out.donated=!!o.donated;out.lastDay=typeof o.lastDay==='string'?o.lastDay:null;
+ const q=o.q||{};out.q={day:typeof q.day==='string'?q.day:today(),xp:num(q.xp,0),lessons:num(q.lessons,0),comboMax:num(q.comboMax,0),flashBest:num(q.flashBest,0),sent:num(q.sent,0,0,1),claimed:Array.isArray(q.claimed)?q.claimed.filter(x=>QUESTS.some(Q=>Q.id===x)):[]};
+ out.per={};
+ for(const c in LANGS){const p=(o.per||{})[c]||{},L=LANGS[c],f=freshLang();
+  f.started=!!p.started;f.level=p.level in LEVELS?p.level:'zero';
+  L.units.forEach(u=>{if(p.prog&&p.prog[u.id])f.prog[u.id]=num(p.prog[u.id],0,0,LPU);if(p.chests&&p.chests[u.id])f.chests[u.id]=true});
+  for(const k in (p.words||{}))if(L.wm[k])f.words[k]={lvl:num(p.words[k].lvl,0,0,5),ko:num(p.words[k].ko,0,0,999)};
+  L.sits.forEach(s=>{if(p.sit&&p.sit[s.id])f.sit[s.id]=num(p.sit[s.id],0,0,3)});
+  out.per[c]=f}
+ return out;
+}
+function loadLocal(){
+ try{const r=localStorage.getItem(KEY);if(r)return sanitize(JSON.parse(r));
+  // anciennes versions : on récupère la progression lingala
+  const v3=localStorage.getItem('loba-state-v3');
+  if(v3){const o=JSON.parse(v3);if(o.sit&&o.sit.ndjili){o.sit.arrivee=o.sit.ndjili}return sanitize({...o,per:{ln:{started:!!o.onboarded,level:o.level,prog:o.prog,chests:o.chests,words:o.words,sit:o.sit}}})}
+ }catch(e){}
+ return fresh();
+}
+let S=loadLocal();
+let LG=LANGS[S.lang];
+const LP=()=>S.per[S.lang];
+function save(){S.savedAt=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}cloud.schedule()}
+function setLang(c){S.lang=c;LG=LANGS[c];save()}
+
+/* ----- Sauvegarde cloud automatique (Supabase) ----- */
+let sb=null;
+try{if(BACKEND.url&&BACKEND.anonKey&&window.supabase)sb=window.supabase.createClient(BACKEND.url,BACKEND.anonKey)}catch(e){sb=null}
+const cloud={
+ timer:null,last:0,busy:false,
+ async session(){const {data}=await sb.auth.getSession();if(data.session)return data.session;const r=await sb.auth.signInAnonymously();if(r.error)throw r.error;return r.data.session},
+ schedule(){if(!sb||!S.onboarded)return;clearTimeout(this.timer);this.timer=setTimeout(()=>this.push(),2500)},
+ async push(){
+  if(!sb||this.busy)return;this.busy=true;
+  try{const s=await this.session();
+   const {error}=await sb.from('progress').upsert({user_id:s.user.id,data:S,updated_at:new Date(S.savedAt||Date.now()).toISOString()});
+   if(!error){this.last=Date.now();try{localStorage.setItem('loba-uid',s.user.id)}catch(e){}}
+  }catch(e){}finally{this.busy=false}
+ },
+ async pull(){
+  if(!sb)return;
+  try{
+   const {data:ss}=await sb.auth.getSession();if(!ss.session)return;
+   const uid=ss.session.user.id;let owner=null;try{owner=localStorage.getItem('loba-uid')}catch(e){}
+   const {data}=await sb.from('progress').select('data,updated_at').eq('user_id',uid).maybeSingle();
+   if(data&&data.data){
+    const remote=sanitize(data.data);
+    // Autre compte (lien de connexion) ou version plus récente ailleurs : le cloud gagne.
+    if(owner!==uid||remote.savedAt>S.savedAt){S=remote;LG=LANGS[S.lang];try{localStorage.setItem(KEY,JSON.stringify(S));localStorage.setItem('loba-uid',uid)}catch(e){}
+     applyStatic();if(S.onboarded&&LP().started){show('sLearn');if(owner&&owner!==uid)toast(t('restored'))}}
+   }else if(S.onboarded)this.push();
+   this.last=Date.now();
+  }catch(e){}
+ }
+};
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&cloud.timer){clearTimeout(cloud.timer);cloud.push()}});
+
+/* ======================= RÈGLES DE JEU ======================= */
 function dayCheck(){if(S.q.day!==today())S.q=newQ();if(S.lastDay&&S.lastDay!==today()&&S.lastDay!==yesterday())S.streak=0}
 function regen(){if(S.hearts>=MAXH){S.heartTs=null;return}if(!S.heartTs)S.heartTs=Date.now();const n=Math.floor((Date.now()-S.heartTs)/REGEN);if(n>0){S.hearts=Math.min(MAXH,S.hearts+n);S.heartTs=S.hearts>=MAXH?null:S.heartTs+n*REGEN}}
 function bumpStreak(){if(S.lastDay!==today()){S.streak=S.lastDay===yesterday()?S.streak+1:1;S.lastDay=today();S.bestStreak=Math.max(S.bestStreak,S.streak)}}
 function loseHeart(){if(S.hearts===MAXH)S.heartTs=Date.now();S.hearts=Math.max(0,S.hearts-1)}
 function addXp(n){S.xp+=n;S.q.xp+=n}
-function track(li,ok){if(!WORDMAP[li])return;const w=S.words[li]||(S.words[li]={lvl:0,ko:0});if(ok)w.lvl=Math.min(5,w.lvl+1);else{w.ko++;w.lvl=Math.max(0,w.lvl-2)}}
-const weakWords=()=>Object.entries(S.words).filter(([k,v])=>v.ko>0&&v.lvl<4&&WORDMAP[k]).sort((a,b)=>a[1].lvl-b[1].lvl||b[1].ko-a[1].ko).map(([k])=>WORDMAP[k]);
+function track(li,ok){if(!LG.wm[li])return;const W=LP().words;const w=W[li]||(W[li]={lvl:0,ko:0});if(ok)w.lvl=Math.min(5,w.lvl+1);else{w.ko++;w.lvl=Math.max(0,w.lvl-2)}}
+const weakWords=()=>Object.entries(LP().words).filter(([k,v])=>v.ko>0&&v.lvl<4&&LG.wm[k]).sort((a,b)=>a[1].lvl-b[1].lvl||b[1].ko-a[1].ko).map(([k])=>LG.wm[k]);
+const unitOpen=i=>i===0||(LP().prog[LG.units[i-1].id]||0)>=LPU;
+const openWords=()=>LG.units.filter((u,i)=>unitOpen(i)).flatMap(u=>u.words);
+const questsReady=()=>QUESTS.filter(q=>q.val()>=q.goal()&&!S.q.claimed.includes(q.id)).length;
+const unitsDone=c=>LANGS[c].units.filter(u=>(S.per[c].prog[u.id]||0)>=LPU).length;
 
-/* ======================= UTILS ======================= */
-const $=id=>document.getElementById(id);
-const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
-const pick=(a,n)=>shuffle(a).slice(0,n);
-const norm=s=>s.toLowerCase().replace(/[?!.,…]/g,'').replace(/\s+/g,' ').trim();
-const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
-let tt;function toast(t,ms=2200){const el=$('toast');el.textContent=t;el.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>el.classList.remove('on'),ms)}
+/* ======================= INTERFACE COMMUNE ======================= */
+let tt;function toast(m,ms=2200){const el=$('toast');el.textContent=m;el.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>el.classList.remove('on'),ms)}
 let AC;function sfx(kind){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();
  const seq={good:[[660,0],[880,.09]],bad:[[220,0],[180,.12]],win:[[523,0],[659,.1],[784,.2],[1046,.3]],coin:[[988,0],[1319,.07]],pop:[[740,0]]}[kind];
- seq.forEach(([f,t])=>{const o=AC.createOscillator(),g=AC.createGain();o.type=kind==='bad'?'sawtooth':'triangle';o.frequency.value=f;
-  g.gain.setValueAtTime(.0001,AC.currentTime+t);g.gain.exponentialRampToValueAtTime(kind==='pop'?.07:.18,AC.currentTime+t+.02);g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+t+.18);
-  o.connect(g).connect(AC.destination);o.start(AC.currentTime+t);o.stop(AC.currentTime+t+.2)})}catch(e){}}
-function sheet(html,btns){$('sheet').innerHTML=html;btns.forEach(b=>{const x=document.createElement('button');x.className='btn '+(b.cls||'');x.textContent=b.label;x.disabled=!!b.disabled;x.onclick=()=>{$('ov').classList.remove('on');b.fn&&b.fn()};$('sheet').appendChild(x)});$('ov').classList.add('on')}
-async function copy(text){try{await navigator.clipboard.writeText(text);toast('Copié ✅')}catch(e){toast('Copie bloquée ici : sélectionne le texte à la main')}}
-const unitOpen=i=>i===0||(S.prog[UNITS[i-1].id]||0)>=LPU;
-const openWords=()=>UNITS.filter((u,i)=>unitOpen(i)).flatMap(u=>u.words);
-const questsReady=()=>QUESTS.filter(q=>q.val()>=q.goal()&&!S.q.claimed.includes(q.id)).length;
-const dayIdx=()=>Math.floor(Date.now()/864e5);
+ seq.forEach(([f,d])=>{const o=AC.createOscillator(),g=AC.createGain();o.type=kind==='bad'?'sawtooth':'triangle';o.frequency.value=f;
+  g.gain.setValueAtTime(.0001,AC.currentTime+d);g.gain.exponentialRampToValueAtTime(kind==='pop'?.07:.18,AC.currentTime+d+.02);g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+d+.18);
+  o.connect(g).connect(AC.destination);o.start(AC.currentTime+d);o.stop(AC.currentTime+d+.2)})}catch(e){}}
+function closeSheet(){$('ov').classList.remove('on')}
+function sheet(html,btns){$('sheet').innerHTML=html;btns.forEach(b=>{const x=document.createElement('button');x.className='btn '+(b.cls||'');x.textContent=b.label;x.disabled=!!b.disabled;x.onclick=()=>{closeSheet();b.fn&&b.fn()};$('sheet').appendChild(x)});$('ov').classList.add('on')}
+$('ov').addEventListener('click',e=>{if(e.target.id==='ov')closeSheet()});
+async function copy(text){try{await navigator.clipboard.writeText(text);toast(t('copied'))}catch(e){toast(t('copyBlocked'))}}
+const btn=(cls,label,fn)=>{const x=document.createElement('button');x.className=cls;x.textContent=label;x.onclick=fn;return x};
 
 /* ======================= NAVIGATION ======================= */
 const MAIN=['sLearn','sSit','sQuests','sProfile'];let tab='sLearn';
@@ -529,226 +1002,308 @@ function show(id){
 }
 document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>show(b.dataset.tab));
 function render(){
- dayCheck();regen();save();
+ dayCheck();regen();
+ $('langBtn').textContent=LANG_NAMES.en[S.lang]+' ▾';
  $('tStreak').textContent=S.streak;$('tStreakW').classList.toggle('dim',S.lastDay!==today());$('tGems').textContent=S.gems;$('tHearts').textContent=S.hearts;
  $('navQ').classList.toggle('dot',questsReady()>0);
  ({sLearn:renderLearn,sSit:renderSits,sQuests:renderQuests,sProfile:renderProfile})[tab]();
 }
+function langSheet(){
+ $('sheet').innerHTML=`<h2>${t('whichLangSheet')}</h2><p>${t('sharedStats')}</p><div class="langlist" id="langList"></div>`;
+ Object.values(LANGS).forEach(l=>{const p=S.per[l.code],x=document.createElement('button');x.className='opt'+(l.code===S.lang?' cur':'');
+  x.innerHTML=`<b>${LANG_NAMES.en[l.code]}</b><small>${esc(tr(l.region))}</small><div class="pr">${p.started?t('unitsDone',{a:unitsDone(l.code),b:l.units.length}):t('notStarted')}</div>`;
+  x.onclick=()=>{closeSheet();if(l.code===S.lang)return;setLang(l.code);if(!LP().started)startOnb(true);else{sfx('pop');toast(t('resume',{l:LANG_NAMES.en[l.code]}));show(tab)}};
+  $('langList').appendChild(x)});
+ $('sheet').appendChild(btn('btn ghost',t('close'),closeSheet));$('ov').classList.add('on');
+}
+$('langBtn').onclick=langSheet;
+function setUi(code){S.ui=code;save();applyStatic();render()}
 
 /* ======================= ONBOARDING ======================= */
 let O={};
-function startOnb(){O={step:'hello'};show('onb');renderOnb()}
-function onbAsk(text){return `<div class="ask"><div class="mascot">🦜</div><div class="bubble">${text}</div></div>`}
+function startOnb(addLang){O={step:addLang?'level':'hello',add:!!addLang};show('onb');renderOnb()}
+const onbAsk=m=>`<div class="ask"><div class="mascot">🦜</div><div class="bubble">${m}</div></div>`;
 function onbProg(p){$('onbTop').style.visibility=p==null?'hidden':'visible';if(p!=null)$('onbProg').style.width=p+'%'}
+function choiceList(items,onPick){
+ const box=document.createElement('div');box.className='list';
+ items.forEach(([k,e,label,sub])=>{const x=document.createElement('button');x.className='opt big';x.innerHTML=`<span class="e">${e}</span><span>${esc(label)}${sub?`<small>${esc(sub)}</small>`:''}</span>`;
+  x.onclick=()=>{sfx('pop');x.classList.add('sel');setTimeout(()=>onPick(k),220)};box.appendChild(x)});
+ return box;
+}
 function renderOnb(){
  const b=$('onbBody');b.innerHTML='';
  if(O.step==='hello'){onbProg(null);
-  b.innerHTML=`<div class="hello"><div class="mascot">🦜</div><h1>Mbote !<br>Moi c'est Koko.</h1><p>Le perroquet gris du Congo qui va te faire parler le lingala de Kinshasa, 5 minutes par jour.</p></div><button class="btn" id="oGo">C'est parti</button>`;
-  $('oGo').onclick=()=>{sfx('pop');O.step='motive';renderOnb()};return}
- if(O.step==='motive'||O.step==='level'||O.step==='goal'){
-  const cfg={motive:[20,'Pourquoi tu apprends le lingala ?',Object.entries(MOTIVES).map(([k,v])=>[k,v[0],v[1]])],
-   level:[40,'Tu en es où avec le lingala ?',Object.entries(LEVELS).map(([k,v])=>[k,v[0],v[1]])],
-   goal:[60,'Combien de temps par jour ?',GOALS.map(g=>[g[0],'⏱️',g[1],g[2]])]}[O.step];
-  onbProg(cfg[0]);b.innerHTML=onbAsk(cfg[1])+'<div class="list" id="oList"></div>';
-  cfg[2].forEach(([k,e,t,s])=>{const x=document.createElement('button');x.className='opt big';x.innerHTML=`<span class="e">${e}</span><span>${t}${s?`<small>${s}</small>`:''}</span>`;
-   x.onclick=()=>{sfx('pop');x.classList.add('sel');setTimeout(()=>{
-    if(O.step==='motive'){S.motive=k;O.step='level'}
-    else if(O.step==='level'){S.level=k;S.hints=k==='zero';O.step='goal'}
-    else{S.goal=k;O.step=S.level==='zero'?'result':'testIntro'}
-    renderOnb()},220)};
-   $('oList').appendChild(x)});return}
+  b.innerHTML=`<div class="seg" style="max-width:220px;margin:0 auto"><button data-u="fr" class="${S.ui==='fr'?'on':''}">🇫🇷 Français</button><button data-u="en" class="${S.ui==='en'?'on':''}">🇬🇧 English</button></div>
+   <div class="hello"><div class="mascot">🦜</div><h1>${t('helloTitle')}</h1><p>${t('helloSub')}</p></div>`;
+  b.querySelectorAll('.seg button').forEach(x=>x.onclick=()=>{S.ui=x.dataset.u;applyStatic();renderOnb()});
+  b.appendChild(btn('btn',t('go'),()=>{sfx('pop');O.step='lang';renderOnb()}));return}
+ if(O.step==='lang'){onbProg(15);b.innerHTML=onbAsk(t('whichLang'));
+  b.appendChild(choiceList([['ln','🇨🇩','Lingala',tr(LANGS.ln.region)],['sw','🌍','Swahili',tr(LANGS.sw.region)]],k=>{setLang(k);O.step='motive';renderOnb()}));return}
+ if(O.step==='motive'){onbProg(30);b.innerHTML=onbAsk(t('whyLearn',{lang:lname()}));
+  b.appendChild(choiceList(Object.keys(MOTIVES).map(k=>[k,MOTIVES[k][0],motiveLabel(k)]),k=>{S.motive=k;O.step='level';renderOnb()}));return}
+ if(O.step==='level'){onbProg(O.add?20:45);b.innerHTML=onbAsk(t('whereAt',{lang:lname()}));
+  b.appendChild(choiceList(Object.entries(LEVELS).map(([k,v])=>[k,v[0],t(v[1])]),k=>{LP().level=k;S.hints=k==='zero';O.step=O.add?(k==='zero'?'result':'testIntro'):'goal';renderOnb()}));return}
+ if(O.step==='goal'){onbProg(60);b.innerHTML=onbAsk(t('howLong'));
+  b.appendChild(choiceList(GOALS.map(g=>[g[0],'⏱️',t(g[1]),t(g[2])]),k=>{S.goal=k;O.step=LP().level==='zero'?'result':'testIntro';renderOnb()}));return}
  if(O.step==='testIntro'){onbProg(70);
-  b.innerHTML=onbAsk(S.level==='passif'?'Beaucoup de gens de la diaspora comprennent sans oser parler. On va voir ce que tu sais déjà !':'Montre-moi ce que tu sais déjà !')+
-   `<div class="card" style="font-weight:700;color:var(--muted)">📝 10 questions rapides<br>❤️ Aucun cœur perdu<br>🔓 Je débloque les unités que tu maîtrises</div><div class="spacer"></div><button class="btn blue" id="oT">Faire le test</button><button class="btn ghost" id="oSkip">Passer, je commence au début</button>`;
-  $('oT').onclick=()=>{O.step='test';O.qs=UNITS.slice(0,5).flatMap((u,ui)=>pick(u.words,2).map(w=>({w,ui,pool:u.words})));O.i=0;O.ok={};renderOnb()};
-  $('oSkip').onclick=()=>{O.step='result';renderOnb()};return}
+  b.innerHTML=onbAsk(t(LP().level==='passif'?'testPassif':'testOther'))+`<div class="card" style="font-weight:700;color:var(--muted)">${t('testCard')}</div><div class="spacer"></div>`;
+  b.append(btn('btn blue',t('doTest'),()=>{O.step='test';O.qs=LG.units.slice(0,5).flatMap((u,ui)=>pick(u.words,2).map(w=>({w,ui,pool:u.words})));O.i=0;O.ok={};renderOnb()}),
+   btn('btn ghost',t('skipTest'),()=>{O.step='result';renderOnb()}));return}
  if(O.step==='test'){
   const q=O.qs[O.i];onbProg(70+O.i/O.qs.length*30);
-  b.innerHTML=`<div class="q-kind">Que veut dire…</div><div class="prompt"><div class="mascot">🦜</div><div class="bubble lg">${q.w[0]}</div></div><div class="opts" id="oOpts"></div><div class="spacer"></div><button class="btn ghost" id="oDk">Je ne sais pas</button>`;
-  const next=ok=>{if(ok)O.ok[q.ui]=(O.ok[q.ui]||0)+1;setTimeout(()=>{O.i++;if(O.i>=O.qs.length){placement();O.step='result'}renderOnb()},ok?450:900)};
-  shuffle([q.w,...pick(q.pool.filter(x=>x!==q.w),3)]).forEach(w=>{const x=document.createElement('button');x.className='opt';x.textContent=w[1];
-   x.onclick=()=>{if(O.lock)return;O.lock=true;const ok=w===q.w;x.classList.add(ok?'good':'bad');sfx(ok?'good':'bad');
-    if(!ok)[...document.querySelectorAll('#oOpts .opt')].find(y=>y.textContent===q.w[1]).classList.add('good');track(q.w[0],ok);setTimeout(()=>O.lock=false,ok?450:900);next(ok)};
-   $('oOpts').appendChild(x)});
-  $('oDk').onclick=()=>{if(O.lock)return;O.lock=true;setTimeout(()=>O.lock=false,900);[...document.querySelectorAll('#oOpts .opt')].find(y=>y.textContent===q.w[1]).classList.add('good');next(false)};return}
+  b.innerHTML=`<div class="q-kind">${t('whatMeans')}</div><div class="prompt"><div class="mascot">🦜</div><div class="bubble lg">${esc(q.w[0])}</div></div><div class="opts" id="oOpts"></div><div class="spacer"></div>`;
+  const good=tr(q.w[1]);
+  const next=ok=>{if(ok)O.ok[q.ui]=(O.ok[q.ui]||0)+1;setTimeout(()=>{O.lock=false;O.i++;if(O.i>=O.qs.length){placement();O.step='result'}renderOnb()},ok?450:900)};
+  const mark=()=>[...document.querySelectorAll('#oOpts .opt')].find(y=>y.textContent===good).classList.add('good');
+  shuffle([q.w,...pick(q.pool.filter(x=>x!==q.w),3)]).forEach(w=>$('oOpts').appendChild(btn('opt',tr(w[1]),e=>{if(O.lock)return;O.lock=true;const ok=w===q.w;e.target.classList.add(ok?'good':'bad');sfx(ok?'good':'bad');if(!ok)mark();track(q.w[0],ok);next(ok)})));
+  b.appendChild(btn('btn ghost',t('dunno'),()=>{if(O.lock)return;O.lock=true;mark();next(false)}));return}
  if(O.step==='result'){onbProg(100);
-  const unlocked=UNITS.filter(u=>(S.prog[u.id]||0)>=LPU).length;const reco=SITS.find(s=>s.id===MOTIVES[S.motive][2]);
-  b.innerHTML=onbAsk('Ton parcours est prêt !')+`<div class="res">
-   <div><span>${MOTIVES[S.motive][0]}</span>Objectif : ${MOTIVES[S.motive][1].toLowerCase()}</div>
-   <div><span>🔓</span>${unlocked?`${unlocked} unité${unlocked>1?'s':''} débloquée${unlocked>1?'s':''} grâce au test`:'On commence par les bases'}</div>
-   <div><span>${reco.ic}</span>Situation recommandée : ${reco.t}</div>
-   <div><span>🎯</span>${S.goal} XP par jour</div>
-   ${S.level!=='zero'?'<div><span>🆘</span>Tu vas adorer l\'unité « Loba malembe »</div>':''}</div>
-   <div class="spacer"></div><button class="btn" id="oEnd">Commencer</button>`;
-  $('oEnd').onclick=()=>{S.onboarded=true;save();sfx('win');show('sLearn')};}
+  const n=unitsDone(S.lang),reco=LG.sits.find(s=>s.id===MOTIVES[S.motive][2]);
+  b.innerHTML=onbAsk(t('ready',{lang:lname()}))+`<div class="res">
+   ${O.add?'':`<div><span>${MOTIVES[S.motive][0]}</span>${esc(t('goal',{m:motiveLabel(S.motive).toLowerCase()}))}</div>`}
+   <div><span>🔓</span>${n?t('unlockedN',{n}):t('basics')}</div>
+   <div><span>${reco.ic}</span>${esc(t('recoSit',{s:tr(reco.t)}))}</div>
+   <div><span>🎯</span>${t('xpPerDay',{n:S.goal})}</div>
+   ${LP().level!=='zero'?`<div><span>🆘</span>${esc(t('loveUnit',{u:tr(LG.units[1].title)}))}</div>`:''}
+   ${LG.note?`<div><span>📝</span><span style="font-size:14px;width:auto;text-align:left;color:var(--muted)">${esc(tr(LG.note))}</span></div>`:''}</div><div class="spacer"></div>`;
+  b.appendChild(btn('btn',t('start'),()=>{S.onboarded=true;LP().started=true;save();sfx('win');show('sLearn')}));}
 }
-function placement(){for(let i=0;i<5;i++){if((O.ok[i]||0)>=2)S.prog[UNITS[i].id]=LPU;else break}save()}
+function placement(){for(let i=0;i<5;i++){if((O.ok[i]||0)>=2)LP().prog[LG.units[i].id]=LPU;else break}save()}
 
 /* ======================= APPRENDRE ======================= */
+const donationsOn=()=>!STORE_BUILD&&!!(DONATE.paypalMe||DONATE.orangeNumber);
 function renderLearn(){
  const hc=$('homeCards');hc.innerHTML='';
  const r=questsReady(),dq=S.q.claimed.length;
  const c=document.createElement('button');c.className='card qcard';
- c.innerHTML=`<div class="ic">🎯</div><div class="tx">Quêtes du jour<small>${r?r+' récompense(s) à récupérer !':dq+' / '+QUESTS.length+' terminées'}</small><div class="minibar"><i style="width:${Math.min(100,S.q.xp/S.goal*100)}%"></i></div><small>${Math.min(S.q.xp,S.goal)} / ${S.goal} XP aujourd'hui</small></div><div style="font-size:22px">›</div>`;
+ c.innerHTML=`<div class="ic">🎯</div><div class="tx">${t('dailyQuests')}<small>${r?t('rewardsReady',{n:r}):t('questsDone',{a:dq,b:QUESTS.length})}</small><div class="minibar"><i style="width:${Math.min(100,S.q.xp/S.goal*100)}%"></i></div><small>${t('xpToday',{a:Math.min(S.q.xp,S.goal),b:S.goal})}</small></div><div style="font-size:22px">›</div>`;
  c.onclick=()=>show('sQuests');hc.appendChild(c);
- const [li,fr]=MSGS[dayIdx()%MSGS.length];
+ const [li,fr]=LG.msgs[dayIdx()%LG.msgs.length];
  const m=document.createElement('div');m.className='card msg';
- m.innerHTML=`${S.q.sent?'<div class="done">✓ Envoyé</div>':''}<div class="k">💌 Message du jour pour ta famille</div><div class="li">${li}</div><div class="fr">${fr}</div>
-  <div class="row"><a id="waBtn" href="https://wa.me/?text=${encodeURIComponent(li)}" target="_blank" rel="noopener">Envoyer sur WhatsApp</a><button id="msgCopy">Copier</button></div>`;
+ m.innerHTML=`${S.q.sent?`<div class="done">${t('sent')}</div>`:''}<div class="k">${t('msgOfDay')}</div><div class="li">${esc(li)}</div><div class="fr">${esc(tr(fr))}</div>
+  <div class="row"><a id="waBtn" href="https://wa.me/?text=${encodeURIComponent(li)}" target="_blank" rel="noopener noreferrer">${t('sendWA')}</a><button id="msgCopy">${t('copy')}</button></div>`;
  hc.appendChild(m);
- const sent=()=>{if(!S.q.sent){S.q.sent=1;S.sentTotal++;save();sfx('coin');setTimeout(()=>{toast('💌 Ta famille va adorer ! Quête accomplie');render()},400)}};
+ const sent=()=>{if(!S.q.sent){S.q.sent=1;S.sentTotal++;save();sfx('coin');setTimeout(()=>{toast(t('familyLove'));render()},400)}};
  m.querySelector('#waBtn').onclick=sent;m.querySelector('#msgCopy').onclick=()=>{copy(li);sent()};
- const weak=weakWords();const r2=document.createElement('div');r2.className='row2';
- r2.innerHTML=`<button class="card mini ${weak.length>=3?'':'off'}" id="revBtn">${weak.length>=3?`<span class="tag">${weak.length}</span>`:''}<div class="ic">🧠</div><b>Révision intelligente</b><small>${weak.length>=3?'Tes mots difficiles · +1 ❤️':'Se remplit avec tes erreurs'}</small></button>
-  <button class="card mini" id="machBtn"><div class="ic">🧩</div><b>Machine à phrases</b><small>Crée tes propres phrases</small></button>`;
+ const weak=weakWords(),r2=document.createElement('div');r2.className='row2';
+ r2.innerHTML=`<button class="card mini ${weak.length>=3?'':'off'}" id="revBtn">${weak.length>=3?`<span class="tag">${weak.length}</span>`:''}<div class="ic">🧠</div><b>${t('smartReview')}</b><small>${t(weak.length>=3?'reviewHard':'reviewFill')}</small></button>
+  <button class="card mini" id="machBtn"><div class="ic">🧩</div><b>${t('machine')}</b><small>${t('buildOwn')}</small></button>`;
  hc.appendChild(r2);
- $('revBtn').onclick=()=>weak.length>=3?startReview():toast('Fais quelques leçons : tes erreurs reviendront ici au bon moment.');
+ $('revBtn').onclick=()=>weak.length>=3?startReview():toast(t('reviewWait'));
  $('machBtn').onclick=startMach;
+ if(donationsOn()){const p=document.createElement('button');p.className='card promo';
+  p.innerHTML=`<div class="ic">❤️</div><div style="flex:1"><b>${t('supportCard')}</b><small>${t('supportCardSub')}</small></div><div class="go">${t('give')}</div>`;
+  p.onclick=openDonate;hc.appendChild(p)}
+ if(LG.note){const n=document.createElement('div');n.className='unit-tip on';n.style.marginTop='12px';n.textContent='📝 '+tr(LG.note);hc.appendChild(n)}
 
  const path=$('path');path.innerHTML='';const offs=[0,48,72,48,0,-48,-72,-48];let k=0;
- UNITS.forEach((u,i)=>{
-  const open=unitOpen(i),done=S.prog[u.id]||0;
+ LG.units.forEach((u,i)=>{
+  const open=unitOpen(i),done=LP().prog[u.id]||0;
   const head=document.createElement('div');head.className='unit-head';head.style.background=open?u.color:'#b9bfcc';if(u.dark&&open)head.style.color='#1d2433';
-  head.innerHTML=`<div><div class="k">Unité ${i+1} · ${Math.min(done,LPU)}/${LPU}</div><div class="t">${u.title}</div></div><button class="tipbtn" aria-label="Astuce">📖</button>`;
-  const tip=document.createElement('div');tip.className='unit-tip';tip.innerHTML='💡 '+u.tip;head.querySelector('.tipbtn').onclick=()=>tip.classList.toggle('on');
+  head.innerHTML=`<div><div class="k">${LANG_NAMES.en[S.lang]} · ${t('unit')} ${i+1} · ${Math.min(done,LPU)}/${LPU}</div><div class="t">${esc(tr(u.title))}</div></div><button class="tipbtn" aria-label="Astuce">📖</button>`;
+  const tip=document.createElement('div');tip.className='unit-tip';tip.innerHTML='💡 '+tr(u.tip);head.querySelector('.tipbtn').onclick=()=>tip.classList.toggle('on');
   path.append(head,tip);
   const nodes=document.createElement('div');nodes.className='nodes';
   for(let n=0;n<=LPU;n++){
    const w=document.createElement('div');w.className='nodewrap';w.style.marginLeft=offs[k++%offs.length]+'px';
    const b=document.createElement('button');b.className='node';
    if(n===LPU){
-    b.classList.add('chest');const claimed=S.chests[u.id],ready=done>=LPU&&!claimed;b.textContent=claimed?'🏆':'🎁';
+    b.classList.add('chest');const claimed=LP().chests[u.id],ready=done>=LPU&&!claimed;b.textContent=claimed?'🏆':'🎁';
     if(ready||claimed){b.style.background=claimed?'#f3d77a':'var(--sun)';b.style.boxShadow='0 7px 0 var(--sun-d)'}else b.classList.add('locked');
     if(ready)b.classList.add('ready');
-    b.onclick=()=>ready?openChest(u):toast(claimed?'Coffre déjà ouvert':'Termine les 4 leçons pour l\'ouvrir');
+    b.onclick=()=>ready?openChest(u):toast(t(claimed?'chestOpened':'chestLocked'));
    }else{
     const isDone=n<done,isCur=open&&n===done;
     if(isDone||isCur){b.style.background=u.color;b.style.boxShadow=`0 7px 0 ${u.shadow}`;if(u.dark)b.style.color='#1d2433'}else b.classList.add('locked');
     b.textContent=isDone?'✓':isCur?(n===LPU-1?'💪':u.icon):'🔒';if(isDone)b.style.fontSize='34px';
-    if(isCur){b.classList.add('cur');const bub=document.createElement('div');bub.className='startbub';bub.textContent=i===0&&n===0?'COMMENCER':'LEÇON '+(n+1);w.appendChild(bub)}
-    b.onclick=()=>(isDone||isCur)?startLesson(i):toast('Pas encore débloqué');
+    if(isCur){b.classList.add('cur');const bub=document.createElement('div');bub.className='startbub';bub.textContent=i===0&&n===0?t('startBub'):t('lessonN',{n:n+1});w.appendChild(bub)}
+    b.onclick=()=>(isDone||isCur)?startLesson(i):toast(t('notYet'));
    }
    w.appendChild(b);nodes.appendChild(w);
   }
   path.appendChild(nodes);
  });
 }
-function openChest(u){const g=25;S.gems+=g;S.chests[u.id]=true;save();sfx('win');
- sheet(`<div class="big">🎁</div><h2>Coffre ouvert !</h2><p>Unité « ${u.title} » terminée.<br>Tu gagnes <b style="color:var(--sky)">💎 ${g}</b></p>`,[{label:'Super !',cls:'blue',fn:render}])}
+function openChest(u){const g=25;S.gems+=g;LP().chests[u.id]=true;save();sfx('win');
+ sheet(`<div class="big">🎁</div><h2>${t('chestTitle')}</h2><p>${t('chestText',{u:esc(tr(u.title)),g})}</p>`,[{label:t('great'),cls:'blue',fn:render}])}
+
+/* ======================= SOUTENIR LOBA (DONS) ======================= */
+function openDonate(){if(!donationsOn())return;show('don');renderDonate()}
+function renderDonate(){
+ const b=$('donBody');b.innerHTML='';
+ const card=(title,sub)=>{const d=document.createElement('div');d.className='card';d.style.marginBottom='14px';d.innerHTML=`<b style="font-size:18px">${title}</b><p style="color:var(--muted);font-weight:700;margin:4px 0 12px">${sub}</p>`;return d};
+ if(DONATE.paypalMe){
+  const d=card(t('donDiaspora'),t('donDiasporaSub'));
+  const a=document.createElement('a');a.className='btn blue';a.target='_blank';a.rel='noopener noreferrer';
+  a.href=/^https:\/\/www\.paypal\.com\//.test(DONATE.paypalMe)?DONATE.paypalMe:'https://www.paypal.com/paypalme/'+encodeURIComponent(DONATE.paypalMe);a.textContent=t('donPaypal');d.appendChild(a);b.appendChild(d);
+ }
+ if(DONATE.orangeNumber){
+  const d=card(t('donRdc'),t('donRdcSub'));
+  const num=document.createElement('div');num.style.cssText="font-family:'Baloo 2';font-size:30px;font-weight:800;text-align:center;letter-spacing:1px;color:#ff7900";num.textContent=DONATE.orangeNumber;d.appendChild(num);
+  if(DONATE.orangeName){const n=document.createElement('div');n.className='pw-note';n.style.marginTop='0';n.textContent=t('donName',{n:DONATE.orangeName});d.appendChild(n)}
+  const c=btn('btn',t('donCopyNum'),()=>copy(DONATE.orangeNumber.replace(/\s/g,'')));c.style.cssText='margin-top:12px;background:#ff7900;box-shadow:0 5px 0 #c65e00';d.appendChild(c);
+  const s=document.createElement('p');s.style.cssText='font-size:13px;color:var(--muted);font-weight:700;margin-top:12px';s.textContent=t('donSteps');d.appendChild(s);
+  b.appendChild(d);
+ }
+ const use=document.createElement('div');use.className='perks';use.innerHTML=`<div><span>❓</span><div>${t('donUse')}</div></div><div><span></span><div>${t('donUse1')}</div></div><div><span></span><div>${t('donUse2')}</div></div><div><span></span><div>${t('donUse3')}</div></div>`;b.appendChild(use);
+ b.appendChild(btn('btn ghost',t('donDone'),()=>{S.donated=true;save();sfx('win');sheet(`<div class="big">❤️</div><h2>${t('donThanks')}</h2><p>${t('donThanksText')}</p>`,[{label:t('great'),cls:'gold',fn:()=>show(tab)}])}));
+}
+$('donQuit').onclick=()=>show(tab);
 
 /* ======================= SITUATIONS ======================= */
 function renderSits(){
  const box=$('sits');box.innerHTML='';const reco=MOTIVES[S.motive][2];
- [...SITS].sort((a,b)=>(b.id===reco)-(a.id===reco)).forEach(s=>{
-  const st=S.sit[s.id]||0;const x=document.createElement('button');x.className='card sit';
-  x.innerHTML=`${s.id===reco?'<div class="reco">⭐ Recommandé pour toi</div>':''}<div class="ic" style="background:${s.bg}">${s.ic}</div><div class="bd"><b>${s.t}</b><small>${s.d}</small><div class="stars">${'⭐'.repeat(st)}${'☆'.repeat(3-st)}</div></div><div style="font-size:22px;color:var(--muted)">›</div>`;
+ [...LG.sits].sort((a,b)=>(b.id===reco)-(a.id===reco)).forEach(s=>{
+  const st=LP().sit[s.id]||0,x=document.createElement('button');x.className='card sit';
+  x.innerHTML=`${s.id===reco?`<div class="reco">${t('recoForYou')}</div>`:''}<div class="ic" style="background:${s.bg}">${s.ic}</div><div class="bd"><b>${esc(tr(s.t))}</b><small>${esc(tr(s.d))}</small><div class="stars">${'⭐'.repeat(st)}${'☆'.repeat(3-st)}</div></div><div style="font-size:22px;color:var(--muted)">›</div>`;
   x.onclick=()=>startSit(s.id);box.appendChild(x);
  });
 }
 let D=null;
 function startSit(id){
- const s=SITS.find(x=>x.id===id);D={s,i:0,miss:0,lock:false};show('dlg');
- $('dWho').textContent=s.who;$('dAv').textContent=s.av;$('chat').innerHTML=`<div class="dtip">💡 ${s.tip}</div>`;$('choices').innerHTML='';
+ const s=LG.sits.find(x=>x.id===id);D={s,i:0,miss:0,lock:false};show('dlg');
+ $('dWho').textContent=tr(s.who);$('dAv').textContent=s.av;$('dStatus').textContent=t('online');$('dHint').textContent=t('help');
+ $('chat').innerHTML=`<div class="dtip">💡 ${esc(tr(s.tip))}</div>`;$('choices').innerHTML='';
  $('dHint').classList.toggle('on',S.hints);setTimeout(npcSay,500);
 }
 function addBub(kind,li,fr){
- const d=document.createElement('div');d.className='bub '+kind;d.innerHTML=`<b>${li}</b><small class="${kind==='npc'&&!S.hints?'hid':''}">${fr}</small>`;
+ const d=document.createElement('div');d.className='bub '+kind;d.innerHTML=`<b>${esc(li)}</b><small class="${kind==='npc'&&!S.hints?'hid':''}">${esc(tr(fr))}</small>`;
  const sm=d.querySelector('small');sm.onclick=()=>sm.classList.remove('hid');
- $('chat').appendChild(d);d.scrollIntoView({behavior:'smooth',block:'end'});return d;
+ $('chat').appendChild(d);d.scrollIntoView({behavior:'smooth',block:'end'});
 }
 function npcSay(){
  if(!D)return;const st=D.s.steps[D.i];
- const t=document.createElement('div');t.className='bub npc typing';t.textContent='•••';$('chat').appendChild(t);$('dStatus').textContent="en train d'écrire…";
- setTimeout(()=>{if(!D)return;t.remove();$('dStatus').textContent='en ligne';addBub('npc',st.li,st.fr);sfx('pop');renderChoices()},900);
+ const ty=document.createElement('div');ty.className='bub npc typing';ty.textContent='•••';$('chat').appendChild(ty);$('dStatus').textContent=t('typing');
+ setTimeout(()=>{if(!D)return;ty.remove();$('dStatus').textContent=t('online');addBub('npc',st.li,st.fr);sfx('pop');renderChoices()},900);
 }
 function renderChoices(){
  const st=D.s.steps[D.i],box=$('choices');box.innerHTML='';
- shuffle(st.opts).forEach(o=>{const x=document.createElement('button');x.className='opt';x.innerHTML=`${o[0]}${S.hints?`<small>${o[1]}</small>`:''}`;
+ shuffle(st.opts).forEach(o=>{const x=document.createElement('button');x.className='opt';x.innerHTML=`${esc(o[0])}${S.hints?`<small>${esc(tr(o[1]))}</small>`:''}`;
   x.onclick=()=>{if(D.lock)return;
    if(o[2]===1){D.lock=true;track(o[0],true);sfx('good');box.innerHTML='';addBub('me',o[0],o[1]);D.i++;D.lock=false;
     if(D.i<D.s.steps.length)setTimeout(npcSay,500);else setTimeout(endSit,900)}
-   else{D.miss++;sfx('bad');x.classList.add('bad');x.disabled=true;toast(o[3]||`« ${o[0]} » = « ${o[1]} ». Essaie encore !`,2600)}};
+   else{D.miss++;sfx('bad');x.classList.add('bad');x.disabled=true;toast(o[3]?tr(o[3]):t('tryAgain',{a:o[0],b:tr(o[1])}),2600)}};
   box.appendChild(x)});
 }
 $('dHint').onclick=()=>{S.hints=!S.hints;save();$('dHint').classList.toggle('on',S.hints);if(S.hints)document.querySelectorAll('.bub small').forEach(s=>s.classList.remove('hid'));if(D&&$('choices').children.length)renderChoices()};
 $('dQuit').onclick=()=>{D=null;show('sSit')};
 function endSit(){
- const s=D.s,stars=D.miss===0?3:D.miss<=2?2:1;S.sit[s.id]=Math.max(S.sit[s.id]||0,stars);S.sitDone++;S.q.lessons++;addXp(15);bumpStreak();save();sfx('win');
+ const s=D.s,stars=D.miss===0?3:D.miss<=2?2:1;LP().sit[s.id]=Math.max(LP().sit[s.id]||0,stars);S.sitDone++;S.q.lessons++;addXp(15);bumpStreak();save();sfx('win');
  const kit=s.steps.map(st=>st.opts.find(o=>o[2]===1));
- showEnd({icon:s.ic,title:'Conversation réussie !',sub:`${s.t} · ${D.miss} erreur${D.miss>1?'s':''}`,labA:'XP gagnés',a:'+15',labB:'Étoiles',b:'⭐'.repeat(stars),
-  extra:`<div class="lab" style="margin-top:0">📌 Tes phrases à retenir</div><div class="kit">${kit.map(o=>`<div>${o[0]}<small>${o[1]}</small></div>`).join('')}</div>`,
-  share:`💬 Je viens de tenir une conversation en lingala sur Loba : « ${s.t} » ${'⭐'.repeat(stars)}\nProchaine étape : le vrai appel à la famille 🇨🇩`,back:'sSit'});
+ showEnd({icon:s.ic,title:t('convDone'),sub:`${tr(s.t)} · ${t('errors',{n:D.miss})}`,labA:t('xpWon'),a:'+15',labB:t('stars'),b:'⭐'.repeat(stars),
+  extra:`<div class="lab" style="margin-top:0">${t('keyPhrases')}</div><div class="kit">${kit.map(o=>`<div>${esc(o[0])}<small>${esc(tr(o[1]))}</small></div>`).join('')}</div>`,
+  share:t('shareSit',{lang:lname(),s:tr(s.t),st:'⭐'.repeat(stars)}),back:'sSit'});
  D=null;
 }
 
 /* ======================= MACHINE À PHRASES ======================= */
-const PRON=[['na','Je','je'],['o','Tu','tu'],['a','Il / Elle','il/elle'],['to','Nous','nous'],['bo','Vous','vous'],['ba','Ils / Elles','ils/elles']];
-const ETRE=['suis','es','est','sommes','êtes','sont'],ALLER=['vais','vas','va','allons','allez','vont'];
-const VERBS=[['kolia','manger',[['mbisi','du poisson'],['pondu','du pondu'],['nyama','de la viande']]],['komela','boire',[['mai','de l\'eau']]],['kokende','aller',[['na zando','au marché'],['na ndako','à la maison']]],['koya','venir',[['na ndako','à la maison']]],['kolala','dormir',[]],['kosala','travailler',[]],['koloba','parler',[['lingala','lingala']]],['koyekola','apprendre',[['lingala','le lingala']]]];
+const FR_SUBJ=['je','tu','il/elle','nous','vous','ils/elles'],EN_SUBJ=['I','you','he/she','we','you (all)','they'];
+const ETRE=['suis','es','est','sommes','êtes','sont'],ALLER=['vais','vas','va','allons','allez','vont'],BE=['am','are','is','are','are','are'];
+const EN_VERB={manger:['eat','eating'],boire:['drink','drinking'],aller:['go','going'],venir:['come','coming'],dormir:['sleep','sleeping'],travailler:['work','working'],parler:['speak','speaking'],apprendre:['learn','learning']};
+const EN_PRON=['I','You','He / She','We','You (all)','They'];
+function meaning(o,vb){
+ const comp=o.c>=0?vb.c[o.c]:null;
+ if(S.ui==='en'){const [inf,ing]=EN_VERB[vb.fr],be=BE[o.p],neg=o.n?' not':'';
+  let s=`${EN_SUBJ[o.p]} ${be}${neg} `+(o.t==='prog'?ing:`going to ${inf}`);if(comp)s+=' '+tr(comp[1]);return cap(s)}
+ const aux=(o.t==='prog'?ETRE:ALLER)[o.p],vow=/^[aeéêiou]/.test(aux);
+ let fr=FR_SUBJ[o.p]+' '+(o.n?(vow?"n'":'ne ')+aux+' pas':aux);
+ fr+=o.t==='prog'?(/^[aeiou]/.test(vb.fr)?" en train d'":' en train de ')+vb.fr:' '+vb.fr;
+ if(comp)fr+=' '+comp[1];return cap(fr);
+}
+const subjOf=p=>(S.ui==='en'?EN_SUBJ:FR_SUBJ)[p];
+const verbOf=vb=>S.ui==='en'?'to '+EN_VERB[vb.fr][0]:vb.fr;
+function buildLn(o){
+ const m=LANGS.ln.mach,px=m.pron[o.p][0],vb=m.verbs[o.v],root=vb.v.slice(2),comp=o.c>=0?vb.c[o.c]:null;let h,s;
+ if(o.t==='prog'){s=`${px}zali ${vb.v}`;h=`<span class="mp">${cap(px)}</span><span class="ma">zali</span> <span class="mv">${vb.v}</span>`}
+ else{s=`${px}ko${root}`;h=`<span class="mp">${cap(px)}</span><span class="mt">ko</span><span class="mv">${root}</span>`}
+ if(comp){s+=' '+comp[0];h+=' '+esc(comp[0])}
+ if(o.n){s+=' te';h+=' <span class="mn">te</span>'}
+ const leg=[['lp',`${px} = ${subjOf(o.p)}`],o.t==='prog'?['la',S.ui==='en'?'zali = to be (‑ing)':'zali = être (en train de)']:['lt',S.ui==='en'?'ko = going to (future)':'ko = futur proche'],['lv',`${o.t==='prog'?vb.v:root} = ${verbOf(vb)}`]];
+ if(o.n)leg.push(['ln',S.ui==='en'?'te = negation':'te = négation']);
+ return {liH:h,liT:cap(s),leg};
+}
+function buildSw(o){
+ const m=LANGS.sw.mach,vb=m.verbs[o.v],comp=o.c>=0?vb.c[o.c]:null;let px,mk,stem;
+ if(!o.n){px=m.pron[o.p][0];mk=o.t==='prog'?'na':'ta';stem=vb.st}
+ else if(o.t==='fut'){px=m.neg[o.p];mk='ta';stem=vb.st}
+ else{px=m.neg[o.p];mk='';stem=vb.ng;if(px==='ham'&&/^[aeiou]/.test(stem))px='hamw'}
+ let s=px+mk+stem,h=`<span class="${o.n?'mn':'mp'}">${cap(px)}</span>${mk?`<span class="${mk==='na'?'ma':'mt'}">${mk}</span>`:''}<span class="mv">${stem}</span>`;
+ if(comp){s+=' '+comp[0];h+=' '+esc(comp[0])}
+ const en=S.ui==='en',leg=[o.n?['ln',`${px} = ${subjOf(o.p)} (${en?'negative':'négatif'})`]:['lp',`${px} = ${subjOf(o.p)}`]];
+ leg.push(mk==='na'?['la',en?'na = present':'na = présent']:mk==='ta'?['lt',en?'ta = future':'ta = futur']:['ln',en?'-a → -i = present negative':'-a → -i = négation au présent']);
+ leg.push(['lv',`${stem} = ${verbOf(vb)}`]);
+ return {liH:h,liT:cap(s),leg};
+}
+const BUILD={ln:buildLn,sw:buildSw};
 let M=null;
 function startMach(){M={p:0,v:0,c:-1,t:'prog',n:false,wins:0};newTarget();show('mach');renderMach()}
-function newTarget(){const v=Math.random()*VERBS.length|0;const cs=VERBS[v][2];M.target={p:Math.random()*6|0,v,c:cs.length&&Math.random()<.7?Math.random()*cs.length|0:-1,t:Math.random()<.5?'prog':'fut',n:Math.random()<.3};M.won=false}
-function build(o){
- const [px]=PRON[o.p],[vb,inf,cs]=VERBS[o.v],comp=o.c>=0?cs[o.c]:null,root=vb.slice(2);
- let liH,liT;
- if(o.t==='prog'){liT=`${px}zali ${vb}`;liH=`<span class="mp">${px}</span><span class="ma">zali</span> <span class="mv">${vb}</span>`}
- else{liT=`${px}ko${root}`;liH=`<span class="mp">${px}</span><span class="mt">ko</span><span class="mv">${root}</span>`}
- if(comp){liT+=' '+comp[0];liH+=' '+comp[0]}
- if(o.n){liT+=' te';liH+=' <span class="mn">te</span>'}
- const subj=PRON[o.p][2],aux=(o.t==='prog'?ETRE:ALLER)[o.p],vow=/^[aeéêiou]/.test(aux);
- let fr=subj+' '+(o.n?(vow?"n'":'ne ')+aux+' pas':aux);
- fr+=o.t==='prog'?(/^[aeiou]/.test(inf)?" en train d'":' en train de ')+inf:' '+inf;
- if(comp)fr+=' '+comp[1];
- liH=liH.replace(`<span class="mp">${px}</span>`,`<span class="mp">${cap(px)}</span>`);
- return {liH,liT:cap(liT),fr:cap(fr)};
-}
+function newTarget(){const mc=LG.mach,v=Math.random()*mc.verbs.length|0,cs=mc.verbs[v].c;M.target={p:Math.random()*6|0,v,c:cs.length&&Math.random()<.7?Math.random()*cs.length|0:-1,t:Math.random()<.5?'prog':'fut',n:Math.random()<.3};M.won=false}
 function renderMach(){
- const out=build(M),tg=build(M.target),b=$('mBody');
- const same=['p','v','c','t','n'].every(k=>M[k]===M.target[k]);
- if(same&&!M.won){M.won=true;M.wins++;addXp(5);save();sfx('win');setTimeout(()=>{newTarget();renderMach()},1600)}
- const [px]=PRON[M.p],[vb,inf]=VERBS[M.v];
- b.innerHTML=`<div class="target ${M.won?'win':''}"><div class="t"><small>${M.won?'✅ Bravo ! +5 XP':'🎯 Défi : construis en lingala'}</small><b>« ${tg.fr} »</b></div><div class="w">🏅 ${M.wins}</div></div>
-  <div class="out"><div class="li">${out.liH}</div><div class="fr">${out.fr}</div>
-   <div class="leg"><span class="lp">${px} = ${PRON[M.p][2]}</span>${M.t==='prog'?'<span class="la">zali = être (en train de)</span>':'<span class="lt">ko = futur proche</span>'}<span class="lv">${M.t==='prog'?vb:vb.slice(2)} = ${inf}</span>${M.n?'<span class="ln">te = négation</span>':''}</div></div>
-  <div class="lab">Qui ?</div><div class="pills" id="mP"></div>
-  <div class="lab">Fait quoi ?</div><div class="pills" id="mV"></div>
-  <div class="lab">Complément</div><div class="pills" id="mC"></div>
-  <div class="lab">Quand ?</div><div class="pills" id="mT"></div>
-  <div style="display:flex;gap:10px;margin-top:22px"><button class="btn blue" id="mCopy" style="flex:1">Copier</button><button class="btn" id="mNew" style="flex:1;background:var(--purple);box-shadow:0 5px 0 var(--purple-d)">Autre défi</button></div>`;
- const pills=(id,items,cur,fn)=>items.forEach(([v,l,s])=>{const x=document.createElement('button');x.className='pill'+(cur===v?' on':'');x.innerHTML=l+(s?`<small>${s}</small>`:'');x.onclick=()=>{sfx('pop');fn(v);renderMach()};$(id).appendChild(x)});
- pills('mP',PRON.map((p,i)=>[i,p[0]+'-',p[1]]),M.p,v=>M.p=v);
- pills('mV',VERBS.map((v,i)=>[i,v[0],v[1]]),M.v,v=>{M.v=v;M.c=-1});
- pills('mC',[[-1,'—','aucun'],...VERBS[M.v][2].map((c,i)=>[i,c[0],c[1]])],M.c,v=>M.c=v);
- pills('mT',[['prog','En ce moment','-zali ko-'],['fut','Futur proche','-ko-'],['neg',M.n?'✓ Négatif':'Négatif','… te']],M.t,v=>{if(v==='neg')M.n=!M.n;else M.t=v});
+ const mc=LG.mach,out=BUILD[S.lang](M),tg=meaning(M.target,mc.verbs[M.target.v]),now=meaning(M,mc.verbs[M.v]),b=$('mBody');
+ if(['p','v','c','t','n'].every(k=>M[k]===M.target[k])&&!M.won){M.won=true;M.wins++;addXp(5);save();sfx('win');setTimeout(()=>{if(M){newTarget();renderMach()}},1600)}
+ const en=S.ui==='en';
+ b.innerHTML=`<div class="target ${M.won?'win':''}"><div class="t"><small>${M.won?t('bravo5'):t('buildIn',{lang:lname()})}</small><b>« ${esc(tg)} »</b></div><div class="w">🏅 ${M.wins}</div></div>
+  <div class="out"><div class="li">${out.liH}</div><div class="fr">${esc(now)}</div><div class="leg">${out.leg.map(([c,x])=>`<span class="${c}">${esc(x)}</span>`).join('')}</div></div>
+  <div class="lab">${t('who')}</div><div class="pills" id="mP"></div><div class="lab">${t('doesWhat')}</div><div class="pills" id="mV"></div>
+  <div class="lab">${t('complement')}</div><div class="pills" id="mC"></div><div class="lab">${t('when')}</div><div class="pills" id="mT"></div>
+  <div style="display:flex;gap:10px;margin-top:22px" id="mBtns"></div>`;
+ const pills=(id,items,cur,fn)=>items.forEach(([v,l,s])=>{const x=document.createElement('button');x.className='pill'+(cur===v?' on':'');x.innerHTML=esc(l)+(s?`<small>${esc(s)}</small>`:'');x.onclick=()=>{sfx('pop');fn(v);renderMach()};$(id).appendChild(x)});
+ pills('mP',mc.pron.map((p,i)=>[i,p[0]+'-',en?EN_PRON[i]:p[1]]),M.p,v=>M.p=v);
+ pills('mV',mc.verbs.map((v,i)=>[i,v.v,en?EN_VERB[v.fr][0]:v.fr]),M.v,v=>{M.v=v;M.c=-1});
+ pills('mC',[[-1,'—',t('none')],...mc.verbs[M.v].c.map((c,i)=>[i,c[0],tr(c[1])])],M.c,v=>M.c=v);
+ const tens=mc.tenses.map(([k,l,s])=>[k,en?(k==='prog'?(S.lang==='sw'?'Present':'Right now'):(S.lang==='sw'?'Future':'Near future')):l,s]);
+ pills('mT',[...tens,['neg',(M.n?'✓ ':'')+t('negative'),mc.negHint]],M.t,v=>{if(v==='neg')M.n=!M.n;else M.t=v});
  if(M.n)[...$('mT').children][2].classList.add('on');
- $('mCopy').onclick=()=>copy(`${out.liT}\n(${out.fr})`);$('mNew').onclick=()=>{newTarget();renderMach()};
+ const c1=btn('btn blue',t('copy'),()=>copy(`${out.liT}\n(${now})`)),c2=btn('btn',t('otherChallenge'),()=>{newTarget();renderMach()});
+ c1.style.flex=c2.style.flex='1';c2.style.cssText+=';background:var(--purple);box-shadow:0 5px 0 var(--purple-d)';$('mBtns').append(c1,c2);
 }
-$('mQuit').onclick=()=>show('sLearn');
+$('mQuit').onclick=()=>{M=null;show('sLearn')};
 
 /* ======================= DÉFIS ======================= */
 function renderQuests(){
- $('fBest').textContent=S.flashBest;const m=new Date();m.setHours(24,0,0,0);$('qReset').textContent='⏳ '+Math.ceil((m-Date.now())/36e5)+' h restantes';
+ $('fBest').textContent=S.flashBest;const m=new Date();m.setHours(24,0,0,0);$('qReset').textContent=t('hoursLeft',{n:Math.ceil((m-Date.now())/36e5)});
  const box=$('quests');box.innerHTML='';
  QUESTS.forEach(q=>{const g=q.goal(),v=Math.min(q.val(),g),claimed=S.q.claimed.includes(q.id),ready=v>=g&&!claimed;
   const d=document.createElement('div');d.className='card quest';
-  d.innerHTML=`<div class="ic">${q.ic}</div><div class="bd"><div class="t">${q.t()}</div><div class="minibar"><i style="width:${v/g*100}%"></i><b>${v} / ${g}</b></div></div>`;
-  const b=document.createElement('button');b.className='claim'+(claimed?' done':'');b.textContent=claimed?'✓ Reçu':'💎 '+q.r;b.disabled=!ready&&!claimed;
-  b.onclick=()=>{if(!ready)return;S.gems+=q.r;S.q.claimed.push(q.id);save();sfx('coin');toast('+'+q.r+' 💎');render()};
-  d.appendChild(b);box.appendChild(d)});
+  d.innerHTML=`<div class="ic">${q.ic}</div><div class="bd"><div class="t">${esc(q.t())}</div><div class="minibar"><i style="width:${v/g*100}%"></i><b>${v} / ${g}</b></div></div>`;
+  const b=btn('claim'+(claimed?' done':''),claimed?t('received'):'💎 '+q.r,()=>{if(!ready)return;S.gems+=q.r;S.q.claimed.push(q.id);save();sfx('coin');toast('+'+q.r+' 💎');render()});
+  b.disabled=!ready&&!claimed;d.appendChild(b);box.appendChild(d)});
 }
 $('flashGo').onclick=startFlash;
 
 /* ======================= PROFIL ======================= */
+function ago(ts){const s=(Date.now()-ts)/1000;if(s<60)return t('justNow');const m=Math.round(s/60);return S.ui==='en'?`${m} min ago`:`il y a ${m} min`}
 function renderProfile(){
- $('pMotive').textContent=MOTIVES[S.motive][0]+' '+MOTIVES[S.motive][1];
- const st=[['🔥',S.streak,'Série actuelle'],['⚡',S.xp,'XP au total'],['📘',S.total,'Leçons'],['💬',S.sitDone,'Conversations'],['⏱️',S.flashBest,'Record éclair'],['🏅',BADGES.filter(b=>b.ok()).length+'/'+BADGES.length,'Badges']];
- $('pStats').innerHTML=st.map(s=>`<div class="sbox"><div class="ic">${s[0]}</div><div><b>${s[1]}</b><small>${s[2]}</small></div></div>`).join('');
- $('pBadges').innerHTML=BADGES.map(b=>`<div class="badge ${b.ok()?'':'off'}"><span class="ic">${b.ic}</span><b>${b.t}</b><small>${b.d}</small></div>`).join('');
- const ws=Object.entries(S.words).filter(([k])=>WORDMAP[k]).sort((a,b)=>a[1].lvl-b[1].lvl);
- $('pWordsN').textContent=ws.length+' vus · '+ws.filter(w=>w[1].lvl>=4).length+' maîtrisés';
- $('pWords').innerHTML=ws.length?ws.slice(0,20).map(([k,v])=>`<div class="word"><div class="l"><b>${k}</b><small>${WORDMAP[k][1]}</small></div><div class="str ${v.ko&&v.lvl<4?'weak':''}">${[0,1,2,3,4].map(i=>`<i class="${i<v.lvl?'on':''}"></i>`).join('')}</div></div>`).join(''):'<div style="color:var(--muted);font-weight:700;padding:8px 0">Fais ta première leçon pour remplir ton carnet.</div>';
+ $('pMotive').textContent=MOTIVES[S.motive][0]+' '+motiveLabel(S.motive)+' · '+Object.values(LANGS).filter(l=>S.per[l.code].started).map(l=>LANG_NAMES.en[l.code]).join(' + ');
+ const ps=$('pSettings');ps.innerHTML='';
+ const row=(ic,label,right)=>{const d=document.createElement('div');d.className='card substat';d.style.marginBottom='10px';d.innerHTML=`<div class="ic">${ic}</div><div class="tx">${label}</div>`;d.appendChild(right);return d};
+ const seg=document.createElement('div');seg.className='seg';seg.style.margin='0';
+ [['fr','FR'],['en','EN']].forEach(([c,l])=>{const b=btn(S.ui===c?'on':'',l,()=>setUi(c));seg.appendChild(b)});
+ ps.appendChild(row('🌐',t('appLanguage'),seg));
+ ps.appendChild(row('📚',t('learning'),btn('pill',LANG_NAMES.en[S.lang]+' ▾',langSheet)));
+ const saveTxt=!sb?t('saveOff'):cloud.last?t('saveCloudAgo',{t:ago(cloud.last)}):t('saveCloud');
+ const sv=row('💾',`${t('save')}<small>${esc(saveTxt)}</small>`,document.createElement('span'));ps.appendChild(sv);
+ if(sb){const a=btn('btn ghost',t('secure'),accountSheet);a.style.marginTop='-4px';ps.appendChild(a)}
+ if(donationsOn())ps.appendChild(btn('btn ghost','❤️ '+t('supportCard'),openDonate));
+ const st=[['🔥',S.streak,'sStreak'],['⚡',S.xp,'sXp'],['📘',S.total,'sLessons'],['💬',S.sitDone,'sConv'],['⏱️',S.flashBest,'sFlash'],['🏅',BADGES.filter(b=>b[2]()).length+'/'+BADGES.length,'sBadges']];
+ $('pStats').innerHTML=st.map(s=>`<div class="sbox"><div class="ic">${s[0]}</div><div><b>${s[1]}</b><small>${t(s[2])}</small></div></div>`).join('');
+ $('pBadges').innerHTML=BADGES.map(([ic,k,ok])=>`<div class="badge ${ok()?'':'off'}"><span class="ic">${ic}</span><b>${t(k)}</b><small>${t(k+'d')}</small></div>`).join('');
+ const ws=Object.entries(LP().words).filter(([k])=>LG.wm[k]).sort((a,b)=>a[1].lvl-b[1].lvl);
+ $('pWordsN').textContent=t('wordsSeen',{l:LANG_NAMES.en[S.lang],a:ws.length,b:ws.filter(w=>w[1].lvl>=4).length});
+ $('pWords').innerHTML=ws.length?ws.slice(0,20).map(([k,v])=>`<div class="word"><div class="l"><b>${esc(k)}</b><small>${esc(tr(LG.wm[k][1]))}</small></div><div class="str ${v.ko&&v.lvl<4?'weak':''}">${[0,1,2,3,4].map(i=>`<i class="${i<v.lvl?'on':''}"></i>`).join('')}</div></div>`).join(''):`<div style="color:var(--muted);font-weight:700;padding:8px 0">${t('noWords')}</div>`;
 }
-$('resetBtn').onclick=()=>sheet('<div class="big">⚠️</div><h2>Tout recommencer ?</h2><p>Ta série, tes XP, tes gemmes et ton carnet seront effacés.</p>',[{label:'Oui, réinitialiser',cls:'red',fn:()=>{S=fresh();save();startOnb()}},{label:'Annuler',cls:'ghost'}]);
+$('resetBtn').onclick=()=>sheet(`<div class="big">⚠️</div><h2>${t('resetTitle')}</h2><p>${t('resetText')}</p>`,[{label:t('resetYes'),cls:'red',fn:()=>{const ui=S.ui;S=fresh();S.ui=ui;LG=LANGS.ln;save();startOnb()}},{label:t('cancel'),cls:'ghost'}]);
+function accountSheet(){
+ if(!sb)return;
+ $('sheet').innerHTML=`<div class="big">☁️</div><h2>${t('accTitle')}</h2><p>${t('accText')}</p><input class="field" id="accMail" type="email" autocomplete="email" maxlength="120" placeholder="email@exemple.com"><div class="err" id="accErr"></div>`;
+ const msg=(m,ok)=>{$('accErr').style.color=ok?'var(--green-d)':'';$('accErr').textContent=m};
+ const mail=()=>{const v=$('accMail').value.trim();return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)?v:null};
+ $('sheet').append(
+  btn('btn gold',t('accSave'),async()=>{const e=mail();if(!e)return msg(t('badEmail'));try{await cloud.session();const {error}=await sb.auth.updateUser({email:e});if(error)throw error;msg(t('accCheck'),true)}catch(er){msg(er.message||'Erreur')}}),
+  btn('btn ghost',t('accRestore'),async()=>{const e=mail();if(!e)return msg(t('accEmailFirst'));try{const {error}=await sb.auth.signInWithOtp({email:e,options:{shouldCreateUser:false,emailRedirectTo:location.origin+location.pathname}});if(error)throw error;msg(t('accLink'),true)}catch(er){msg(er.message||'Erreur')}}),
+  btn('btn ghost',t('close'),closeSheet));
+ $('ov').classList.add('on');
+}
 
 /* ======================= LEÇON / RÉVISION ======================= */
 let L=null;
@@ -761,65 +1316,63 @@ function buildExercises(u){
  const r=shuffle(ex);r.splice(3,0,{type:'match',pairs:pick(u.words,4)});return r;
 }
 function startLesson(i){regen();if(S.hearts<=0)return noHearts(()=>startLesson(i));
- L={u:UNITS[i],queue:buildExercises(UNITS[i]),idx:0,total:8,correct:0,answered:0,errors:0,combo:0,comboMax:0,state:'answer',sel:null,retried:new Set()};show('lesson');renderEx()}
+ L={u:LG.units[i],queue:buildExercises(LG.units[i]),idx:0,total:8,correct:0,answered:0,errors:0,combo:0,comboMax:0,state:'answer',sel:null,retried:new Set()};show('lesson');renderEx()}
 function startReview(){
  const weak=weakWords().slice(0,6),pool=openWords();
- const q=shuffle(weak.map(w=>({type:'mc',dir:Math.random()<.5?'lf':'fl',item:w,pool:pool.length>=4?pool:UNITS[0].words})));
+ const q=shuffle(weak.map(w=>({type:'mc',dir:Math.random()<.5?'lf':'fl',item:w,pool:pool.length>=4?pool:LG.units[0].words})));
  if(weak.length>=4)q.splice(2,0,{type:'match',pairs:weak.slice(0,4)});
- L={review:true,u:{id:'review',title:'Révision intelligente'},queue:q,idx:0,total:q.length,correct:0,answered:0,errors:0,combo:0,comboMax:0,state:'answer',sel:null,retried:new Set()};
- show('lesson');renderEx();toast('🧠 Révision : pas de cœur perdu, +1 ❤️ à la fin');
+ L={review:true,u:{id:'review'},queue:q,idx:0,total:q.length,correct:0,answered:0,errors:0,combo:0,comboMax:0,state:'answer',sel:null,retried:new Set()};
+ show('lesson');renderEx();toast(t('reviewToast'));
 }
 function noHearts(retry,onQuit){
- sheet(`<div class="big">💔</div><h2>Plus de cœurs !</h2><p>Un cœur revient toutes les 30 min.<br>Ou fais une révision pour en regagner un.</p>`,[
-  {label:`Recharger ❤️ ×5 — 💎 ${REFILL}`,cls:'blue',disabled:S.gems<REFILL,fn:()=>{S.gems-=REFILL;S.hearts=MAXH;S.heartTs=null;save();sfx('coin');retry&&retry()}},
-  {label:'🧠 Réviser pour regagner un cœur',disabled:weakWords().length<3,fn:()=>{onQuit&&onQuit();startReview()}},
-  {label:'Plus tard',cls:'ghost',fn:()=>{onQuit&&onQuit();show(tab)}}]);
+ sheet(`<div class="big">💔</div><h2>${t('noHeartsTitle')}</h2><p>${t('noHeartsText')}</p>`,[
+  {label:t('refill',{n:REFILL}),cls:'blue',disabled:S.gems<REFILL,fn:()=>{S.gems-=REFILL;S.hearts=MAXH;S.heartTs=null;save();sfx('coin');retry&&retry()}},
+  {label:t('reviewHeart'),disabled:weakWords().length<3,fn:()=>{onQuit&&onQuit();startReview()}},
+  {label:t('later'),cls:'ghost',fn:()=>{onQuit&&onQuit();show(tab)}}]);
 }
 function setProgress(){$('progFill').style.width=Math.min(100,L.correct/L.total*100)+'%';$('lHeartN').textContent=S.hearts;$('lHearts').style.visibility=L.review?'hidden':''}
 function renderEx(){
- setProgress();$('foot').className='foot';$('checkBtn').textContent='Vérifier';$('checkBtn').disabled=true;L.state='answer';L.sel=null;
+ setProgress();$('foot').className='foot';$('checkBtn').textContent=t('check');$('checkBtn').disabled=true;L.state='answer';L.sel=null;
  const e=L.queue[L.idx],b=$('body');b.innerHTML='';
  if(e.type==='mc'){
-  const [li,fr]=e.item,q=e.dir==='lf'?li:fr,ans=e.dir==='lf'?fr:li;
-  const others=pick(e.pool.filter(w=>w[0]!==li&&w[1]!==fr),3).map(w=>e.dir==='lf'?w[1]:w[0]);
-  b.innerHTML=`<div class="q-kind">${L.review?'🧠 ':''}${e.dir==='lf'?'Que veut dire…':'Comment dit-on en lingala…'}</div><div class="prompt"><div class="mascot">🦜</div><div class="bubble ${e.dir==='lf'?'lg':''}">${q}</div></div><div class="opts" id="opts"></div>`;
-  shuffle([ans,...others]).forEach(o=>{const x=document.createElement('button');x.className='opt';x.textContent=o;
-   x.onclick=()=>{if(L.state!=='answer')return;document.querySelectorAll('#opts .opt').forEach(y=>y.classList.remove('sel'));x.classList.add('sel');L.sel=o;$('checkBtn').disabled=false};$('opts').appendChild(x)});
+  const [li,fr]=e.item,q=e.dir==='lf'?li:tr(fr),ans=e.dir==='lf'?tr(fr):li;
+  const others=pick(e.pool.filter(w=>w[0]!==li&&w[1]!==fr),3).map(w=>e.dir==='lf'?tr(w[1]):w[0]);
+  b.innerHTML=`<div class="q-kind">${L.review?'🧠 ':''}${e.dir==='lf'?t('whatMeans'):t('howSay',{lang:lname()})}</div><div class="prompt"><div class="mascot">🦜</div><div class="bubble ${e.dir==='lf'?'lg':''}">${esc(q)}</div></div><div class="opts" id="opts"></div>`;
+  shuffle([ans,...others]).forEach(o=>{const x=btn('opt',o,()=>{if(L.state!=='answer')return;document.querySelectorAll('#opts .opt').forEach(y=>y.classList.remove('sel'));x.classList.add('sel');L.sel=o;$('checkBtn').disabled=false});$('opts').appendChild(x)});
   e.answer=ans;
  }else if(e.type==='match'){
-  b.innerHTML=`<div class="q-kind">Associe les paires</div><div class="match"><div class="col" id="cl"></div><div class="col" id="cr"></div></div>`;
+  b.innerHTML=`<div class="q-kind">${t('pairs')}</div><div class="match"><div class="col" id="cl"></div><div class="col" id="cr"></div></div>`;
   let left=null,right=null,found=0;e.perfect=true;
   const tryPair=()=>{if(!left||!right)return;
    if(left.dataset.k===right.dataset.k){left.classList.add('done');right.classList.add('done');found++;track(left.dataset.k,true);sfx('good');if(found===e.pairs.length)checkAnswer()}
-   else{e.perfect=false;track(left.dataset.k,false);sfx('bad');const a=left,c=right;[a,c].forEach(t=>t.classList.add('wrong'));setTimeout(()=>[a,c].forEach(t=>t.classList.remove('wrong')),400)}
+   else{e.perfect=false;track(left.dataset.k,false);sfx('bad');const a=left,c=right;[a,c].forEach(z=>z.classList.add('wrong'));setTimeout(()=>[a,c].forEach(z=>z.classList.remove('wrong')),400)}
    left.classList.remove('sel');right.classList.remove('sel');left=right=null};
-  shuffle(e.pairs).forEach(p=>{const t=document.createElement('button');t.className='tile';t.textContent=p[0];t.dataset.k=p[0];t.onclick=()=>{if(left)left.classList.remove('sel');left=t;t.classList.add('sel');tryPair()};$('cl').appendChild(t)});
-  shuffle(e.pairs).forEach(p=>{const t=document.createElement('button');t.className='tile';t.textContent=p[1];t.dataset.k=p[0];t.onclick=()=>{if(right)right.classList.remove('sel');right=t;t.classList.add('sel');tryPair()};$('cr').appendChild(t)});
+  shuffle(e.pairs).forEach(p=>{const x=btn('tile',p[0],()=>{if(left)left.classList.remove('sel');left=x;x.classList.add('sel');tryPair()});x.dataset.k=p[0];$('cl').appendChild(x)});
+  shuffle(e.pairs).forEach(p=>{const x=btn('tile',tr(p[1]),()=>{if(right)right.classList.remove('sel');right=x;x.classList.add('sel');tryPair()});x.dataset.k=p[0];$('cr').appendChild(x)});
  }else{
   const [fr,li,distract]=e.s;
-  b.innerHTML=`<div class="q-kind">Traduis cette phrase</div><div class="prompt"><div class="mascot">🦜</div><div class="bubble">${fr}</div></div><div class="answer-line" id="line"></div><div class="bank" id="bank"></div>`;
+  b.innerHTML=`<div class="q-kind">${t('translateSentence')}</div><div class="prompt"><div class="mascot">🦜</div><div class="bubble">${esc(tr(fr))}</div></div><div class="answer-line" id="line"></div><div class="bank" id="bank"></div>`;
   const chosen=[];const upd=()=>{$('checkBtn').disabled=!chosen.length;L.sel=chosen.map(c=>c.w).join(' ')};
-  shuffle([...li.replace(/[?!]/g,'').split(' '),...distract]).forEach(w=>{const t=document.createElement('button');t.className='tile';t.textContent=w;
-   t.onclick=()=>{if(L.state!=='answer')return;const c=document.createElement('button');c.className='tile';c.textContent=w;const rec={w,c,t};chosen.push(rec);
-    c.onclick=()=>{if(L.state!=='answer')return;chosen.splice(chosen.indexOf(rec),1);c.remove();t.classList.remove('ghost');upd()};$('line').appendChild(c);t.classList.add('ghost');upd()};
-   $('bank').appendChild(t)});
+  shuffle([...li.replace(/[?!]/g,'').split(' '),...distract]).forEach(w=>{const tile=btn('tile',w,()=>{if(L.state!=='answer')return;
+    const rec={w};const c=btn('tile',w,()=>{if(L.state!=='answer')return;chosen.splice(chosen.indexOf(rec),1);c.remove();tile.classList.remove('ghost');upd()});
+    chosen.push(rec);$('line').appendChild(c);tile.classList.add('ghost');upd()});
+   $('bank').appendChild(tile)});
   e.answer=li;
  }
 }
-const PRAISE=['Malamu mingi !','Ya solo ! Bravo','Bravo !','Malamu !','Ozali makasi ! 💪'];
 function checkAnswer(){
  const e=L.queue[L.idx];const ok=e.type==='match'?e.perfect:norm(L.sel||'')===norm(e.answer);
  if(e.type==='mc'){track(e.item[0],ok);document.querySelectorAll('#opts .opt').forEach(o=>{o.disabled=true;if(o.textContent===e.answer)o.classList.add('good');else if(o.classList.contains('sel'))o.classList.add('bad')})}
  L.answered++;const f=$('foot');
- if(ok){L.correct++;L.combo++;L.comboMax=Math.max(L.comboMax,L.combo);sfx('good');f.className='foot good';$('fbTitle').textContent=pick(PRAISE,1)[0];$('fbText').textContent=e.type==='match'?'Toutes les paires du premier coup.':''}
+ if(ok){L.correct++;L.combo++;L.comboMax=Math.max(L.comboMax,L.combo);sfx('good');f.className='foot good';$('fbTitle').textContent=pick(LG.praise,1)[0];$('fbText').textContent=e.type==='match'?t('allPairs'):''}
  else{
   L.errors++;L.combo=0;if(!L.review){loseHeart();$('lHearts').classList.remove('hit');void $('lHearts').offsetWidth;$('lHearts').classList.add('hit')}
-  save();sfx('bad');f.className='foot bad';$('fbTitle').textContent='Pas tout à fait…'+(L.review?'':' −1 ❤️');
-  $('fbText').textContent=e.type==='match'?'Tu y es arrivé, on la revoit à la fin.':'Bonne réponse : '+e.answer+(e.type==='mc'?' · ce mot reviendra en révision 🧠':'');
+  sfx('bad');f.className='foot bad';$('fbTitle').textContent=t('notQuite')+(L.review?'':t('minusHeart'));
+  $('fbText').textContent=e.type==='match'?t('pairsRetry'):t('goodAnswer',{a:e.answer})+(e.type==='mc'?t('willReview'):'');
   if(!L.retried.has(e)){L.retried.add(e);L.queue.push(e)}
  }
- const cb=$('combo');if(L.combo>=3){cb.textContent=`🔥 ${L.combo} d'affilée !`;cb.classList.add('on')}else cb.classList.remove('on');
- save();setProgress();L.state='next';$('checkBtn').textContent='Continuer';$('checkBtn').disabled=false;
+ const cb=$('combo');if(L.combo>=3){cb.textContent=t('inARow',{n:L.combo});cb.classList.add('on')}else cb.classList.remove('on');
+ save();setProgress();L.state='next';$('checkBtn').textContent=t('continue');$('checkBtn').disabled=false;
 }
 $('checkBtn').onclick=()=>{
  if(L.state==='answer')return checkAnswer();
@@ -827,58 +1380,62 @@ $('checkBtn').onclick=()=>{
  L.idx++;nextEx();
 };
 function nextEx(){if(L.idx>=L.queue.length||L.correct>=L.total)finishLesson();else renderEx()}
-$('quit').onclick=()=>sheet('<div class="big">🥺</div><h2>Tu pars déjà ?</h2><p>Ta progression dans cette leçon sera perdue.</p>',[{label:'Continuer la leçon',cls:'blue'},{label:'Quitter',cls:'ghost',fn:()=>{$('combo').classList.remove('on');show(tab)}}]);
+$('quit').onclick=()=>sheet(`<div class="big">🥺</div><h2>${t('leaveTitle')}</h2><p>${t('leaveText')}</p>`,[{label:t('keepGoing'),cls:'blue'},{label:t('quit'),cls:'ghost',fn:()=>{$('combo').classList.remove('on');show(tab)}}]);
 
 /* ======================= DÉFI ÉCLAIR ======================= */
 let F=null;
 function startFlash(){F={score:0,end:Date.now()+60000,timer:null,lock:false,pool:openWords()};show('flash');$('fScore').textContent='0';
  F.timer=setInterval(()=>{const r=F.end-Date.now();$('timerFill').style.width=Math.max(0,r/600)+'%';$('timer').classList.toggle('low',r<10000);if(r<=0)endFlash()},100);flashNext()}
 function flashNext(){
- F.lock=false;const w=pick(F.pool,1)[0],dir=Math.random()<.5?'lf':'fl',q=dir==='lf'?w[0]:w[1],ans=dir==='lf'?w[1]:w[0];
- const others=pick(F.pool.filter(x=>x!==w),3).map(x=>dir==='lf'?x[1]:x[0]);
- $('fBody').innerHTML=`<div class="prompt"><div class="mascot" style="background:var(--fire);box-shadow:0 4px 0 #c96a00">⚡</div><div class="bubble ${dir==='lf'?'lg':''}">${q}</div></div><div class="opts" id="fOpts"></div>`;
- shuffle([ans,...others]).forEach(o=>{const x=document.createElement('button');x.className='opt';x.textContent=o;
-  x.onclick=()=>{if(F.lock)return;F.lock=true;const ok=o===ans;track(w[0],ok);
+ F.lock=false;const w=pick(F.pool,1)[0],dir=Math.random()<.5?'lf':'fl',q=dir==='lf'?w[0]:tr(w[1]),ans=dir==='lf'?tr(w[1]):w[0];
+ const others=pick(F.pool.filter(x=>x!==w),3).map(x=>dir==='lf'?tr(x[1]):x[0]);
+ $('fBody').innerHTML=`<div class="prompt"><div class="mascot" style="background:var(--fire);box-shadow:0 4px 0 #c96a00">⚡</div><div class="bubble ${dir==='lf'?'lg':''}">${esc(q)}</div></div><div class="opts" id="fOpts"></div>`;
+ shuffle([ans,...others]).forEach(o=>{const x=btn('opt',o,()=>{if(F.lock)return;F.lock=true;const ok=o===ans;track(w[0],ok);
    x.classList.add(ok?'good':'bad');if(!ok)document.querySelectorAll('#fOpts .opt').forEach(y=>{if(y.textContent===ans)y.classList.add('good')});
    const p=$('plus');p.textContent=ok?'+1':'−3s';p.style.color=ok?'var(--green)':'var(--red)';p.classList.remove('go');void p.offsetWidth;p.classList.add('go');
-   if(ok){F.score++;sfx('good')}else{F.end-=3000;sfx('bad')}$('fScore').textContent=F.score;setTimeout(()=>F&&F.timer&&flashNext(),ok?280:700)};
+   if(ok){F.score++;sfx('good')}else{F.end-=3000;sfx('bad')}$('fScore').textContent=F.score;setTimeout(()=>F&&F.timer&&flashNext(),ok?280:700)});
   $('fOpts').appendChild(x)});
 }
 function endFlash(){
  clearInterval(F.timer);F.timer=null;const sc=F.score,rec=sc>S.flashBest;
  S.flashBest=Math.max(S.flashBest,sc);S.q.flashBest=Math.max(S.q.flashBest,sc);addXp(sc);if(sc>0)bumpStreak();save();sfx('win');
- showEnd({icon:rec?'🏅':'⏱️',title:rec?'Nouveau record !':'Temps écoulé !',sub:sc>=15?'Ozali makasi ! Vrai Kinois.':'Recommence pour battre ton record.',labA:'Score',a:sc,labB:'Record',b:S.flashBest,
-  share:`⚡ J'ai fait ${sc} points au Défi éclair de Loba en 60 secondes.\nTu parles lingala ? Bats-moi si tu peux 😏🇨🇩`,back:'sQuests'});
+ showEnd({icon:rec?'🏅':'⏱️',title:t(rec?'newRecord':'timeUp'),sub:sc>=15?t('flashStrong',{s:LG.strong,n:LG.native}):t('flashRetry'),labA:t('score'),a:sc,labB:t('record'),b:S.flashBest,
+  share:t('shareFlash',{n:sc,lang:lname()}),back:'sQuests'});
 }
 $('fQuit').onclick=()=>{clearInterval(F.timer);F=null;show(tab)};
 
-/* ======================= FIN ======================= */
+/* ======================= FIN D'ACTIVITÉ ======================= */
 let BACK='sLearn';
 function finishLesson(){
  const acc=Math.round(L.correct/Math.max(L.answered,1)*100),perfect=L.errors===0;$('combo').classList.remove('on');
  S.q.comboMax=Math.max(S.q.comboMax,L.comboMax);
  if(L.review){
-  const gain=S.hearts<MAXH?1:0;S.hearts=Math.min(MAXH,S.hearts+1);if(S.hearts>=MAXH)S.heartTs=null;S.reviews++;addXp(8);bumpStreak();save();sfx('win');
-  showEnd({icon:'🧠',title:'Révision terminée !',sub:gain?'Tu regagnes 1 ❤️. Ta mémoire te remercie.':'Tes cœurs sont déjà au max 💪',labA:'XP gagnés',a:'+8',labB:'Précision',b:acc+'%',
-   share:`🧠 Révision lingala du jour faite sur Loba (${acc}%). Les mots difficiles ne m'échappent plus 🇨🇩`,back:'sLearn'});return}
+  const gain=S.hearts<MAXH;S.hearts=Math.min(MAXH,S.hearts+1);if(S.hearts>=MAXH)S.heartTs=null;S.reviews++;addXp(8);bumpStreak();save();sfx('win');
+  showEnd({icon:'🧠',title:t('reviewDone'),sub:t(gain?'reviewGain':'reviewMax'),labA:t('xpWon'),a:'+8',labB:t('precision'),b:acc+'%',share:t('shareReview',{lang:lname(),p:acc}),back:'sLearn'});return}
  const xp=10+L.correct+(perfect?5:0)+(L.comboMax>=5?3:0);
- addXp(xp);S.q.lessons++;S.total++;if(perfect)S.perfect++;S.prog[L.u.id]=Math.min(LPU,(S.prog[L.u.id]||0)+1);bumpStreak();save();sfx('win');
- showEnd({icon:perfect?'🌟':'🎉',title:perfect?'Leçon parfaite !':'Leçon terminée !',sub:perfect?'Sans faute ! Ozali makasi 💪':'Malamu mingi ! Continue demain.',labA:'XP gagnés',a:'+'+xp,labB:'Précision',b:acc+'%',
-  share:`🔥 Jour ${S.streak} sur Loba\nJ'apprends le lingala : « ${L.u.title} » (${acc}% de précision).\nMbote na bino! 🇨🇩`,back:'sLearn'});
+ addXp(xp);S.q.lessons++;S.total++;if(perfect)S.perfect++;LP().prog[L.u.id]=Math.min(LPU,(LP().prog[L.u.id]||0)+1);bumpStreak();save();sfx('win');
+ showEnd({icon:perfect?'🌟':'🎉',title:t(perfect?'lessonPerfect':'lessonDone'),sub:perfect?t('perfectSub',{s:LG.strong}):t('doneSub',{g:LG.good}),labA:t('xpWon'),a:'+'+xp,labB:t('precision'),b:acc+'%',
+  share:t('shareLesson',{d:S.streak,lang:lname(),u:tr(L.u.title),p:acc,hi:LG.hi}),back:'sLearn'});
 }
 function showEnd(o){
  $('eIcon').textContent=o.icon;$('eTitle').textContent=o.title;$('eSub').textContent=o.sub;$('eLabA').textContent=o.labA;$('eA').textContent=o.a;$('eLabB').textContent=o.labB;$('eB').textContent=o.b;$('eC').textContent='🔥 '+S.streak;
  $('eExtra').innerHTML=o.extra||'';
- $('eQuests').innerHTML=QUESTS.filter(q=>q.val()>=q.goal()&&!S.q.claimed.includes(q.id)).map(q=>`<div>🎯 Quête accomplie : ${q.t()} → récupère 💎 ${q.r}</div>`).join('');
+ const q=$('eQuests');q.innerHTML='';
+ QUESTS.filter(x=>x.val()>=x.goal()&&!S.q.claimed.includes(x.id)).forEach(x=>{const d=document.createElement('div');d.textContent=t('questDone',{q:x.t(),r:x.r});q.appendChild(d)});
+ if(donationsOn()&&S.total>0&&S.total%5===0&&!S.donated){const d=document.createElement('div');d.style.cssText='background:#fde9ec;color:var(--red-d);cursor:pointer';d.textContent=t('donAsk');d.onclick=openDonate;q.appendChild(d)}
  $('shareTxt').textContent=o.share;BACK=o.back||'sLearn';show('end');
 }
 $('copyBtn').onclick=()=>copy($('shareTxt').textContent);
 $('homeBtn').onclick=()=>show(questsReady()?'sQuests':BACK);
 
-/* ======================= START ======================= */
-dayCheck();regen();
-if(S.onboarded)show('sLearn');else startOnb();
+/* ======================= DÉMARRAGE ======================= */
+applyStatic();dayCheck();regen();
+if(S.onboarded&&LP().started)show('sLearn');else startOnb(S.onboarded);
+cloud.pull();
 setInterval(()=>{if(MAIN.includes(tab)&&$(tab).classList.contains('on'))render()},60000);
+// Application installable + hors ligne (seulement sur le vrai site, pas en aperçu)
+if('serviceWorker' in navigator&&location.protocol==='https:'&&window.top===window.self){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
+
 </script>
 </body>
 </html>
