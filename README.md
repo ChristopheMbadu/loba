@@ -11,6 +11,7 @@
 - **Deux langues à apprendre** : lingala et swahili, avec test de placement.
 - **Interface en français ou en anglais** (🇫🇷 / 🇬🇧), pour les francophones comme pour les anglophones (Kenya, Tanzanie, diaspora anglo-saxonne).
 - **Exercices variés** : QCM, paires, phrases à reconstruire, situations réelles façon WhatsApp (maman, marché, aéroport de N'djili…).
+- **Apprentissage vocal** : écoute la prononciation de chaque mot (🔊, 🐢 au ralenti), exercices « Qu'as-tu entendu ? » et exercices où tu parles au micro, avec vérification automatique de ta prononciation.
 - **Machine à phrases** : pronom + verbe + temps + négation, pour comprendre la mécanique de la langue.
 - **Gamification** : série 🔥, XP, cœurs ❤️, gemmes 💎, quêtes, Défi éclair, badges.
 - **Sauvegarde automatique** : la progression est enregistrée en continu, sur l'appareil et dans le cloud (compte anonyme). On peut lier un e-mail pour la retrouver sur un autre téléphone.

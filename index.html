@@ -333,6 +333,20 @@ h1,h2,h3{font-family:'Baloo 2',sans-serif}
 .sheet .btn+.btn{margin-top:12px}
 .toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(200px);background:var(--ink);color:#fff;padding:10px 18px;border-radius:16px;font-weight:800;transition:transform .3s;z-index:40;max-width:90%;text-align:center}
 .toast.on{transform:translateX(-50%) translateY(0)}
+/* ===== Voix ===== */
+.say{display:flex;gap:12px;justify-content:center;align-items:center;margin:4px 0 16px}
+.icb{width:52px;height:52px;border-radius:14px;border:2px solid var(--line);background:var(--card);font-size:24px;box-shadow:0 4px 0 var(--line);cursor:pointer;flex:none}
+.icb:active{transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
+.icb.big{width:104px;height:104px;font-size:46px;border-radius:26px;background:var(--sky);border-color:transparent;box-shadow:0 6px 0 var(--sky-d)}
+.icb.sm{width:40px;height:40px;font-size:19px;border-radius:12px;align-self:center}
+.bubble small.sub{display:block;font-family:Nunito,sans-serif;font-size:14px;color:var(--muted);font-weight:700;margin-top:4px}
+.mic{display:block;width:100%;padding:22px;border-radius:18px;border:2px solid var(--line);background:var(--card);font:800 18px Nunito,sans-serif;color:var(--sky-d);box-shadow:0 5px 0 var(--line);cursor:pointer}
+.mic.on{background:#fde0e4;color:var(--red-d);border-color:#f5b5bf;animation:micpulse 1.1s ease-in-out infinite}
+.mic:disabled{opacity:.6}
+@keyframes micpulse{50%{box-shadow:0 5px 0 #f5b5bf,0 0 0 8px rgba(215,38,61,.12)}}
+.heard{text-align:center;color:var(--muted);font-weight:800;margin-top:12px;min-height:22px}
+.linkbtn{display:block;margin:16px auto 0;background:none;border:none;color:var(--muted);font:800 14px Nunito,sans-serif;text-decoration:underline;cursor:pointer}
+.bub{cursor:pointer}.word{cursor:pointer}
 
 .nav button b{font-weight:800}
 </style>
@@ -766,6 +780,11 @@ fr:{
  accSave:'Rattacher mon e-mail',accRestore:'Récupérer ma progression',accCheck:'Vérifie ta boîte mail pour confirmer ✅',accLink:'Lien de connexion envoyé : ouvre-le sur cet appareil ✅',
  badEmail:'E-mail invalide.',accEmailFirst:'Entre l\'e-mail de ton compte.',restored:'☁️ Progression récupérée !',
  // mots génériques
+ sayIt:'Dis-le à voix haute',tapSpeak:'🎤 Appuie et parle',listening:'🔴 Je t\'écoute…',heard:'J\'ai entendu : « {s} »',speakRetry:'presque ! Réessaie 🎯',
+ speakSkip:'Passer',cantSpeak:'Je ne peux pas parler maintenant',micOffToast:'OK, pas d\'exercices oraux pendant 1 h 🤫',noSpeech:'Je n\'ai rien entendu. Parle un peu plus fort 🙂',
+ micDenied:'Micro bloqué : autorise-le dans ton navigateur pour parler.',speakGood:'Bien prononcé ! 🎙️',speakMiss:'Pas grave, aucun cœur perdu. Réécoute et retente plus tard.',
+ listenQ:'Qu\'as-tu entendu ?',play:'Écouter',slow:'Plus lentement',voiceSet:'Voix',voiceNative:'Voix swahili de ton téléphone',voiceApprox:'Voix approchée, en attendant nos enregistrements',
+ micSet:'Exercices oraux',micPaused:'En pause pendant 1 h',on:'Oui',off:'Non',b11:'Loba !',b11d:'10 phrases dites',
  day:'Jour'
 },
 en:{
@@ -833,6 +852,11 @@ en:{
  accTitle:'Your progress, everywhere',accText:'Add your email: your progress will be linked to your account and you can get it back on another phone.',
  accSave:'Link my email',accRestore:'Recover my progress',accCheck:'Check your inbox to confirm ✅',accLink:'Sign-in link sent: open it on this device ✅',
  badEmail:'Invalid email.',accEmailFirst:'Enter your account email.',restored:'☁️ Progress recovered!',
+ sayIt:'Say it out loud',tapSpeak:'🎤 Tap and speak',listening:'🔴 Listening…',heard:'I heard: “{s}”',speakRetry:'almost! Try again 🎯',
+ speakSkip:'Skip',cantSpeak:'I can\'t speak right now',micOffToast:'OK, no speaking exercises for 1 hour 🤫',noSpeech:'I didn\'t hear anything. Speak a little louder 🙂',
+ micDenied:'Microphone blocked: allow it in your browser to speak.',speakGood:'Nicely said! 🎙️',speakMiss:'No worries, no heart lost. Listen again and retry later.',
+ listenQ:'What did you hear?',play:'Listen',slow:'Slower',voiceSet:'Voice',voiceNative:'Your phone\'s Swahili voice',voiceApprox:'Approximate voice, until our native recordings',
+ micSet:'Speaking exercises',micPaused:'Paused for 1 hour',on:'On',off:'Off',b11:'Loba!',b11d:'10 phrases spoken',
  day:'Day'
 }};
 // Libellés de contenu propres à l'interface (motivations, voyage…)
@@ -891,7 +915,7 @@ const BADGES=[
  ['🌱','b1',()=>S.total>=1],['🔥','b2',()=>S.bestStreak>=3],['🎯','b3',()=>S.perfect>=1],['💬','b4',()=>S.sitDone>=1],
  ['💌','b5',()=>S.sentTotal>=1],['🧠','b6',()=>S.reviews>=1],['⚡','b7',()=>S.flashBest>=15],
  ['🏆','b8',()=>anyLang(p=>Object.keys(p.chests).length>=1)],['🌍','b9',()=>Object.values(S.per).filter(p=>p.started).length>=2],
- ['❤️','b10',()=>S.donated],
+ ['❤️','b10',()=>S.donated],['🎙️','b11',()=>S.spoken>=10],
 ];
 
 /* ======================= ÉTAT + SAUVEGARDE ======================= */
@@ -899,14 +923,15 @@ const KEY='loba-state-v4';
 const newQ=()=>({day:today(),xp:0,lessons:0,comboMax:0,flashBest:0,sent:0,claimed:[]});
 const freshLang=()=>({started:false,level:'zero',prog:{},chests:{},words:{},sit:{}});
 const detectUi=()=>((navigator.language||'fr').toLowerCase().startsWith('fr')?'fr':'en');
-const fresh=()=>({v:5,savedAt:0,ui:detectUi(),onboarded:false,lang:'ln',motive:'famille',goal:40,hints:true,xp:0,gems:50,hearts:MAXH,heartTs:null,streak:0,bestStreak:0,lastDay:null,total:0,perfect:0,flashBest:0,sitDone:0,sentTotal:0,reviews:0,donated:false,q:newQ(),per:{ln:freshLang(),sw:freshLang()}});
+const fresh=()=>({v:5,savedAt:0,ui:detectUi(),onboarded:false,lang:'ln',motive:'famille',goal:40,hints:true,xp:0,gems:50,hearts:MAXH,heartTs:null,streak:0,bestStreak:0,lastDay:null,total:0,perfect:0,flashBest:0,sitDone:0,sentTotal:0,reviews:0,spoken:0,voice:true,mic:true,micOff:0,donated:false,q:newQ(),per:{ln:freshLang(),sw:freshLang()}});
 
 // Nettoie un état venant du stockage ou du cloud : types attendus, valeurs bornées.
 function sanitize(o){
  const S0=fresh();if(!o||typeof o!=='object')return S0;
  const num=(v,d,min=0,max=1e9)=>Number.isFinite(+v)?Math.min(max,Math.max(min,+v)):d;
  const out={...S0};
- for(const k of ['xp','gems','streak','bestStreak','total','perfect','flashBest','sitDone','sentTotal','reviews'])out[k]=num(o[k],S0[k]);
+ for(const k of ['xp','gems','streak','bestStreak','total','perfect','flashBest','sitDone','sentTotal','reviews','spoken'])out[k]=num(o[k],S0[k]);
+ out.voice=o.voice!==false;out.mic=o.mic!==false;out.micOff=num(o.micOff,0,0,1e15);
  out.savedAt=num(o.savedAt,0,0,1e15);out.hearts=num(o.hearts,MAXH,0,MAXH);out.heartTs=o.heartTs?num(o.heartTs,null,0,1e15):null;out.goal=[20,40,60].includes(+o.goal)?+o.goal:40;
  out.ui=o.ui==='en'?'en':o.ui==='fr'?'fr':S0.ui;out.lang=o.lang in LANGS?o.lang:'ln';out.motive=o.motive in MOTIVES?o.motive:'famille';
  out.onboarded=!!o.onboarded;out.hints=o.hints!==false;out.donated=!!o.donated;out.lastDay=typeof o.lastDay==='string'?o.lastDay:null;
@@ -986,6 +1011,35 @@ let AC;function sfx(kind){try{AC=AC||new (window.AudioContext||window.webkitAudi
  seq.forEach(([f,d])=>{const o=AC.createOscillator(),g=AC.createGain();o.type=kind==='bad'?'sawtooth':'triangle';o.frequency.value=f;
   g.gain.setValueAtTime(.0001,AC.currentTime+d);g.gain.exponentialRampToValueAtTime(kind==='pop'?.07:.18,AC.currentTime+d+.02);g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+d+.18);
   o.connect(g).connect(AC.destination);o.start(AC.currentTime+d);o.stop(AC.currentTime+d+.2)})}catch(e){}}
+/* ======================= VOIX : ÉCOUTER ET PARLER ======================= */
+// Synthèse vocale du téléphone + reconnaissance vocale du navigateur. Rien n'est enregistré par Loba.
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+function lev(a,b){const m=a.length,n=b.length;let p=Array.from({length:n+1},(_,j)=>j);
+ for(let i=1;i<=m;i++){const c=[i];for(let j=1;j<=n;j++)c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1));p=c}return p[n]}
+const VOX={
+ ok:'speechSynthesis' in window,
+ pick(){if(!VOX.ok)return {v:null,native:false};const vs=speechSynthesis.getVoices();
+  const sw=LG.code==='sw'&&vs.find(v=>/^sw/i.test(v.lang));if(sw)return {v:sw,native:true};
+  const fr=vs.filter(v=>/^fr/i.test(v.lang));return {v:fr.find(v=>/google|natural|premium|enhanced/i.test(v.name))||fr[0]||null,native:false}},
+ // Le lingala et le swahili s'écrivent comme ils se prononcent : on adapte l'orthographe pour qu'une voix française les lise juste.
+ phon:s=>s.toLowerCase().replace(/ch/g,'tch').replace(/sh/g,'ch').replace(/j/g,'dj').replace(/u/g,'ou').replace(/e/g,'é').replace(/ɛ/g,'è').replace(/ɔ/g,'o')
+  .replace(/g(?=[éiy])/g,'gu').replace(/([aéiou])s(?=[aéiouy])/g,'$1ss').replace(/a(?=[iy])/g,'a ').replace(/o(?=[iy])/g,'o '),
+ speak(text,slow){if(!S.voice||!VOX.ok||!text)return;try{speechSynthesis.cancel();const {v,native}=VOX.pick();
+  const u=new SpeechSynthesisUtterance(native?text:VOX.phon(text));if(v){u.voice=v;u.lang=v.lang}else u.lang='fr-FR';u.rate=slow?.55:.85;speechSynthesis.speak(u)}catch(e){}},
+ canListen:()=>!!SR&&S.mic&&Date.now()>(S.micOff||0),
+ listen(){return new Promise((res,rej)=>{let got=[];try{const r=new SR();r.lang=LG.code==='sw'?'sw-KE':'fr-FR';r.interimResults=false;r.maxAlternatives=5;
+  r.onresult=e=>{got=[...e.results[0]].map(a=>a.transcript)};r.onerror=e=>rej(e.error||'error');r.onend=()=>res(got);VOX.rec=r;r.start()}catch(e){rej('error')}})},
+ stop(){try{VOX.rec&&VOX.rec.abort()}catch(e){}},
+ // Forme « sonore » simplifiée pour comparer ce qui a été dit et ce qui était attendu.
+ key:s=>s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/qu/g,'k').replace(/c(?=[aou])/g,'k').replace(/tch|ch|sh/g,'x').replace(/dj/g,'j').replace(/ou/g,'u')
+  .replace(/[^a-z]/g,'').replace(/h/g,'').replace(/(.)\1+/g,'$1').replace(/^[ae](?=[mn])/,'').replace(/[ezst]$/,''),
+ score(alts,target){const b=VOX.key(target);return Math.max(0,...alts.map(s=>{const a=VOX.key(s);return a?1-lev(a,b)/Math.max(a.length,b.length):0}))},
+ pass:()=>LG.code==='sw'&&VOX.pick().native?.72:.6
+};
+if(VOX.ok){try{speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices()}catch(e){}}
+const spkBtn=(text,cls)=>{const x=btn('icb '+(cls||''),'🔊',e=>{e&&e.stopPropagation();VOX.speak(text)});x.setAttribute('aria-label',t('play'));return x};
+const slowBtn=text=>{const x=btn('icb','🐢',()=>VOX.speak(text,true));x.setAttribute('aria-label',t('slow'));return x};
+
 function closeSheet(){$('ov').classList.remove('on')}
 function sheet(html,btns){$('sheet').innerHTML=html;btns.forEach(b=>{const x=document.createElement('button');x.className='btn '+(b.cls||'');x.textContent=b.label;x.disabled=!!b.disabled;x.onclick=()=>{closeSheet();b.fn&&b.fn()};$('sheet').appendChild(x)});$('ov').classList.add('on')}
 $('ov').addEventListener('click',e=>{if(e.target.id==='ov')closeSheet()});
@@ -1168,7 +1222,7 @@ function startSit(id){
 }
 function addBub(kind,li,fr){
  const d=document.createElement('div');d.className='bub '+kind;d.innerHTML=`<b>${esc(li)}</b><small class="${kind==='npc'&&!S.hints?'hid':''}">${esc(tr(fr))}</small>`;
- const sm=d.querySelector('small');sm.onclick=()=>sm.classList.remove('hid');
+ const sm=d.querySelector('small');sm.onclick=e=>{e.stopPropagation();sm.classList.remove('hid')};d.onclick=()=>VOX.speak(li);if(kind==='npc')VOX.speak(li);
  $('chat').appendChild(d);d.scrollIntoView({behavior:'smooth',block:'end'});
 }
 function npcSay(){
@@ -1281,6 +1335,9 @@ function renderProfile(){
  [['fr','FR'],['en','EN']].forEach(([c,l])=>{const b=btn(S.ui===c?'on':'',l,()=>setUi(c));seg.appendChild(b)});
  ps.appendChild(row('🌐',t('appLanguage'),seg));
  ps.appendChild(row('📚',t('learning'),btn('pill',LANG_NAMES.en[S.lang]+' ▾',langSheet)));
+ const tog=(on,fn)=>{const b=btn('pill',on?t('on'):t('off'),fn);if(!on)b.style.opacity='.6';return b};
+ if(VOX.ok)ps.appendChild(row('🔊',`${t('voiceSet')}<small>${t(VOX.pick().native?'voiceNative':'voiceApprox')}</small>`,tog(S.voice,()=>{S.voice=!S.voice;save();renderProfile();if(S.voice)VOX.speak(LG.hi)})));
+ if(SR)ps.appendChild(row('🎤',`${t('micSet')}${S.micOff>Date.now()?`<small>${t('micPaused')}</small>`:''}`,tog(S.mic,()=>{S.mic=!S.mic;S.micOff=0;save();renderProfile()})));
  const saveTxt=!sb?t('saveOff'):cloud.last?t('saveCloudAgo',{t:ago(cloud.last)}):t('saveCloud');
  const sv=row('💾',`${t('save')}<small>${esc(saveTxt)}</small>`,document.createElement('span'));ps.appendChild(sv);
  if(sb){const a=btn('btn ghost',t('secure'),accountSheet);a.style.marginTop='-4px';ps.appendChild(a)}
@@ -1290,9 +1347,10 @@ function renderProfile(){
  $('pBadges').innerHTML=BADGES.map(([ic,k,ok])=>`<div class="badge ${ok()?'':'off'}"><span class="ic">${ic}</span><b>${t(k)}</b><small>${t(k+'d')}</small></div>`).join('');
  const ws=Object.entries(LP().words).filter(([k])=>LG.wm[k]).sort((a,b)=>a[1].lvl-b[1].lvl);
  $('pWordsN').textContent=t('wordsSeen',{l:LANG_NAMES.en[S.lang],a:ws.length,b:ws.filter(w=>w[1].lvl>=4).length});
- $('pWords').innerHTML=ws.length?ws.slice(0,20).map(([k,v])=>`<div class="word"><div class="l"><b>${esc(k)}</b><small>${esc(tr(LG.wm[k][1]))}</small></div><div class="str ${v.ko&&v.lvl<4?'weak':''}">${[0,1,2,3,4].map(i=>`<i class="${i<v.lvl?'on':''}"></i>`).join('')}</div></div>`).join(''):`<div style="color:var(--muted);font-weight:700;padding:8px 0">${t('noWords')}</div>`;
+ $('pWords').innerHTML=ws.length?ws.slice(0,20).map(([k,v])=>`<div class="word" data-w="${esc(k)}"><div class="l"><b>${esc(k)}</b><small>${esc(tr(LG.wm[k][1]))}</small></div><div class="str ${v.ko&&v.lvl<4?'weak':''}">${[0,1,2,3,4].map(i=>`<i class="${i<v.lvl?'on':''}"></i>`).join('')}</div></div>`).join(''):`<div style="color:var(--muted);font-weight:700;padding:8px 0">${t('noWords')}</div>`;
 }
 $('resetBtn').onclick=()=>sheet(`<div class="big">⚠️</div><h2>${t('resetTitle')}</h2><p>${t('resetText')}</p>`,[{label:t('resetYes'),cls:'red',fn:()=>{const ui=S.ui;S=fresh();S.ui=ui;LG=LANGS.ln;save();startOnb()}},{label:t('cancel'),cls:'ghost'}]);
+$('pWords').addEventListener('click',e=>{const w=e.target.closest('.word');if(w&&w.dataset.w)VOX.speak(w.dataset.w)});
 function accountSheet(){
  if(!sb)return;
  $('sheet').innerHTML=`<div class="big">☁️</div><h2>${t('accTitle')}</h2><p>${t('accText')}</p><input class="field" id="accMail" type="email" autocomplete="email" maxlength="120" placeholder="email@exemple.com"><div class="err" id="accErr"></div>`;
@@ -1313,7 +1371,11 @@ function buildExercises(u){
  ws.slice(3,5).forEach(w=>ex.push({type:'mc',dir:'fl',item:w,pool:u.words}));
  pick(u.sentences,2).forEach(s=>ex.push({type:'build',s}));
  while(ex.length<7){const w=ws[ex.length%ws.length];ex.push({type:'mc',dir:Math.random()<.5?'lf':'fl',item:w,pool:u.words})}
- const r=shuffle(ex);r.splice(3,0,{type:'match',pairs:pick(u.words,4)});return r;
+ const r=shuffle(ex);r.splice(3,0,{type:'match',pairs:pick(u.words,4)});
+ // Apprentissage vocal : un exercice d'écoute et un exercice où l'on parle.
+ if(VOX.ok&&S.voice){const w=pick(u.words,1)[0];r.splice(2,1,{type:'listen',item:w,pool:u.words})}
+ if(VOX.canListen()){const s=pick(u.sentences,1)[0],w=pick(u.words,1)[0];r.splice(6,0,s&&Math.random()<.6?{type:'speak',li:s[1],fr:s[0]}:{type:'speak',li:w[0],fr:w[1],word:true})}
+ return r;
 }
 function startLesson(i){regen();if(S.hearts<=0)return noHearts(()=>startLesson(i));
  L={u:LG.units[i],queue:buildExercises(LG.units[i]),idx:0,total:8,correct:0,answered:0,errors:0,combo:0,comboMax:0,state:'answer',sel:null,retried:new Set()};show('lesson');renderEx()}
@@ -1340,6 +1402,28 @@ function renderEx(){
   b.innerHTML=`<div class="q-kind">${L.review?'🧠 ':''}${e.dir==='lf'?t('whatMeans'):t('howSay',{lang:lname()})}</div><div class="prompt"><div class="mascot">🦜</div><div class="bubble ${e.dir==='lf'?'lg':''}">${esc(q)}</div></div><div class="opts" id="opts"></div>`;
   shuffle([ans,...others]).forEach(o=>{const x=btn('opt',o,()=>{if(L.state!=='answer')return;document.querySelectorAll('#opts .opt').forEach(y=>y.classList.remove('sel'));x.classList.add('sel');L.sel=o;$('checkBtn').disabled=false});$('opts').appendChild(x)});
   e.answer=ans;
+  if(e.dir==='lf'&&VOX.ok&&S.voice){b.querySelector('.prompt').appendChild(spkBtn(li,'sm'));VOX.speak(li)}
+ }else if(e.type==='listen'){
+  const li=e.item[0],others=pick(e.pool.filter(w=>w[0]!==li),3).map(w=>w[0]);
+  b.innerHTML=`<div class="q-kind">🎧 ${t('listenQ')}</div><div class="say" id="say"></div><div class="opts" id="opts"></div>`;
+  $('say').append(spkBtn(li,'big'),slowBtn(li));
+  shuffle([li,...others]).forEach(o=>{const x=btn('opt',o,()=>{if(L.state!=='answer')return;document.querySelectorAll('#opts .opt').forEach(y=>y.classList.remove('sel'));x.classList.add('sel');L.sel=o;$('checkBtn').disabled=false});$('opts').appendChild(x)});
+  e.answer=li;setTimeout(()=>VOX.speak(li),250);
+ }else if(e.type==='speak'){
+  e.tries=e.tries||0;e.answer=e.li;
+  b.innerHTML=`<div class="q-kind">🎤 ${t('sayIt')}</div><div class="prompt"><div class="mascot">🦜</div><div class="bubble lg">${esc(e.li)}<small class="sub">${esc(tr(e.fr))}</small></div></div><div class="say" id="say"></div><button class="mic" id="mic"></button><div class="heard" id="heard"></div>`;
+  $('say').append(spkBtn(e.li),slowBtn(e.li));$('mic').textContent=t('tapSpeak');
+  const skip=btn('linkbtn',t('cantSpeak'),()=>{VOX.stop();S.micOff=Date.now()+36e5;save();toast(t('micOffToast'));L.queue=L.queue.filter((x,i)=>i<=L.idx||x.type!=='speak');L.queue.splice(L.idx,1);nextEx()});b.appendChild(skip);
+  $('mic').onclick=async()=>{if(L.state!=='answer'||$('mic').classList.contains('on'))return;
+   speechSynthesis&&speechSynthesis.cancel();$('mic').classList.add('on');$('mic').textContent=t('listening');$('heard').textContent='';
+   try{const alts=await VOX.listen();if(!L||L.queue[L.idx]!==e)return;$('mic').classList.remove('on');$('mic').textContent=t('tapSpeak');
+    if(!alts.length){$('heard').textContent=t('noSpeech');return}
+    const sc=VOX.score(alts,e.li);$('heard').textContent=t('heard',{s:alts[0]});
+    if(sc>=VOX.pass()){e.ok=true;S.spoken++;checkAnswer()}
+    else{e.tries++;sfx('bad');$('heard').textContent+=' — '+t('speakRetry');if(e.tries>=2&&!$('skipSay')){const k=btn('btn ghost',t('speakSkip'),()=>{e.ok=false;checkAnswer()});k.id='skipSay';k.style.marginTop='12px';$('heard').after(k)}}
+   }catch(err){if(!L||L.queue[L.idx]!==e)return;$('mic').classList.remove('on');$('mic').textContent=t('tapSpeak');
+    if(err==='not-allowed'||err==='service-not-allowed'){S.micOff=Date.now()+36e5;save();toast(t('micDenied'),3200);L.queue=L.queue.filter((x,i)=>i<=L.idx||x.type!=='speak');L.queue.splice(L.idx,1);nextEx()}
+    else $('heard').textContent=t('noSpeech')}};
  }else if(e.type==='match'){
   b.innerHTML=`<div class="q-kind">${t('pairs')}</div><div class="match"><div class="col" id="cl"></div><div class="col" id="cr"></div></div>`;
   let left=null,right=null,found=0;e.perfect=true;
@@ -1361,15 +1445,19 @@ function renderEx(){
  }
 }
 function checkAnswer(){
- const e=L.queue[L.idx];const ok=e.type==='match'?e.perfect:norm(L.sel||'')===norm(e.answer);
+ const e=L.queue[L.idx];const ok=e.type==='match'?e.perfect:e.type==='speak'?!!e.ok:norm(L.sel||'')===norm(e.answer);const soft=e.type==='speak';
+ if(e.type==='speak'){$('mic').disabled=true;const k=$('skipSay');k&&k.remove()}
+ if(e.type==='listen'){track(e.item[0],ok);document.querySelectorAll('#opts .opt').forEach(o=>{o.disabled=true;if(o.textContent===e.answer)o.classList.add('good');else if(o.classList.contains('sel'))o.classList.add('bad')})}
  if(e.type==='mc'){track(e.item[0],ok);document.querySelectorAll('#opts .opt').forEach(o=>{o.disabled=true;if(o.textContent===e.answer)o.classList.add('good');else if(o.classList.contains('sel'))o.classList.add('bad')})}
  L.answered++;const f=$('foot');
- if(ok){L.correct++;L.combo++;L.comboMax=Math.max(L.comboMax,L.combo);sfx('good');f.className='foot good';$('fbTitle').textContent=pick(LG.praise,1)[0];$('fbText').textContent=e.type==='match'?t('allPairs'):''}
+ if(ok){L.correct++;L.combo++;L.comboMax=Math.max(L.comboMax,L.combo);sfx('good');f.className='foot good';$('fbTitle').textContent=pick(LG.praise,1)[0];$('fbText').textContent=e.type==='match'?t('allPairs'):soft?t('speakGood'):'';
+  const said=e.type==='build'||e.type==='mc'&&e.dir==='fl'?e.answer:null;if(said)VOX.speak(said)}
  else{
-  L.errors++;L.combo=0;if(!L.review){loseHeart();$('lHearts').classList.remove('hit');void $('lHearts').offsetWidth;$('lHearts').classList.add('hit')}
-  sfx('bad');f.className='foot bad';$('fbTitle').textContent=t('notQuite')+(L.review?'':t('minusHeart'));
-  $('fbText').textContent=e.type==='match'?t('pairsRetry'):t('goodAnswer',{a:e.answer})+(e.type==='mc'?t('willReview'):'');
-  if(!L.retried.has(e)){L.retried.add(e);L.queue.push(e)}
+  L.errors++;L.combo=0;if(!L.review&&!soft){loseHeart();$('lHearts').classList.remove('hit');void $('lHearts').offsetWidth;$('lHearts').classList.add('hit')}
+  sfx('bad');f.className='foot bad';$('fbTitle').textContent=t('notQuite')+(L.review||soft?'':t('minusHeart'));
+  $('fbText').textContent=e.type==='match'?t('pairsRetry'):soft?t('speakMiss'):t('goodAnswer',{a:e.answer})+(e.type==='mc'?t('willReview'):'');
+  if(!soft&&!L.retried.has(e)){L.retried.add(e);L.queue.push(e)}
+  if(e.type==='build'||e.type==='mc'&&e.dir==='fl')VOX.speak(e.answer)
  }
  const cb=$('combo');if(L.combo>=3){cb.textContent=t('inARow',{n:L.combo});cb.classList.add('on')}else cb.classList.remove('on');
  save();setProgress();L.state='next';$('checkBtn').textContent=t('continue');$('checkBtn').disabled=false;

@@ -20,6 +20,9 @@ Google Play et Apple **interdisent aux particuliers** de mettre des liens de don
    - Sécurité des données : identifiant utilisateur anonyme + e-mail facultatif, chiffrés en transit, suppression sur demande.
    - Captures d'écran (au moins 2) + icône 512 px (`icons/icon-512.png`).
 
+### Micro (exercices oraux)
+L'application demande le micro seulement quand on appuie sur 🎤. Dans la fiche Play Console, déclare l'accès au micro (« Audio : enregistrement vocal, non collecté, non partagé ») et laisse la mention « Micro » de la politique de confidentialité.
+
 ## 2. App Store (iPhone)
 **Coût : 99 $ par an. Il faut un Mac (ou un service de build cloud).**
 
