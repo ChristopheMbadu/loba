@@ -347,6 +347,23 @@ h1,h2,h3{font-family:'Baloo 2',sans-serif}
 .heard{text-align:center;color:var(--muted);font-weight:800;margin-top:12px;min-height:22px}
 .linkbtn{display:block;margin:16px auto 0;background:none;border:none;color:var(--muted);font:800 14px Nunito,sans-serif;text-decoration:underline;cursor:pointer}
 .bub{cursor:pointer}.word{cursor:pointer}
+/* ===== Profil & compte ===== */
+.prof .pinfo{flex:1;min-width:0}.prof h2{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prof .avatar{cursor:pointer}.pacc{display:block;color:var(--green-d)!important;margin-top:2px}
+.edit-av{margin:6px auto 10px}
+.flabel{display:block;font-weight:800;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin:10px 0 6px;text-align:left}
+.avgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.avb{font-size:26px;padding:8px 0;border-radius:12px;border:2px solid var(--line);background:#fff;cursor:pointer}
+.avb.on{border-color:var(--sky);background:#e8f4fd}
+.colrow{display:flex;gap:10px;flex-wrap:wrap}
+.colb{width:34px;height:34px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 2px var(--line);cursor:pointer}
+.colb.on{box-shadow:0 0 0 3px var(--ink)}
+.btn.black{background:#111;color:#fff;box-shadow:0 5px 0 #000}
+.btn:disabled{opacity:.5}
+#accBox .btn{margin-bottom:10px}
+.field.code{text-align:center;letter-spacing:8px;font-size:26px}
+select.pill{font:inherit;font-weight:800;padding:6px 10px;border-radius:12px;border:2px solid var(--line);background:#fff;color:var(--ink)}
+.sheet{max-height:92vh;overflow-y:auto}
 
 .nav button b{font-weight:800}
 </style>
@@ -389,7 +406,7 @@ h1,h2,h3{font-family:'Baloo 2',sans-serif}
 
   <!-- PROFIL -->
   <section class="screen" id="sProfile"><div class="pad">
-    <div class="prof"><div class="avatar">🦜</div><div><h2 data-i18n="myProfile"></h2><small id="pMotive"></small></div></div>
+    <div class="prof"><div class="avatar" id="pAv">🦜</div><div class="pinfo"><h2 id="pName"></h2><small id="pMotive"></small><small id="pAcc" class="pacc"></small></div><button class="icb" id="pEdit" aria-label="edit">✏️</button></div>
     <div class="sec" data-i18n="settings"></div><div id="pSettings"></div>
     <div class="sec" data-i18n="stats"></div><div class="grid" id="pStats"></div>
     <div class="sec" data-i18n="badges"></div><div class="badges" id="pBadges"></div>
@@ -748,7 +765,7 @@ fr:{
  sStreak:'Série actuelle',sXp:'XP au total',sLessons:'Leçons',sConv:'Conversations',sFlash:'Record éclair',sBadges:'Badges',
  wordsSeen:'{l} · {a} vus · {b} maîtrisés',noWords:'Fais ta première leçon pour remplir ton carnet.',
  appLanguage:'Langue de l\'appli',learning:'Langue apprise',save:'Sauvegarde',saveLocal:'Sur cet appareil',saveCloud:'☁️ Synchronisée',saveCloudAgo:'☁️ Synchronisée {t}',
- saveOff:'Locale uniquement',secure:'Récupérer ma progression sur un autre appareil',justNow:'à l\'instant',
+ saveOff:'Locale uniquement',secure:'👤 Mon compte · Créer un compte ou se connecter',justNow:'à l\'instant',
  resetTitle:'Tout recommencer ?',resetText:'Ta série, tes XP, tes gemmes et tes carnets (toutes langues) seront effacés.',resetYes:'Oui, réinitialiser',cancel:'Annuler',
  // lesson
  check:'Vérifier',translateSentence:'Traduis cette phrase',howSay:'Comment dit-on en {lang}…',pairs:'Associe les paires',
@@ -776,7 +793,7 @@ fr:{
  donSoon:'Bientôt disponible.',donUse:'À quoi servent les dons ?',donUse1:'🎙️ Enregistrer l\'audio avec des locuteurs',donUse2:'🌍 Ajouter le kikongo et le tshiluba',donUse3:'☁️ Payer les serveurs de sauvegarde',
  donStoreNote:'Merci d\'utiliser Loba ! 🙏🏾',donAsk:'Loba t\'aide ? Un petit don le fait grandir ❤️',
  // compte / sauvegarde
- accTitle:'Ta progression, partout',accText:'Ajoute ton e-mail : ta progression sera rattachée à ton compte et tu pourras la récupérer sur un autre téléphone.',
+ accTitle:'Crée ton compte',accText:'Garde ta progression et retrouve-la sur n\'importe quel téléphone. Déjà un compte ? Même bouton : on te reconnecte.',
  accSave:'Rattacher mon e-mail',accRestore:'Récupérer ma progression',accCheck:'Vérifie ta boîte mail pour confirmer ✅',accLink:'Lien de connexion envoyé : ouvre-le sur cet appareil ✅',
  badEmail:'E-mail invalide.',accEmailFirst:'Entre l\'e-mail de ton compte.',restored:'☁️ Progression récupérée !',
  // mots génériques
@@ -785,6 +802,12 @@ fr:{
  micDenied:'Micro bloqué : autorise-le dans ton navigateur pour parler.',speakGood:'Bien prononcé ! 🎙️',speakMiss:'Pas grave, aucun cœur perdu. Réécoute et retente plus tard.',
  listenQ:'Qu\'as-tu entendu ?',play:'Écouter',slow:'Plus lentement',voiceSet:'Voix',voiceNative:'Voix swahili de ton téléphone',voiceApprox:'Voix approchée, en attendant nos enregistrements',
  micSet:'Exercices oraux',micPaused:'En pause pendant 1 h',on:'Oui',off:'Non',b11:'Loba !',b11d:'10 phrases dites',
+ editTitle:'Mon profil',nameLabel:'Ton prénom ou pseudo',namePh:'Ex. Christophe',avLabel:'Avatar',colLabel:'Couleur',goalLabel:'Objectif quotidien',saveBtn:'Enregistrer',profSaved:'Profil mis à jour ✅',
+ withApple:'Continuer avec Apple',withEmail:'Continuer avec l\'e-mail',withPhone:'Continuer avec le numéro',soon:'bientôt',sendCode:'Recevoir un code',back:'Retour',
+ codeSentMail:'E-mail envoyé à <b>{v}</b> (regarde aussi dans tes spams). Saisis le code reçu, ou clique simplement sur le lien de l\'e-mail.',codeSentSms:'Code envoyé par SMS au <b>{v}</b>.',verify:'Valider',badCode:'Code incorrect ou expiré.',badPhone:'Numéro invalide : commence par + et l\'indicatif (ex. +243…).',
+ accDone:'Compte connecté ✅ Ta progression est sauvegardée.',accIn:'Ton compte',accInText:'Connecté avec <b>{a}</b>. Ta progression est sauvegardée automatiquement.',signOut:'Se déconnecter',signOutText:'Ta progression reste dans ton compte. Sur ce téléphone, l\'appli repartira de zéro jusqu\'à ta reconnexion.',
+ remindLabel:'Rappel quotidien',remindSub:'Une notification si tu n\'as pas encore pratiqué',remindIos:'Sur iPhone : ajoute d\'abord Loba à l\'écran d\'accueil',remindUnsupported:'Non disponible sur ce navigateur',
+ remindDenied:'Notifications refusées : autorise-les dans les réglages du navigateur.',remindSet:'C\'est noté : rappel à {h} 🔔',remindHour:'Heure du rappel',
  day:'Jour'
 },
 en:{
@@ -826,7 +849,7 @@ en:{
  sStreak:'Current streak',sXp:'Total XP',sLessons:'Lessons',sConv:'Conversations',sFlash:'Lightning best',sBadges:'Badges',
  wordsSeen:'{l} · {a} seen · {b} mastered',noWords:'Do your first lesson to fill your notebook.',
  appLanguage:'App language',learning:'Learning',save:'Backup',saveLocal:'On this device',saveCloud:'☁️ Synced',saveCloudAgo:'☁️ Synced {t}',
- saveOff:'Local only',secure:'Get my progress on another device',justNow:'just now',
+ saveOff:'Local only',secure:'👤 My account · Sign up or log in',justNow:'just now',
  resetTitle:'Start over?',resetText:'Your streak, XP, gems and notebooks (all languages) will be erased.',resetYes:'Yes, reset',cancel:'Cancel',
  check:'Check',translateSentence:'Translate this sentence',howSay:'How do you say it in {lang}…',pairs:'Match the pairs',
  notQuite:'Not quite…',minusHeart:' −1 ❤️',goodAnswer:'Correct answer: {a}',willReview:' · this word will come back in review 🧠',
@@ -849,7 +872,7 @@ en:{
  donName:'Name: {n}',donDone:'I made a donation ❤️',donThanks:'Matondo mingi! Asante sana!',donThanksText:'Thank you for keeping Loba alive. The Motema badge is yours.',
  donSoon:'Coming soon.',donUse:'What are donations for?',donUse1:'🎙️ Recording audio with native speakers',donUse2:'🌍 Adding Kikongo and Tshiluba',donUse3:'☁️ Paying for backup servers',
  donStoreNote:'Thank you for using Loba! 🙏🏾',donAsk:'Is Loba helping you? A small donation helps it grow ❤️',
- accTitle:'Your progress, everywhere',accText:'Add your email: your progress will be linked to your account and you can get it back on another phone.',
+ accTitle:'Create your account',accText:'Keep your progress and get it back on any phone. Already have an account? Same button: we\'ll log you back in.',
  accSave:'Link my email',accRestore:'Recover my progress',accCheck:'Check your inbox to confirm ✅',accLink:'Sign-in link sent: open it on this device ✅',
  badEmail:'Invalid email.',accEmailFirst:'Enter your account email.',restored:'☁️ Progress recovered!',
  sayIt:'Say it out loud',tapSpeak:'🎤 Tap and speak',listening:'🔴 Listening…',heard:'I heard: “{s}”',speakRetry:'almost! Try again 🎯',
@@ -857,6 +880,12 @@ en:{
  micDenied:'Microphone blocked: allow it in your browser to speak.',speakGood:'Nicely said! 🎙️',speakMiss:'No worries, no heart lost. Listen again and retry later.',
  listenQ:'What did you hear?',play:'Listen',slow:'Slower',voiceSet:'Voice',voiceNative:'Your phone\'s Swahili voice',voiceApprox:'Approximate voice, until our native recordings',
  micSet:'Speaking exercises',micPaused:'Paused for 1 hour',on:'On',off:'Off',b11:'Loba!',b11d:'10 phrases spoken',
+ editTitle:'My profile',nameLabel:'Your first name or nickname',namePh:'E.g. Christophe',avLabel:'Avatar',colLabel:'Colour',goalLabel:'Daily goal',saveBtn:'Save',profSaved:'Profile updated ✅',
+ withApple:'Continue with Apple',withEmail:'Continue with email',withPhone:'Continue with phone number',soon:'soon',sendCode:'Get a code',back:'Back',
+ codeSentMail:'Email sent to <b>{v}</b> (check your spam too). Enter the code, or simply tap the link in the email.',codeSentSms:'Code sent by SMS to <b>{v}</b>.',verify:'Confirm',badCode:'Wrong or expired code.',badPhone:'Invalid number: start with + and the country code (e.g. +243…).',
+ accDone:'Account connected ✅ Your progress is saved.',accIn:'Your account',accInText:'Signed in with <b>{a}</b>. Your progress is saved automatically.',signOut:'Sign out',signOutText:'Your progress stays in your account. On this phone, the app will start from scratch until you sign back in.',
+ remindLabel:'Daily reminder',remindSub:'A notification if you haven\'t practised yet',remindIos:'On iPhone: add Loba to your home screen first',remindUnsupported:'Not available in this browser',
+ remindDenied:'Notifications blocked: allow them in your browser settings.',remindSet:'Got it: reminder at {h} 🔔',remindHour:'Reminder time',
  day:'Day'
 }};
 // Libellés de contenu propres à l'interface (motivations, voyage…)
@@ -871,6 +900,10 @@ const DONATE={
 };
 // Sauvegarde dans le cloud (Supabase). Clé "anon" publique : c'est normal qu'elle soit ici.
 const BACKEND={url:"https://ovpcnnigwxqvqvhxtufe.supabase.co",anonKey:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im92cGNubmlnd3hxdnF2aHh0dWZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQwODY0ODYsImV4cCI6MjEwOTY2MjQ4Nn0.OlQLatIDr6--xCqPoA0wlzlPGBFa0aaO5fSOlhs0SBU"};
+// Connexion : Apple et SMS ne s'activent qu'une fois configurés dans Supabase (compte Apple Developer, fournisseur SMS).
+const AUTH={apple:false,phone:false};
+// Rappels quotidiens (Web Push) : clé publique VAPID. Vide = rappels désactivés.
+const VAPID_PUBLIC="BPt5o81_Hjs8Jr54mP1gOlw8I-bWjn1gyPxIKNp9rz_hhpBvDDpMU6SGpCjtvs13N7Lnf-GCHiQOmfOKRHv3bs8";
 // Version publiée sur Google Play / App Store : ouverte avec ?app=1 (pas de liens de dons, exigence des stores).
 const STORE_BUILD=(()=>{try{if(new URLSearchParams(location.search).has('app'))localStorage.setItem('loba-store','1');return localStorage.getItem('loba-store')==='1'}catch(e){return false}})();
 
@@ -898,6 +931,9 @@ function applyStatic(){
 
 /* ======================= DONNÉES DE JEU ======================= */
 Object.values(LANGS).forEach(l=>{l.wm={};l.units.forEach(u=>u.words.forEach(w=>l.wm[w[0]]=w))});
+const AVATARS=['🦜','🦁','🐘','🦒','🐆','🦓','🦩','🐒','🦅','🐢','🐊','🦋','🌍','⚽','🥁','🎸','🌺','👑','🔥','⭐'];
+const AV_COLORS=[['#FFC93C','#e0a812'],['#1E8FE1','#1670b3'],['#58CC02','#46a302'],['#D7263D','#a81b2e'],['#CE82FF','#a568cc'],['#FF9600','#cc7800'],['#2EC4B6','#22958a'],['#4B4B4B','#2b2b2b']];
+const cleanName=v=>String(v).replace(/[\u0000-\u001f\u007f<>]/g,'').replace(/\s+/g,' ').trim().slice(0,20);
 const MOTIVES={famille:['🏠','mFamille','mama'],racines:['🌳','mRacines','mama'],belle:['💍','mBelle','belle'],voyage:['✈️',null,'arrivee'],curio:['🧠','mCurio','zando']};
 const motiveLabel=k=>MOTIVES[k][1]?t(MOTIVES[k][1]):tr(LG.voyage);
 const LEVELS={zero:['🌱','lZero'],passif:['👂🏾','lPassif'],moyen:['💬','lMoyen']};
@@ -923,7 +959,7 @@ const KEY='loba-state-v4';
 const newQ=()=>({day:today(),xp:0,lessons:0,comboMax:0,flashBest:0,sent:0,claimed:[]});
 const freshLang=()=>({started:false,level:'zero',prog:{},chests:{},words:{},sit:{}});
 const detectUi=()=>((navigator.language||'fr').toLowerCase().startsWith('fr')?'fr':'en');
-const fresh=()=>({v:5,savedAt:0,ui:detectUi(),onboarded:false,lang:'ln',motive:'famille',goal:40,hints:true,xp:0,gems:50,hearts:MAXH,heartTs:null,streak:0,bestStreak:0,lastDay:null,total:0,perfect:0,flashBest:0,sitDone:0,sentTotal:0,reviews:0,spoken:0,voice:true,mic:true,micOff:0,donated:false,q:newQ(),per:{ln:freshLang(),sw:freshLang()}});
+const fresh=()=>({v:5,savedAt:0,ui:detectUi(),onboarded:false,lang:'ln',motive:'famille',goal:40,hints:true,xp:0,gems:50,hearts:MAXH,heartTs:null,streak:0,bestStreak:0,lastDay:null,total:0,perfect:0,flashBest:0,sitDone:0,sentTotal:0,reviews:0,spoken:0,prof:{name:'',av:'🦜',col:0},remind:{on:false,h:19},voice:true,mic:true,micOff:0,donated:false,q:newQ(),per:{ln:freshLang(),sw:freshLang()}});
 
 // Nettoie un état venant du stockage ou du cloud : types attendus, valeurs bornées.
 function sanitize(o){
@@ -931,6 +967,8 @@ function sanitize(o){
  const num=(v,d,min=0,max=1e9)=>Number.isFinite(+v)?Math.min(max,Math.max(min,+v)):d;
  const out={...S0};
  for(const k of ['xp','gems','streak','bestStreak','total','perfect','flashBest','sitDone','sentTotal','reviews','spoken'])out[k]=num(o[k],S0[k]);
+ const pr=o.prof||{};out.prof={name:typeof pr.name==='string'?cleanName(pr.name):'',av:AVATARS.includes(pr.av)?pr.av:'🦜',col:num(pr.col,0,0,AV_COLORS.length-1)|0};
+ const rm=o.remind||{};out.remind={on:!!rm.on,h:num(rm.h,19,0,23)|0};
  out.voice=o.voice!==false;out.mic=o.mic!==false;out.micOff=num(o.micOff,0,0,1e15);
  out.savedAt=num(o.savedAt,0,0,1e15);out.hearts=num(o.hearts,MAXH,0,MAXH);out.heartTs=o.heartTs?num(o.heartTs,null,0,1e15):null;out.goal=[20,40,60].includes(+o.goal)?+o.goal:40;
  out.ui=o.ui==='en'?'en':o.ui==='fr'?'fr':S0.ui;out.lang=o.lang in LANGS?o.lang:'ln';out.motive=o.motive in MOTIVES?o.motive:'famille';
@@ -1327,7 +1365,10 @@ $('flashGo').onclick=startFlash;
 
 /* ======================= PROFIL ======================= */
 function ago(ts){const s=(Date.now()-ts)/1000;if(s<60)return t('justNow');const m=Math.round(s/60);return S.ui==='en'?`${m} min ago`:`il y a ${m} min`}
+function paintAvatar(el,big){const c=AV_COLORS[S.prof.col]||AV_COLORS[0];el.textContent=S.prof.av;el.style.background=c[0];el.style.boxShadow=`0 5px 0 ${c[1]}`}
 function renderProfile(){
+ paintAvatar($('pAv'));$('pName').textContent=S.prof.name||t('myProfile');
+ const ac=$('pAcc');ac.textContent='';acct.info().then(i=>{if(i&&i.label)ac.textContent='✅ '+i.label});
  $('pMotive').textContent=MOTIVES[S.motive][0]+' '+motiveLabel(S.motive)+' · '+Object.values(LANGS).filter(l=>S.per[l.code].started).map(l=>LANG_NAMES.en[l.code]).join(' + ');
  const ps=$('pSettings');ps.innerHTML='';
  const row=(ic,label,right)=>{const d=document.createElement('div');d.className='card substat';d.style.marginBottom='10px';d.innerHTML=`<div class="ic">${ic}</div><div class="tx">${label}</div>`;d.appendChild(right);return d};
@@ -1337,6 +1378,13 @@ function renderProfile(){
  ps.appendChild(row('📚',t('learning'),btn('pill',LANG_NAMES.en[S.lang]+' ▾',langSheet)));
  const tog=(on,fn)=>{const b=btn('pill',on?t('on'):t('off'),fn);if(!on)b.style.opacity='.6';return b};
  if(VOX.ok)ps.appendChild(row('🔊',`${t('voiceSet')}<small>${t(VOX.pick().native?'voiceNative':'voiceApprox')}</small>`,tog(S.voice,()=>{S.voice=!S.voice;save();renderProfile();if(S.voice)VOX.speak(LG.hi)})));
+ {const sel=document.createElement('select');sel.className='pill';sel.setAttribute('aria-label',t('remindHour'));
+  for(let h=6;h<=22;h++){const o=document.createElement('option');o.value=h;o.textContent=(S.ui==='en'?((h%12)||12)+(h<12?' am':' pm'):h+' h');if(h===S.remind.h)o.selected=true;sel.appendChild(o)}
+  sel.onchange=()=>{S.remind.h=+sel.value;save();remind.sync();toast(t('remindSet',{h:sel.options[sel.selectedIndex].text}))};
+  const wrap=document.createElement('div');wrap.style.cssText='display:flex;gap:6px;align-items:center';
+  const tb=tog(S.remind.on,async()=>{try{if(S.remind.on)await remind.off();else{await remind.on();toast(t('remindSet',{h:sel.options[sel.selectedIndex].text}))}}catch(e){toast(e.message,3600)}renderProfile()});
+  if(S.remind.on)wrap.appendChild(sel);wrap.appendChild(tb);
+  ps.appendChild(row('🔔',`${t('remindLabel')}<small>${t(remind.supported()?'remindSub':(/iphone|ipad/i.test(navigator.userAgent)&&!navigator.standalone?'remindIos':'remindUnsupported'))}</small>`,wrap))}
  if(SR)ps.appendChild(row('🎤',`${t('micSet')}${S.micOff>Date.now()?`<small>${t('micPaused')}</small>`:''}`,tog(S.mic,()=>{S.mic=!S.mic;S.micOff=0;save();renderProfile()})));
  const saveTxt=!sb?t('saveOff'):cloud.last?t('saveCloudAgo',{t:ago(cloud.last)}):t('saveCloud');
  const sv=row('💾',`${t('save')}<small>${esc(saveTxt)}</small>`,document.createElement('span'));ps.appendChild(sv);
@@ -1351,16 +1399,90 @@ function renderProfile(){
 }
 $('resetBtn').onclick=()=>sheet(`<div class="big">⚠️</div><h2>${t('resetTitle')}</h2><p>${t('resetText')}</p>`,[{label:t('resetYes'),cls:'red',fn:()=>{const ui=S.ui;S=fresh();S.ui=ui;LG=LANGS.ln;save();startOnb()}},{label:t('cancel'),cls:'ghost'}]);
 $('pWords').addEventListener('click',e=>{const w=e.target.closest('.word');if(w&&w.dataset.w)VOX.speak(w.dataset.w)});
-function accountSheet(){
- if(!sb)return;
- $('sheet').innerHTML=`<div class="big">☁️</div><h2>${t('accTitle')}</h2><p>${t('accText')}</p><input class="field" id="accMail" type="email" autocomplete="email" maxlength="120" placeholder="email@exemple.com"><div class="err" id="accErr"></div>`;
- const msg=(m,ok)=>{$('accErr').style.color=ok?'var(--green-d)':'';$('accErr').textContent=m};
- const mail=()=>{const v=$('accMail').value.trim();return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)?v:null};
- $('sheet').append(
-  btn('btn gold',t('accSave'),async()=>{const e=mail();if(!e)return msg(t('badEmail'));try{await cloud.session();const {error}=await sb.auth.updateUser({email:e});if(error)throw error;msg(t('accCheck'),true)}catch(er){msg(er.message||'Erreur')}}),
-  btn('btn ghost',t('accRestore'),async()=>{const e=mail();if(!e)return msg(t('accEmailFirst'));try{const {error}=await sb.auth.signInWithOtp({email:e,options:{shouldCreateUser:false,emailRedirectTo:location.origin+location.pathname}});if(error)throw error;msg(t('accLink'),true)}catch(er){msg(er.message||'Erreur')}}),
-  btn('btn ghost',t('close'),closeSheet));
+$('pEdit').onclick=editProfile;$('pAv').onclick=editProfile;
+function editProfile(){
+ const P={...S.prof},goal=S.goal;let g=goal;
+ $('sheet').innerHTML=`<h2>${t('editTitle')}</h2><div class="avatar edit-av" id="eAv"></div>
+  <label class="flabel">${t('nameLabel')}</label><input class="field" id="eName" maxlength="20" autocomplete="nickname" placeholder="${t('namePh')}">
+  <label class="flabel">${t('avLabel')}</label><div class="avgrid" id="eAvs"></div>
+  <label class="flabel">${t('colLabel')}</label><div class="colrow" id="eCols"></div>
+  <label class="flabel">${t('goalLabel')}</label><div class="seg" id="eGoal" style="margin:0 0 6px"></div>`;
+ const paint=()=>{const c=AV_COLORS[P.col];const a=$('eAv');a.textContent=P.av;a.style.background=c[0];a.style.boxShadow=`0 5px 0 ${c[1]}`;
+  document.querySelectorAll('#eAvs button').forEach(b=>b.classList.toggle('on',b.textContent===P.av));document.querySelectorAll('#eCols button').forEach((b,i)=>b.classList.toggle('on',i===P.col));
+  document.querySelectorAll('#eGoal button').forEach(b=>b.classList.toggle('on',+b.dataset.g===g))};
+ $('eName').value=P.name;
+ AVATARS.forEach(a=>$('eAvs').appendChild(btn('avb',a,()=>{P.av=a;paint()})));
+ AV_COLORS.forEach((c,i)=>{const b=btn('colb','',()=>{P.col=i;paint()});b.style.background=c[0];b.setAttribute('aria-label','couleur '+(i+1));$('eCols').appendChild(b)});
+ GOALS.forEach(([n,k])=>{const b=btn('',t(k),()=>{g=n;paint()});b.dataset.g=n;$('eGoal').appendChild(b)});
+ paint();
+ $('sheet').append(btn('btn',t('saveBtn'),()=>{P.name=cleanName($('eName').value);S.prof=P;S.goal=g;save();closeSheet();render();toast(t('profSaved'))}),btn('btn ghost',t('cancel'),closeSheet));
  $('ov').classList.add('on');
+}
+/* ----- Rappel quotidien : notification push à l'heure choisie, seulement si on n'a pas encore pratiqué ----- */
+const remind={
+ supported:()=>!!(sb&&VAPID_PUBLIC&&'serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window&&location.protocol==='https:'),
+ key(){const b=atob(VAPID_PUBLIC.replace(/-/g,'+').replace(/_/g,'/')+'==='.slice((VAPID_PUBLIC.length+3)%4));return Uint8Array.from(b,c=>c.charCodeAt(0))},
+ async sub(){const reg=await navigator.serviceWorker.ready;return (await reg.pushManager.getSubscription())||reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:remind.key()})},
+ async on(){if(!remind.supported())throw new Error(t('remindUnsupported'));
+  const perm=await Notification.requestPermission();if(perm!=='granted')throw new Error(t('remindDenied'));
+  S.remind.on=true;save();await remind.sync()},
+ async sync(){if(!remind.supported()||!S.remind.on||Notification.permission!=='granted')return;
+  try{const s=await cloud.session(),sub=(await remind.sub()).toJSON();
+   await sb.from('push_subs').upsert({endpoint:sub.endpoint,user_id:s.user.id,p256dh:sub.keys.p256dh,auth:sub.keys.auth,hour:S.remind.h,
+    tz:Intl.DateTimeFormat().resolvedOptions().timeZone||'UTC',ui:S.ui},{onConflict:'endpoint'})}catch(e){}},
+ async off(quiet){S.remind.on=false;if(!quiet)save();if(!('serviceWorker' in navigator))return;
+  try{const reg=await navigator.serviceWorker.getRegistration();const sub=reg&&await reg.pushManager.getSubscription();
+   if(sub){if(sb)await sb.from('push_subs').delete().eq('endpoint',sub.endpoint);await sub.unsubscribe()}}catch(e){}}
+};
+/* ----- Compte : e-mail, numéro de téléphone, Apple ----- */
+const acct={
+ async user(){if(!sb)return null;try{const {data}=await sb.auth.getUser();return data.user||null}catch(e){return null}},
+ async info(){const u=await acct.user();if(!u||u.is_anonymous)return null;
+  const apple=(u.identities||[]).some(i=>i.provider==='apple');return {u,label:u.email||(u.phone?'+'+String(u.phone).replace(/^\+/,''):'')||(apple?'Apple':'')}},
+ // 1) on rattache l'e-mail / le numéro au compte anonyme actuel (la progression est gardée) ;
+ // 2) s'il appartient déjà à un compte, on se connecte à ce compte (sa progression est récupérée).
+ async start(kind,val){await cloud.session();
+  const r=await sb.auth.updateUser(kind==='email'?{email:val}:{phone:val});
+  if(!r.error)return kind==='email'?'email_change':'phone_change';
+  if(!/already|exists|registered/i.test(r.error.message+' '+(r.error.code||'')))throw r.error;
+  const r2=await sb.auth.signInWithOtp(kind==='email'?{email:val,options:{shouldCreateUser:false}}:{phone:val,options:{shouldCreateUser:false}});
+  if(r2.error)throw r2.error;return kind==='email'?'email':'sms'},
+ async verify(kind,val,token,type){if(type==='email'||type==='sms')await remind.off(true);const {error}=await sb.auth.verifyOtp(kind==='email'?{email:val,token,type}:{phone:val,token,type});if(error)throw error;await cloud.pull(true);cloud.push();remind.sync()},
+ async apple(){const back=location.origin+location.pathname;
+  const {data}=await sb.auth.getSession();
+  const r=data.session&&data.session.user.is_anonymous?await sb.auth.linkIdentity({provider:'apple',options:{redirectTo:back}}):await sb.auth.signInWithOAuth({provider:'apple',options:{redirectTo:back}});
+  if(r.error)throw r.error},
+ async signOut(){await remind.off(true);try{await sb.auth.signOut()}catch(e){}try{localStorage.removeItem(KEY);localStorage.removeItem('loba-uid')}catch(e){}
+  const ui=S.ui;S=fresh();S.ui=ui;LG=LANGS.ln;startOnb()}
+};
+// Retour de la page Apple : compte Apple déjà utilisé → on s'y connecte.
+(()=>{try{const q=new URLSearchParams(location.hash.slice(1)+'&'+location.search.slice(1));
+ if(sb&&q.get('error_code')==='identity_already_exists'){history.replaceState(null,'',location.pathname);sb.auth.signInWithOAuth({provider:'apple',options:{redirectTo:location.origin+location.pathname}})}}catch(e){}})();
+async function accountSheet(){
+ if(!sb)return;const info=await acct.info();
+ if(info){sheet(`<div class="big">☁️</div><h2>${t('accIn')}</h2><p>${t('accInText',{a:esc(info.label)})}</p>`,[{label:t('close'),cls:'blue'},
+  {label:t('signOut'),cls:'ghost',fn:()=>sheet(`<div class="big">👋🏾</div><h2>${t('signOut')}</h2><p>${t('signOutText')}</p>`,[{label:t('signOut'),cls:'red',fn:()=>acct.signOut()},{label:t('cancel'),cls:'ghost'}])}]);return}
+ $('sheet').innerHTML=`<div class="big">☁️</div><h2>${t('accTitle')}</h2><p>${t('accText')}</p><div id="accBox"></div><div class="err" id="accErr"></div>`;
+ const box=$('accBox'),msg=(m,ok)=>{$('accErr').style.color=ok?'var(--green-d)':'';$('accErr').textContent=m};
+ const soon=(b)=>{b.disabled=true;b.textContent+=' · '+t('soon');return b};
+ const ap=btn('btn black',' '+t('withApple'),async()=>{try{await acct.apple()}catch(e){msg(e.message)}});if(!AUTH.apple)soon(ap);
+ const em=btn('btn',`✉️ ${t('withEmail')}`,()=>otpForm('email'));
+ const ph=btn('btn blue',`📱 ${t('withPhone')}`,()=>otpForm('phone'));if(!AUTH.phone)soon(ph);
+ box.append(ap,em,ph);
+ function otpForm(kind){msg('');
+  box.innerHTML=`<input class="field" id="accVal" ${kind==='email'?'type="email" autocomplete="email" placeholder="email@exemple.com" maxlength="120"':'type="tel" autocomplete="tel" placeholder="+243 81 234 5678" maxlength="20" value="+243 "'}>`;
+  box.append(btn('btn',t('sendCode'),async(ev)=>{const raw=$('accVal').value.trim();
+   const val=kind==='email'?(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(raw)?raw.toLowerCase():null):(/^\+\d{8,15}$/.test(raw.replace(/[\s.-]/g,''))?raw.replace(/[\s.-]/g,''):null);
+   if(!val)return msg(t(kind==='email'?'badEmail':'badPhone'));
+   ev.target.disabled=true;msg('');
+   try{const type=await acct.start(kind,val);codeForm(kind,val,type)}catch(e){ev.target.disabled=false;msg(e.message||'Erreur')}}),btn('btn ghost',t('back'),accountSheet));
+  $('accVal').focus()}
+ function codeForm(kind,val,type){
+  box.innerHTML=`<p style="margin-top:0">${t(kind==='email'?'codeSentMail':'codeSentSms',{v:esc(val)})}</p><input class="field code" id="accCode" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="••••••">`;
+  box.append(btn('btn gold',t('verify'),async(ev)=>{const c=$('accCode').value.replace(/\D/g,'');if(c.length<6)return msg(t('badCode'));ev.target.disabled=true;
+   try{await acct.verify(kind,val,c,type);closeSheet();toast(t('accDone'));render()}catch(e){ev.target.disabled=false;msg(t('badCode'))}}),btn('btn ghost',t('back'),()=>otpForm(kind)));
+  $('accCode').focus()}
+ $('sheet').append(btn('btn ghost',t('close'),closeSheet));$('ov').classList.add('on');
 }
 
 /* ======================= LEÇON / RÉVISION ======================= */
@@ -1519,7 +1641,7 @@ $('homeBtn').onclick=()=>show(questsReady()?'sQuests':BACK);
 /* ======================= DÉMARRAGE ======================= */
 applyStatic();dayCheck();regen();
 if(S.onboarded&&LP().started)show('sLearn');else startOnb(S.onboarded);
-cloud.pull();
+cloud.pull().then(()=>remind.sync());
 setInterval(()=>{if(MAIN.includes(tab)&&$(tab).classList.contains('on'))render()},60000);
 // Application installable + hors ligne (seulement sur le vrai site, pas en aperçu)
 if('serviceWorker' in navigator&&location.protocol==='https:'&&window.top===window.self){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}

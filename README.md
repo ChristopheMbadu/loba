@@ -14,6 +14,9 @@
 - **Apprentissage vocal** : écoute la prononciation de chaque mot (🔊, 🐢 au ralenti), exercices « Qu'as-tu entendu ? » et exercices où tu parles au micro, avec vérification automatique de ta prononciation.
 - **Machine à phrases** : pronom + verbe + temps + négation, pour comprendre la mécanique de la langue.
 - **Gamification** : série 🔥, XP, cœurs ❤️, gemmes 💎, quêtes, Défi éclair, badges.
+- **Profil personnalisé** : prénom ou pseudo, avatar, couleur, objectif quotidien.
+- **Comptes** : e-mail, numéro de téléphone ou Apple, pour retrouver sa progression partout.
+- **Rappel quotidien** : une notification à l'heure choisie, seulement si on n'a pas encore pratiqué.
 - **Sauvegarde automatique** : la progression est enregistrée en continu, sur l'appareil et dans le cloud (compte anonyme). On peut lier un e-mail pour la retrouver sur un autre téléphone.
 - **100 % gratuit, sans publicité, sans traqueur.** Le projet vit grâce aux **dons** (PayPal pour la diaspora, Orange Money pour le Congo).
 - **Application installable (PWA)** et fonctionne hors connexion.

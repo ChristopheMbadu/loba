@@ -1,6 +1,6 @@
 // Service worker de Loba : l'appli fonctionne hors ligne (Kinshasa, coupures réseau…).
 // Change VERSION à chaque mise en ligne pour forcer la mise à jour du cache.
-const VERSION = 'loba-v7-0';
+const VERSION = 'loba-v8-0';
 const SHELL = ['./', 'index.html', 'privacy.html', 'manifest.webmanifest',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-512.png', 'icons/apple-touch-icon.png'];
 
@@ -38,4 +38,24 @@ self.addEventListener('fetch', (e) => {
     }
     return res;
   })));
+});
+
+// Rappel quotidien : la notification envoyée par le serveur (fonction daily-reminder).
+self.addEventListener('push', (e) => {
+  let d = {};
+  try { d = e.data ? e.data.json() : {}; } catch (err) { d = { body: e.data && e.data.text() }; }
+  const title = typeof d.title === 'string' ? d.title.slice(0, 80) : 'Loba';
+  e.waitUntil(self.registration.showNotification(title, {
+    body: typeof d.body === 'string' ? d.body.slice(0, 200) : '',
+    icon: 'icons/icon-192.png', badge: 'icons/icon-192.png', tag: 'loba-daily', renotify: true,
+    data: { url: './' },
+  }));
+});
+
+self.addEventListener('notificationclick', (e) => {
+  e.notification.close();
+  e.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((list) => {
+    for (const c of list) if ('focus' in c) return c.focus();
+    return self.clients.openWindow('./');
+  }));
 });
