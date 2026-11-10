@@ -16,6 +16,10 @@
 - **Gamification** : série 🔥, XP, cœurs ❤️, gemmes 💎, quêtes, Défi éclair, badges.
 - **Profil personnalisé** : prénom ou pseudo, avatar, couleur, objectif quotidien.
 - **Comptes** : e-mail, numéro de téléphone ou Apple, pour retrouver sa progression partout.
+- **12 unités par langue** et des **histoires** avec personnages récurrents (à écouter, avec questions de compréhension).
+- **Ligues hebdomadaires** (Cuivre → Diamant) et **amis** avec code ami et défis.
+- **Série protégée** : gel de série, réparation, étapes 7/30/100 jours, bilan de la semaine.
+- **Boutique** (gel de série, double XP, recharge de cœurs, avatars spéciaux) et **entraînement** par révision espacée.
 - **Rappel quotidien** : une notification à l'heure choisie, seulement si on n'a pas encore pratiqué.
 - **Sauvegarde automatique** : la progression est enregistrée en continu, sur l'appareil et dans le cloud (compte anonyme). On peut lier un e-mail pour la retrouver sur un autre téléphone.
 - **100 % gratuit, sans publicité, sans traqueur.** Le projet vit grâce aux **dons** (PayPal pour la diaspora, Orange Money pour le Congo).

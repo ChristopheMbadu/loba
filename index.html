@@ -185,8 +185,8 @@ h1,h2,h3{font-family:'Baloo 2',sans-serif}
 .str.weak i.on{background:var(--fire)}
 
 /* lesson */
-.lesson,.flash,.onb,.dlg,.mach{flex-direction:column;min-height:100vh}
-.lesson.on,.flash.on,.onb.on,.dlg.on,.mach.on{display:flex}
+.lesson,.flash,.onb,.dlg,.mach,.story{flex-direction:column;min-height:100vh}
+.lesson.on,.flash.on,.onb.on,.dlg.on,.mach.on,.story.on{display:flex}
 .l-top{display:flex;align-items:center;gap:12px;padding:18px 18px 10px}
 .close{font-size:26px;color:#a3a9b6;line-height:1}
 .prog{flex:1;height:16px;border-radius:99px;background:var(--line);overflow:hidden}
@@ -364,6 +364,52 @@ h1,h2,h3{font-family:'Baloo 2',sans-serif}
 .field.code{text-align:center;letter-spacing:8px;font-size:26px}
 select.pill{font:inherit;font-weight:800;padding:6px 10px;border-radius:12px;border:2px solid var(--line);background:#fff;color:var(--ink)}
 .sheet{max-height:92vh;overflow-y:auto}
+/* ===== Histoires ===== */
+.st-title{text-align:center;font-size:22px;margin:4px 18px 8px}
+.st-lines{flex:1;overflow-y:auto;padding:8px 16px 16px;display:flex;flex-direction:column;gap:12px}
+.stl{display:flex;gap:10px;align-items:flex-end;animation:pop .25s ease;cursor:pointer}
+.stl .av{font-size:30px;width:46px;height:46px;border-radius:50%;background:#fff;display:grid;place-items:center;border:2px solid var(--line);flex:none}
+.stl .bb{background:#fff;border:2px solid var(--line);border-radius:16px 16px 16px 4px;padding:10px 14px;max-width:78%}
+.stl.me{flex-direction:row-reverse}.stl.me .bb{border-radius:16px 16px 4px 16px;background:#e8f4fd;border-color:#bfe0f8}
+.stl .who{display:block;font-size:12px;font-weight:800;color:var(--muted)}
+.stl b{font-size:17px}.stl small{display:block;color:var(--muted);font-weight:700;margin-top:3px}.stl small.hid{display:none}
+.stq{align-self:center;background:#fff7d6;border:2px solid #f1d98a;border-radius:14px;padding:10px 14px;font-weight:800;text-align:center}
+.st-foot{padding:12px 16px 22px;border-top:2px solid var(--line)}.st-foot .opts{margin-bottom:0}
+.card.sit.off{opacity:.55}
+/* ===== Ligue ===== */
+.lhead{text-align:center;padding:20px 10px 14px}
+.lhead .tiers{display:flex;justify-content:center;gap:8px;font-size:26px;margin-bottom:8px}
+.lhead .tiers span{opacity:.35;filter:grayscale(1)}.lhead .tiers span.past{opacity:.7;filter:none}.lhead .tiers span.on{opacity:1;filter:none;transform:scale(1.45);display:inline-block}
+.lhead h2{color:var(--lc);font-size:28px;margin:6px 0 2px}.lhead small{color:var(--muted);font-weight:700}
+.board{padding:6px 12px}
+.lrow{display:flex;align-items:center;gap:10px;padding:9px 4px;border-bottom:1px solid var(--line)}
+.lrow:last-child{border-bottom:0}.lrow.me{background:#e8f4fd;border-radius:12px;padding:9px 8px}
+.lrow .rk{width:24px;text-align:center;color:var(--muted)}.lrow.up .rk{color:var(--green-d)}.lrow.down .rk{color:var(--red-d)}
+.lrow .av{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:20px;flex:none}
+.lrow .nm{flex:1;font-weight:800;min-width:0;overflow:hidden;text-overflow:ellipsis}.lrow .nm small{display:block;color:var(--muted);font-weight:700;font-size:12px}
+.lrow .xp{font-size:14px}
+.zone{font-size:12px;font-weight:900;text-align:center;padding:6px;letter-spacing:.3px}.zone.up{color:var(--green-d)}.zone.down{color:var(--red-d)}
+.friendcode{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px}
+.friendcode small{display:block;color:var(--muted);font-weight:800;font-size:12px}.friendcode b{font-family:'Baloo 2';font-size:26px;letter-spacing:3px}
+.addfriend{padding:12px 16px}.addfriend .field{text-transform:uppercase;letter-spacing:3px;text-align:center}
+.card.empty{padding:18px;text-align:center;color:var(--muted);font-weight:700}
+/* ===== Boutique ===== */
+.shopit small{color:var(--muted);font-weight:700;font-size:13px}
+.shopav{padding:14px 16px;margin-top:10px}.shopav .t{font-weight:800}.shopav>small{color:var(--muted);font-weight:700;display:block;margin-bottom:10px}
+.avb small{display:block;font-size:11px;font-weight:800;color:var(--sky-d)}
+/* ===== Célébrations ===== */
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:999;overflow:hidden}
+.confetti i{position:absolute;top:-12px;width:9px;height:14px;border-radius:2px;animation:fall linear forwards}
+@keyframes fall{to{top:105%;transform:rotate(720deg) translateX(40px)}}
+.mascot-bounce{animation:mbounce .9s cubic-bezier(.3,1.6,.5,1) 1}
+@keyframes mbounce{0%{transform:scale(.3) rotate(-15deg)}60%{transform:scale(1.15) rotate(6deg)}100%{transform:scale(1) rotate(0)}}
+.mile{background:linear-gradient(135deg,#ff9600,#ff4b4b);color:#fff;border-radius:18px;padding:16px;margin-bottom:12px;text-align:center}
+.mile .fire{font-size:48px;animation:mbounce 1s ease}.mile b{display:block;font-size:22px;font-family:'Baloo 2'}.mile small{font-weight:700;opacity:.9}
+.boostnote{background:#fff3c4;color:#8a6200;font-weight:800;border-radius:12px;padding:8px;margin-bottom:10px}
+.recap{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}.recap div{background:#f4f6fa;border-radius:14px;padding:12px}
+.recap b{display:block;font-size:24px;font-family:'Baloo 2'}.recap small{color:var(--muted);font-weight:800}
+.repair{background:#fff3c4}
+.nav button span{font-size:22px}
 
 .nav button b{font-weight:800}
 </style>
@@ -388,7 +434,12 @@ select.pill{font:inherit;font-weight:800;padding:6px 10px;border-radius:12px;bor
   <section class="screen" id="sSit"><div class="pad">
     <div class="hero" style="background:linear-gradient(135deg,#25D366,#128C7E)"><div class="big">💬</div><h2 data-i18n="sitTitle"></h2><p data-i18n="sitSub"></p></div>
     <div id="sits" style="margin-top:20px"></div>
+    <div class="sec" data-i18n="storiesTitle"></div>
+    <div id="stories"></div>
   </div></section>
+
+  <!-- LIGUE -->
+  <section class="screen" id="sLeague"><div class="pad"><div id="leagueBox"></div></div></section>
 
   <!-- DÉFIS -->
   <section class="screen" id="sQuests"><div class="pad">
@@ -402,6 +453,8 @@ select.pill{font:inherit;font-weight:800;padding:6px 10px;border-radius:12px;bor
     </div>
     <div class="sec"><span data-i18n="questsTitle"></span> <small id="qReset"></small></div>
     <div id="quests"></div>
+    <div class="sec">💎 <span data-i18n="shopTitle"></span></div>
+    <div id="shop"></div>
   </div></section>
 
   <!-- PROFIL -->
@@ -450,6 +503,14 @@ select.pill{font:inherit;font-weight:800;padding:6px 10px;border-radius:12px;bor
     <div class="choices" id="choices"></div>
   </section>
 
+  <!-- HISTOIRE -->
+  <section class="screen story" id="story">
+    <div class="l-top"><button class="close" id="stQuit" data-i18n-aria="quit">✕</button><div class="prog"><div class="fill" id="stProg"></div></div></div>
+    <h2 class="st-title" id="stTitle"></h2>
+    <div class="st-lines" id="stLines"></div>
+    <div class="st-foot"><div class="opts" id="stOpts"></div><button class="btn" id="stNext" data-i18n="continue"></button></div>
+  </section>
+
   <!-- MACHINE -->
   <section class="screen mach" id="mach">
     <div class="l-top"><button class="close" id="mQuit" data-i18n-aria="close">✕</button><div style="flex:1;font-family:'Baloo 2';font-weight:800;font-size:22px">🧩 <span data-i18n="machine"></span></div></div>
@@ -474,6 +535,7 @@ select.pill{font:inherit;font-weight:800;padding:6px 10px;border-radius:12px;bor
   <nav class="nav" id="nav">
     <button data-tab="sLearn"><span>🏠</span><b data-i18n="tabLearn"></b></button>
     <button data-tab="sSit"><span>💬</span><b data-i18n="tabSit"></b></button>
+    <button data-tab="sLeague"><span>🏆</span><b data-i18n="tabLeague"></b></button>
     <button data-tab="sQuests" id="navQ"><span>🎯</span><b data-i18n="tabChallenges"></b></button>
     <button data-tab="sProfile"><span>🦜</span><b data-i18n="tabProfile"></b></button>
   </nav>
@@ -719,6 +781,168 @@ const EN={
 "du bukari":"bukari","swahili":"Swahili","le swahili":"Swahili"
 };
 
+/* ======================= CONTENU : UNITÉS SUPPLÉMENTAIRES + HISTOIRES ======================= */
+(()=>{
+const C=[['#E8608A','#b8436a'],['#2E86AB','#1f6283'],['#F18F01','#c06f00'],['#4CAF50','#378a3a'],['#8E5CC9','#6c42a0'],['#00A6A6','#007a7a']];
+const U=(id,title,icon,tip,words,sentences,i)=>({id,title,icon,tip,words,sentences,color:C[i][0],shadow:C[i][1]});
+LANGS.ln.units.push(
+ U('ndako','Ndako — La maison','🏠','<b>Kuku</b> veut dire cuisine. Et <b>« Kota »</b> (entre !) est le mot de bienvenue sur le pas de la porte.',
+  [['Ndako','Maison'],['Mbeto','Lit'],['Kiti','Chaise'],['Mesa','Table'],['Ekuke','Porte'],['Lininisa','Fenêtre'],['Kuku','Cuisine'],['Kokota','Entrer']],
+  [['Je suis à la maison','Nazali na ndako',['mbeto','kokota']],['Entre dans la maison','Kota na ndako',['kiti','mesa']],['Je veux dormir sur le lit','Nalingi kolala na mbeto',['mesa','ekuke']]],0),
+ U('mobembo','Mobembo — Se déplacer','🚕','Pour demander ton chemin : <b>« … ezali wapi? »</b> (… c\'est où ?). <b>Pene</b> = près, <b>mosika</b> = loin.',
+  [['Motuka','Voiture'],['Nzela','Route / chemin'],['Wapi?','Où ?'],['Awa','Ici'],['Kuna','Là-bas'],['Pene','Près'],['Mosika','Loin'],['Mobembo','Voyage']],
+  [['Où est la voiture ?','Motuka ezali wapi?',['awa','mosika']],['C\'est loin','Ezali mosika',['pene','awa']],['Je vais au marché','Nazali kokende na zando',['ndako','motuka']]],1),
+ U('mikolo','Mikolo — Le temps','⏰','Piège : <b>lobi</b> veut dire à la fois <b>hier</b> et <b>demain</b>. C\'est le temps du verbe qui fait la différence !',
+  [['Lelo','Aujourd\'hui'],['Lobi','Hier / demain'],['Sikoyo','Maintenant'],['Ntongo','Matin'],['Butu','Nuit'],['Mokolo','Jour'],['Poso','Semaine'],['Ngonga boni?','Quelle heure est-il ?']],
+  [['Je viendrai demain','Nakoya lobi',['lelo','butu']],['Aujourd\'hui je travaille','Lelo nazali kosala',['lobi','ntongo']]],2),
+ U('nzoto','Nzoto — Corps et santé','🩺','<b>Monganga</b>, c\'est le médecin. Et <b>« Nazali kobela »</b> : la phrase à connaître si tu tombes malade à Kin.',
+  [['Nzoto','Corps'],['Loboko','Main / bras'],['Lokolo','Pied / jambe'],['Miso','Yeux'],['Monoko','Bouche'],['Nazali kobela','Je suis malade'],['Monganga','Médecin'],['Kisi','Médicament']],
+  [['Je suis malade','Nazali kobela',['malamu','miso']],['Je veux voir le médecin','Nalingi komona monganga',['kisi','lokolo']]],3),
+ U('kosomba','Kosomba — Acheter','💵','Au marché de Kin, les prix se disent en <b>falanga</b> (francs congolais)… ou en dollars !',
+  [['Kosomba','Acheter'],['Koteka','Vendre'],['Zando','Marché'],['Moteki','Vendeur'],['Falanga','Franc (monnaie)'],['Pesa ngai','Donne-moi'],['Ntalo makasi','C\'est cher'],['Kitisa ntalo','Baisse le prix']],
+  [['Je veux acheter du poisson','Nalingi kosomba mbisi',['koteka','zando']],['Donne-moi de l\'eau','Pesa ngai mai',['mbisi','ntalo']]],4),
+ U('mayoki','Mayoki — Les émotions','💛','<b>Esengo</b> (la joie) revient dans beaucoup de chansons de rumba. Écoute bien la prochaine fois !',
+  [['Nasepeli','Je suis content(e)'],['Nayoki mawa','Je suis triste'],['Nalembi','Je suis fatigué(e)'],['Nazali na nkanda','Je suis fâché(e)'],['Nabangi','J\'ai peur'],['Nalingi yo','Je t\'aime'],['Nazali kokanisa yo','Je pense à toi'],['Esengo','Joie']],
+  [['Je suis très content','Nasepeli mingi',['nalembi','mawa']],['Je suis fatigué aujourd\'hui','Nalembi lelo',['lobi','esengo']]],5)
+);
+LANGS.sw.units.push(
+ U('nyumba','Nyumba — La maison','🏠','<b>« Hodi ! »</b> pour annoncer ton arrivée devant une maison. On te répond <b>« Karibu ! »</b>.',
+  [['Nyumba','Maison'],['Kitanda','Lit'],['Kiti','Chaise'],['Meza','Table'],['Mlango','Porte'],['Dirisha','Fenêtre'],['Jikoni','Cuisine'],['Kuingia','Entrer']],
+  [['Je suis à la maison','Niko nyumbani',['kitanda','kuingia']],['Entre, s\'il te plaît','Ingia tafadhali',['meza','kiti']],['Je veux dormir sur le lit','Nataka kulala kitandani',['mezani','mlango']]],0),
+ U('safari','Safari — Se déplacer','🚕','Oui, <b>safari</b> veut simplement dire « voyage » en swahili ! Et <b>« Simama hapa »</b> fait arrêter le taxi.',
+  [['Gari','Voiture'],['Njia','Route / chemin'],['Wapi?','Où ?'],['Hapa','Ici'],['Pale','Là-bas'],['Mbali','Loin'],['Safari','Voyage'],['Simama hapa','Arrête-toi ici']],
+  [['Où est la voiture ?','Gari liko wapi?',['hapa','mbali']],['C\'est loin','Ni mbali',['hapa','pale']],['Je vais au marché','Ninaenda sokoni',['nyumbani','gari']]],1),
+ U('wakati','Wakati — Le temps','⏰','<b>Jana</b> = hier, <b>leo</b> = aujourd\'hui, <b>kesho</b> = demain. Et l\'heure swahilie commence à 7 h du matin !',
+  [['Leo','Aujourd\'hui'],['Kesho','Demain'],['Jana','Hier'],['Sasa','Maintenant'],['Asubuhi','Matin'],['Usiku','Nuit'],['Siku','Jour'],['Saa ngapi?','Quelle heure est-il ?']],
+  [['Je viendrai demain','Nitakuja kesho',['leo','jana']],['Aujourd\'hui je travaille','Leo ninafanya kazi',['kesho','usiku']]],2),
+ U('mwili','Mwili — Corps et santé','🩺','<b>Daktari</b>, c\'est le médecin, et <b>dawa</b> le médicament. Pour dire que ça fait mal : <b>« … kinauma »</b>.',
+  [['Mwili','Corps'],['Kichwa','Tête'],['Mkono','Main / bras'],['Mguu','Pied / jambe'],['Macho','Yeux'],['Mimi ni mgonjwa','Je suis malade'],['Daktari','Médecin'],['Dawa','Médicament']],
+  [['Je suis malade','Mimi ni mgonjwa',['mzima','macho']],['Je veux voir le médecin','Nataka kumwona daktari',['dawa','mguu']],['J\'ai mal à la tête','Kichwa kinauma',['mkono','dawa']]],3),
+ U('kununua','Kununua — Acheter','💵','À Lubumbashi, on paie en francs congolais ou en dollars. <b>« Bei gani? »</b> reste ta meilleure amie.',
+  [['Kununua','Acheter'],['Kuuza','Vendre'],['Soko','Marché'],['Muuzaji','Vendeur'],['Ghali','Cher'],['Nipe','Donne-moi'],['Punguza bei','Baisse le prix'],['Bei gani?','C\'est combien ?']],
+  [['Je veux acheter du poisson','Nataka kununua samaki',['kuuza','soko']],['Donne-moi de l\'eau','Nipe maji',['samaki','bei']]],4),
+ U('hisia','Hisia — Les émotions','💛','<b>Nimefurahi</b> (je suis content) : le <b>-me-</b> montre que l\'état est déjà là, comme un passé composé.',
+  [['Nimefurahi','Je suis content(e)'],['Nina huzuni','Je suis triste'],['Nimechoka','Je suis fatigué(e)'],['Nimekasirika','Je suis fâché(e)'],['Ninaogopa','J\'ai peur'],['Nakupenda','Je t\'aime'],['Nakukumbuka','Tu me manques'],['Furaha','Joie']],
+  [['Je suis très content','Nimefurahi sana',['nimechoka','huzuni']],['Je suis fatigué aujourd\'hui','Nimechoka leo',['kesho','furaha']]],5)
+);
+
+// Histoires : personnages récurrents, à écouter, avec des questions de compréhension.
+const L=(c,li,fr)=>({c,li,fr}),Q=(q,...opts)=>({q,opts});
+LANGS.ln.stories=[
+ {id:'taxi',ic:'🚕',title:'Le taxi pour Matonge',chars:{d:['Didi','👩🏾'],c:['Le chauffeur','🧑🏾']},lines:[
+  L('d','Mbote tata! Ozali kokende Matonge?','Bonjour monsieur ! Vous allez à Matonge ?'),
+  L('c','Ee, kota. Ozali kokende wapi na Matonge?','Oui, monte. Tu vas où à Matonge ?'),
+  Q('Où va le taxi ?',['À Matonge',1],['À l\'aéroport'],['À Lubumbashi']),
+  L('d','Na zando. Ntalo boni?','Au marché. C\'est combien ?'),
+  L('c','Mille francs.','Mille francs.'),
+  L('d','Ntalo makasi! Kitisa moke, tata.','C\'est cher ! Baisse un peu, monsieur.'),
+  L('c','Malamu, sept cents. Tokende!','D\'accord, sept cents. Allons-y !'),
+  Q('Combien Didi va-t-elle payer ?',['Sept cents francs',1],['Mille francs'],['Rien du tout']),
+  L('d','Matondo tata!','Merci monsieur !')]},
+ {id:'repas',ic:'🍲',title:'Le repas de maman',chars:{m:['Maman Nsimba','👵🏾'],j:['Junior','👦🏾']},lines:[
+  L('m','Junior, ozali na nzala?','Junior, tu as faim ?'),
+  L('j','Ee mama, nazali na nzala makasi!','Oui maman, j\'ai très faim !'),
+  L('m','Nalambi pondu na mbisi.','J\'ai préparé du pondu avec du poisson.'),
+  Q('Qu\'a préparé maman ?',['Du pondu avec du poisson',1],['De la viande'],['Rien du tout']),
+  L('j','Eh! Nalingi pondu mingi!','Eh ! J\'adore le pondu !'),
+  L('m','Kende kosokola maboko liboso.','Va d\'abord te laver les mains.'),
+  L('j','Ee mama, nazali koya.','Oui maman, j\'arrive.'),
+  Q('Que doit faire Junior avant de manger ?',['Se laver les mains',1],['Dormir'],['Aller au marché'])]},
+ {id:'ami',ic:'🤝🏾',title:'Le nouvel ami',chars:{p:['Patou','🧑🏾'],g:['Grâce','👩🏾‍🦱']},lines:[
+  L('p','Mbote! Nkombo na ngai Patou. Yo nani?','Bonjour ! Je m\'appelle Patou. Et toi ?'),
+  L('g','Nkombo na ngai Grâce. Ozali moto ya Kinshasa?','Je m\'appelle Grâce. Tu es de Kinshasa ?'),
+  L('p','Te, nazali moto ya Paris. Nazali koyekola lingala.','Non, je suis de Paris. J\'apprends le lingala.'),
+  Q('D\'où vient Patou ?',['De Paris',1],['De Kinshasa'],['De Goma']),
+  L('g','Eh! Ozali koloba malamu mingi!','Eh ! Tu parles très bien !'),
+  L('p','Matondo! Tokoki kozala baninga?','Merci ! On peut être amis ?'),
+  L('g','Ee, ya solo!','Oui, bien sûr !'),
+  Q('Que propose Patou ?',['D\'être amis',1],['D\'aller manger'],['De parler français'])]}
+];
+LANGS.sw.stories=[
+ {id:'taxi',ic:'🚕',title:'Le taxi pour le centre-ville',chars:{n:['Neema','👩🏾'],c:['Le chauffeur','🧑🏾']},lines:[
+  L('n','Jambo! Unaenda mjini?','Bonjour ! Vous allez en ville ?'),
+  L('c','Ndiyo, ingia. Unaenda wapi?','Oui, monte. Tu vas où ?'),
+  Q('Où va le taxi ?',['En ville',1],['À l\'aéroport'],['À Kinshasa']),
+  L('n','Sokoni. Bei gani?','Au marché. C\'est combien ?'),
+  L('c','Elfu mbili.','Deux mille.'),
+  L('n','Ghali sana! Punguza kidogo.','C\'est très cher ! Baisse un peu.'),
+  L('c','Sawa, elfu moja na mia tano. Twende!','D\'accord, mille cinq cents. Allons-y !'),
+  Q('Combien Neema va-t-elle payer ?',['Mille cinq cents',1],['Deux mille'],['Rien du tout']),
+  L('n','Asante sana!','Merci beaucoup !')]},
+ {id:'repas',ic:'🍲',title:'Le repas de maman',chars:{m:['Maman Furaha','👵🏾'],j:['Juma','👦🏾']},lines:[
+  L('m','Juma, una njaa?','Juma, tu as faim ?'),
+  L('j','Ndiyo mama, nina njaa sana!','Oui maman, j\'ai très faim !'),
+  L('m','Nimepika bukari na samaki.','J\'ai préparé du bukari avec du poisson.'),
+  Q('Qu\'a préparé maman ?',['Du bukari avec du poisson',1],['De la viande'],['Rien du tout']),
+  L('j','Ah! Napenda bukari sana!','Ah ! J\'adore le bukari !'),
+  L('m','Nenda kunawa mikono kwanza.','Va d\'abord te laver les mains.'),
+  L('j','Sawa mama, ninakuja.','D\'accord maman, j\'arrive.'),
+  Q('Que doit faire Juma avant de manger ?',['Se laver les mains',1],['Dormir'],['Aller au marché'])]},
+ {id:'ami',ic:'🤝🏾',title:'Le nouvel ami',chars:{p:['Patou','🧑🏾'],a:['Amani','👩🏾‍🦱']},lines:[
+  L('p','Jambo! Jina langu ni Patou. Wewe je?','Bonjour ! Je m\'appelle Patou. Et toi ?'),
+  L('a','Jina langu ni Amani. Wewe ni mtu wa Goma?','Je m\'appelle Amani. Tu es de Goma ?'),
+  L('p','Hapana, mimi ni mtu wa Paris. Ninajifunza Kiswahili.','Non, je suis de Paris. J\'apprends le swahili.'),
+  Q('D\'où vient Patou ?',['De Paris',1],['De Goma'],['De Kinshasa']),
+  L('a','Kweli? Unasema vizuri sana!','Vraiment ? Tu parles très bien !'),
+  L('p','Asante! Tunaweza kuwa marafiki?','Merci ! On peut être amis ?'),
+  L('a','Ndiyo, bila shaka!','Oui, bien sûr !'),
+  Q('Que propose Patou ?',['D\'être amis',1],['D\'aller manger'],['De parler français'])]}
+];
+
+Object.assign(EN,{
+"Ndako — La maison":"Ndako — Home","<b>Kuku</b> veut dire cuisine. Et <b>« Kota »</b> (entre !) est le mot de bienvenue sur le pas de la porte.":"<b>Kuku</b> means kitchen. And <b>“Kota”</b> (come in!) is how you welcome someone at the door.",
+"Maison":"House","Lit":"Bed","Chaise":"Chair","Table":"Table","Porte":"Door","Fenêtre":"Window","Cuisine":"Kitchen","Entrer":"To enter",
+"Je suis à la maison":"I'm at home","Entre dans la maison":"Come into the house","Je veux dormir sur le lit":"I want to sleep on the bed",
+"Mobembo — Se déplacer":"Mobembo — Getting around","Pour demander ton chemin : <b>« … ezali wapi? »</b> (… c'est où ?). <b>Pene</b> = près, <b>mosika</b> = loin.":"To ask your way: <b>“… ezali wapi?”</b> (where is …?). <b>Pene</b> = near, <b>mosika</b> = far.",
+"Voiture":"Car","Route / chemin":"Road / way","Où ?":"Where?","Ici":"Here","Là-bas":"Over there","Près":"Near","Loin":"Far","Voyage":"Trip",
+"Où est la voiture ?":"Where is the car?","C'est loin":"It's far","Je vais au marché":"I'm going to the market",
+"Mikolo — Le temps":"Mikolo — Time","Piège : <b>lobi</b> veut dire à la fois <b>hier</b> et <b>demain</b>. C'est le temps du verbe qui fait la différence !":"Trap: <b>lobi</b> means both <b>yesterday</b> and <b>tomorrow</b>. The verb tense tells you which!",
+"Aujourd'hui":"Today","Hier / demain":"Yesterday / tomorrow","Maintenant":"Now","Matin":"Morning","Nuit":"Night","Jour":"Day","Semaine":"Week","Quelle heure est-il ?":"What time is it?",
+"Je viendrai demain":"I'll come tomorrow","Aujourd'hui je travaille":"Today I'm working",
+"Nzoto — Corps et santé":"Nzoto — Body and health","<b>Monganga</b>, c'est le médecin. Et <b>« Nazali kobela »</b> : la phrase à connaître si tu tombes malade à Kin.":"<b>Monganga</b> is the doctor. And <b>“Nazali kobela”</b>: the phrase to know if you fall ill in Kin.",
+"Corps":"Body","Main / bras":"Hand / arm","Pied / jambe":"Foot / leg","Yeux":"Eyes","Bouche":"Mouth","Je suis malade":"I'm sick","Médecin":"Doctor","Médicament":"Medicine",
+"Je veux voir le médecin":"I want to see the doctor",
+"Kosomba — Acheter":"Kosomba — Shopping","Au marché de Kin, les prix se disent en <b>falanga</b> (francs congolais)… ou en dollars !":"At the Kin market, prices are given in <b>falanga</b> (Congolese francs)… or in dollars!",
+"Acheter":"To buy","Vendre":"To sell","Marché":"Market","Vendeur":"Seller","Franc (monnaie)":"Franc (currency)","Donne-moi":"Give me","C'est cher":"It's expensive","Baisse le prix":"Lower the price",
+"Je veux acheter du poisson":"I want to buy fish","Donne-moi de l'eau":"Give me some water",
+"Mayoki — Les émotions":"Mayoki — Feelings","<b>Esengo</b> (la joie) revient dans beaucoup de chansons de rumba. Écoute bien la prochaine fois !":"<b>Esengo</b> (joy) shows up in lots of rumba songs. Listen closely next time!",
+"Je suis content(e)":"I'm happy","Je suis triste":"I'm sad","Je suis fatigué(e)":"I'm tired","Je suis fâché(e)":"I'm angry","J'ai peur":"I'm scared","Je t'aime":"I love you","Je pense à toi":"I'm thinking of you","Joie":"Joy",
+"Je suis très content":"I'm very happy","Je suis fatigué aujourd'hui":"I'm tired today",
+"Nyumba — La maison":"Nyumba — Home","<b>« Hodi ! »</b> pour annoncer ton arrivée devant une maison. On te répond <b>« Karibu ! »</b>.":"Say <b>“Hodi!”</b> to announce yourself at someone's door. They'll answer <b>“Karibu!”</b>.",
+"Entre, s'il te plaît":"Come in, please",
+"Safari — Se déplacer":"Safari — Getting around","Oui, <b>safari</b> veut simplement dire « voyage » en swahili ! Et <b>« Simama hapa »</b> fait arrêter le taxi.":"Yes, <b>safari</b> simply means “trip” in Swahili! And <b>“Simama hapa”</b> stops the taxi.",
+"Arrête-toi ici":"Stop here",
+"Wakati — Le temps":"Wakati — Time","<b>Jana</b> = hier, <b>leo</b> = aujourd'hui, <b>kesho</b> = demain. Et l'heure swahilie commence à 7 h du matin !":"<b>Jana</b> = yesterday, <b>leo</b> = today, <b>kesho</b> = tomorrow. And Swahili time starts at 7 am!",
+"Demain":"Tomorrow","Hier":"Yesterday",
+"Mwili — Corps et santé":"Mwili — Body and health","<b>Daktari</b>, c'est le médecin, et <b>dawa</b> le médicament. Pour dire que ça fait mal : <b>« … kinauma »</b>.":"<b>Daktari</b> is the doctor and <b>dawa</b> the medicine. To say something hurts: <b>“… kinauma”</b>.",
+"Tête":"Head","J'ai mal à la tête":"I have a headache",
+"Kununua — Acheter":"Kununua — Shopping","À Lubumbashi, on paie en francs congolais ou en dollars. <b>« Bei gani? »</b> reste ta meilleure amie.":"In Lubumbashi you pay in Congolese francs or dollars. <b>“Bei gani?”</b> is your best friend.",
+"Cher":"Expensive",
+"Hisia — Les émotions":"Hisia — Feelings","<b>Nimefurahi</b> (je suis content) : le <b>-me-</b> montre que l'état est déjà là, comme un passé composé.":"<b>Nimefurahi</b> (I'm happy): the <b>-me-</b> shows a state that has already started, like a perfect tense.",
+"Tu me manques":"I miss you",
+"Le taxi pour Matonge":"The taxi to Matonge","Didi":"Didi","Le chauffeur":"The driver","Bonjour monsieur ! Vous allez à Matonge ?":"Hello sir! Are you going to Matonge?",
+"Oui, monte. Tu vas où à Matonge ?":"Yes, get in. Where in Matonge are you going?","Où va le taxi ?":"Where is the taxi going?","À Matonge":"To Matonge","À l'aéroport":"To the airport","À Lubumbashi":"To Lubumbashi",
+"Au marché. C'est combien ?":"To the market. How much is it?","Mille francs.":"A thousand francs.","C'est cher ! Baisse un peu, monsieur.":"That's expensive! Lower it a bit, sir.",
+"D'accord, sept cents. Allons-y !":"OK, seven hundred. Let's go!","Combien Didi va-t-elle payer ?":"How much will Didi pay?","Sept cents francs":"Seven hundred francs","Mille francs":"A thousand francs","Rien du tout":"Nothing at all",
+"Merci monsieur !":"Thank you sir!",
+"Le repas de maman":"Mum's meal","Maman Nsimba":"Mama Nsimba","Junior":"Junior","Junior, tu as faim ?":"Junior, are you hungry?","Oui maman, j'ai très faim !":"Yes mum, I'm really hungry!",
+"J'ai préparé du pondu avec du poisson.":"I cooked pondu with fish.","Qu'a préparé maman ?":"What did mum cook?","Du pondu avec du poisson":"Pondu with fish","De la viande":"Meat",
+"Eh ! J'adore le pondu !":"Eh! I love pondu!","Va d'abord te laver les mains.":"Go and wash your hands first.","Oui maman, j'arrive.":"Yes mum, I'm coming.",
+"Que doit faire Junior avant de manger ?":"What must Junior do before eating?","Se laver les mains":"Wash his hands","Dormir":"Sleep","Aller au marché":"Go to the market",
+"Le nouvel ami":"The new friend","Patou":"Patou","Grâce":"Grace","Bonjour ! Je m'appelle Patou. Et toi ?":"Hello! My name is Patou. And you?",
+"Je m'appelle Grâce. Tu es de Kinshasa ?":"My name is Grace. Are you from Kinshasa?","Non, je suis de Paris. J'apprends le lingala.":"No, I'm from Paris. I'm learning Lingala.",
+"D'où vient Patou ?":"Where is Patou from?","De Paris":"From Paris","De Kinshasa":"From Kinshasa","De Goma":"From Goma","Eh ! Tu parles très bien !":"Eh! You speak really well!",
+"Merci ! On peut être amis ?":"Thanks! Can we be friends?","Oui, bien sûr !":"Yes, of course!","Que propose Patou ?":"What does Patou suggest?","D'être amis":"Being friends","D'aller manger":"Going to eat","De parler français":"Speaking French",
+"Le taxi pour le centre-ville":"The taxi to town","Neema":"Neema","Bonjour ! Vous allez en ville ?":"Hello! Are you going into town?","Oui, monte. Tu vas où ?":"Yes, get in. Where are you going?",
+"En ville":"Into town","À Kinshasa":"To Kinshasa","Deux mille.":"Two thousand.","C'est très cher ! Baisse un peu.":"That's very expensive! Lower it a bit.","D'accord, mille cinq cents. Allons-y !":"OK, one thousand five hundred. Let's go!",
+"Combien Neema va-t-elle payer ?":"How much will Neema pay?","Mille cinq cents":"One thousand five hundred","Deux mille":"Two thousand","Merci beaucoup !":"Thank you very much!",
+"Maman Furaha":"Mama Furaha","Juma":"Juma","Juma, tu as faim ?":"Juma, are you hungry?","J'ai préparé du bukari avec du poisson.":"I cooked bukari with fish.","Du bukari avec du poisson":"Bukari with fish",
+"Ah ! J'adore le bukari !":"Ah! I love bukari!","D'accord maman, j'arrive.":"OK mum, I'm coming.","Que doit faire Juma avant de manger ?":"What must Juma do before eating?",
+"Amani":"Amani","Je m'appelle Amani. Tu es de Goma ?":"My name is Amani. Are you from Goma?","Non, je suis de Paris. J'apprends le swahili.":"No, I'm from Paris. I'm learning Swahili.",
+"Vraiment ? Tu parles très bien !":"Really? You speak really well!"
+});
+})();
+
 /* ======================= INTERFACE : FRANÇAIS / ANGLAIS ======================= */
 const UI={
 fr:{
@@ -745,7 +969,7 @@ fr:{
  // home
  dailyQuests:'Quêtes du jour',rewardsReady:'{n} récompense(s) à récupérer !',questsDone:'{a} / {b} terminées',xpToday:'{a} / {b} XP aujourd\'hui',
  msgOfDay:'💌 Message du jour pour ta famille',sendWA:'Envoyer sur WhatsApp',copy:'Copier',sent:'✓ Envoyé',familyLove:'💌 Ta famille va adorer ! Quête accomplie',
- smartReview:'Révision intelligente',reviewHard:'Tes mots difficiles · +1 ❤️',reviewFill:'Se remplit avec tes erreurs',buildOwn:'Crée tes propres phrases',
+ smartReview:'Entraînement',reviewHard:'Tes mots difficiles · +1 ❤️',reviewFill:'Se remplit au fil des leçons',buildOwn:'Crée tes propres phrases',
  reviewWait:'Fais quelques leçons : tes erreurs reviendront ici au bon moment.',supportCard:'Soutenir Loba',supportCardSub:'Gratuit, sans pub, grâce à vous',give:'Faire un don',
  unit:'Unité',startBub:'COMMENCER',lessonN:'LEÇON {n}',chestOpened:'Coffre déjà ouvert',chestLocked:'Termine les 4 leçons pour l\'ouvrir',notYet:'Pas encore débloqué',
  chestTitle:'Coffre ouvert !',chestText:'Unité « {u} » terminée.<br>Tu gagnes <b style="color:var(--sky)">💎 {g}</b>',great:'Super !',
@@ -808,6 +1032,25 @@ fr:{
  accDone:'Compte connecté ✅ Ta progression est sauvegardée.',accIn:'Ton compte',accInText:'Connecté avec <b>{a}</b>. Ta progression est sauvegardée automatiquement.',signOut:'Se déconnecter',signOutText:'Ta progression reste dans ton compte. Sur ce téléphone, l\'appli repartira de zéro jusqu\'à ta reconnexion.',
  remindLabel:'Rappel quotidien',remindSub:'Une notification si tu n\'as pas encore pratiqué',remindIos:'Sur iPhone : ajoute d\'abord Loba à l\'écran d\'accueil',remindUnsupported:'Non disponible sur ce navigateur',
  remindDenied:'Notifications refusées : autorise-les dans les réglages du navigateur.',remindSet:'C\'est noté : rappel à {h} 🔔',remindHour:'Heure du rappel',
+ tabLeague:'Ligue',storiesTitle:'📖 Histoires',shopTitle:'Boutique',
+ notEnoughGems:'Il te faut {n} 💎. Gagne-en avec les leçons, quêtes et coffres !',repaired:'Série réparée : 🔥 {n} jours !',
+ frozeTitle:'Ta série est sauvée !',frozeText:'🧊 {n} gel(s) de série utilisé(s) pendant ton absence. Ta série de {s} jours continue.',
+ lostTitle:'Ta série de {n} jours s\'est arrêtée',lostText:'Tu peux la réparer aujourd\'hui ou demain pour {n} 💎.',repairBtn:'Réparer · 💎 {n}',
+ repairCard:'Répare ta série de {n} jours',repairCardSub:'Offre valable 48 h',
+ recapTitle:'Ta semaine en lingala & swahili',recapDays:'jours actifs',recapGreat:'Semaine incroyable ! Continue comme ça 💪🏾',recapNext:'Objectif de la semaine : pratiquer au moins 5 jours.',recapShare:'Partager mon bilan',
+ shareRecap:'Ma semaine sur Loba : {x} XP, {l} leçons, {d}/7 jours, série de {s} 🔥 J\'apprends le {lang} !',
+ promoTitle:'Promotion en ligue {l} !',promoText:'Tu fais partie des meilleurs de la semaine. Bravo !',demoTitle:'Retour en ligue {l}',demoText:'Pas grave : une bonne semaine et tu remontes.',seeLeague:'Voir ma ligue',
+ mileTitle:'{n} jours de série !',mileText:'Tu fais partie de ceux qui ne lâchent rien.',shareMile:'🔥 {n} jours de suite à apprendre le {lang} sur Loba ! Qui me rejoint ?',boostOn:'Double XP actif !',
+ freezeSub:'Protège ta série un jour sans pratique · {n}/2',boostSub:'XP doublés pendant 15 min',boostLeft:'Actif encore {n} min',heartsSub:'Cœurs : {n}/{m}',
+ shop_freeze:'Gel de série',shop_boost:'Double XP',shop_hearts:'Recharge des cœurs',shop_av:'Avatars spéciaux',shopAvSub:'Débloque un avatar unique pour ton profil.',shopMax:'Tu en as déjà le maximum.',bought:'Acheté ! ✅',buyAv:'Débloquer cet avatar ?',buyAvText:'Il sera à toi pour toujours, pour {n} 💎.',
+ storyLocked:'Termine {n} unités pour débloquer',storyDone:'Histoire terminée !',shareStory:'📖 J\'ai lu « {s} » en {lang} sur Loba !',
+ practiceDue:'{n} mots à revoir aujourd\'hui · +1 ❤️',
+ leagueOff:'Les ligues ont besoin de la connexion au serveur.',loading:'Chargement…',leagueEmpty:'Fais une leçon pour entrer dans la ligue de la semaine !',leagueName:'Ligue {l}',
+ leagueRule:'Les 7 premiers montent',leagueLeft:'{d} j {h} h',zoneUp:'Zone de promotion',zoneDown:'Zone de relégation',learner:'Apprenant·e',you:'toi',
+ tier0:'Cuivre',tier1:'Argent',tier2:'Or',tier3:'Malachite',tier4:'Saphir',tier5:'Diamant',
+ friends:'👫 Amis',myCode:'Mon code ami',shareCode:'Inviter',friendCodePh:'Code de ton ami',addFriend:'Ajouter',badFriendCode:'Code introuvable.',friendAdded:'{n} ajouté·e à tes amis !',friendAddedAnon:'Ami ajouté !',
+ thisWeek:'cette semaine',challenge:'Défier',noFriends:'Ajoute des amis avec leur code pour comparer vos séries.',
+ inviteText:'Apprends le {lang} avec moi sur Loba ! Mon code ami : {c}',challengeText:'{n}, je t\'ai défié·e sur Loba : {x} XP cette semaine en {lang}. Tu peux me battre ? Mon code : {c}',
  day:'Jour'
 },
 en:{
@@ -832,7 +1075,7 @@ en:{
  xpPerDay:'{n} XP per day',loveUnit:'You\'ll love the “{u}” unit',start:'Start',
  dailyQuests:'Daily quests',rewardsReady:'{n} reward(s) to collect!',questsDone:'{a} / {b} completed',xpToday:'{a} / {b} XP today',
  msgOfDay:'💌 Message of the day for your family',sendWA:'Send on WhatsApp',copy:'Copy',sent:'✓ Sent',familyLove:'💌 Your family will love it! Quest complete',
- smartReview:'Smart review',reviewHard:'Your tricky words · +1 ❤️',reviewFill:'Fills up with your mistakes',buildOwn:'Build your own sentences',
+ smartReview:'Practice',reviewHard:'Your tricky words · +1 ❤️',reviewFill:'Fills up as you learn',buildOwn:'Build your own sentences',
  reviewWait:'Do a few lessons: your mistakes will come back here at the right time.',supportCard:'Support Loba',supportCardSub:'Free and ad-free thanks to you',give:'Donate',
  unit:'Unit',startBub:'START',lessonN:'LESSON {n}',chestOpened:'Chest already opened',chestLocked:'Finish the 4 lessons to open it',notYet:'Not unlocked yet',
  chestTitle:'Chest opened!',chestText:'Unit “{u}” completed.<br>You win <b style="color:var(--sky)">💎 {g}</b>',great:'Great!',
@@ -886,6 +1129,25 @@ en:{
  accDone:'Account connected ✅ Your progress is saved.',accIn:'Your account',accInText:'Signed in with <b>{a}</b>. Your progress is saved automatically.',signOut:'Sign out',signOutText:'Your progress stays in your account. On this phone, the app will start from scratch until you sign back in.',
  remindLabel:'Daily reminder',remindSub:'A notification if you haven\'t practised yet',remindIos:'On iPhone: add Loba to your home screen first',remindUnsupported:'Not available in this browser',
  remindDenied:'Notifications blocked: allow them in your browser settings.',remindSet:'Got it: reminder at {h} 🔔',remindHour:'Reminder time',
+ tabLeague:'League',storiesTitle:'📖 Stories',shopTitle:'Shop',
+ notEnoughGems:'You need {n} 💎. Earn them with lessons, quests and chests!',repaired:'Streak repaired: 🔥 {n} days!',
+ frozeTitle:'Your streak is safe!',frozeText:'🧊 {n} streak freeze(s) used while you were away. Your {s}-day streak lives on.',
+ lostTitle:'Your {n}-day streak ended',lostText:'You can repair it today or tomorrow for {n} 💎.',repairBtn:'Repair · 💎 {n}',
+ repairCard:'Repair your {n}-day streak',repairCardSub:'Offer valid for 48 h',
+ recapTitle:'Your week in Lingala & Swahili',recapDays:'active days',recapGreat:'Amazing week! Keep it up 💪🏾',recapNext:'Goal for this week: practise at least 5 days.',recapShare:'Share my recap',
+ shareRecap:'My week on Loba: {x} XP, {l} lessons, {d}/7 days, {s}-day streak 🔥 I\'m learning {lang}!',
+ promoTitle:'Promoted to the {l} league!',promoText:'You were one of the best this week. Well done!',demoTitle:'Back to the {l} league',demoText:'No worries: one good week and you\'re back up.',seeLeague:'See my league',
+ mileTitle:'{n}-day streak!',mileText:'You\'re one of those who never give up.',shareMile:'🔥 {n} days in a row learning {lang} on Loba! Who\'s joining me?',boostOn:'Double XP active!',
+ freezeSub:'Protects your streak for one missed day · {n}/2',boostSub:'Double XP for 15 min',boostLeft:'Active for {n} more min',heartsSub:'Hearts: {n}/{m}',
+ shop_freeze:'Streak freeze',shop_boost:'Double XP',shop_hearts:'Refill hearts',shop_av:'Special avatars',shopAvSub:'Unlock a unique avatar for your profile.',shopMax:'You already have the maximum.',bought:'Bought! ✅',buyAv:'Unlock this avatar?',buyAvText:'It\'s yours forever, for {n} 💎.',
+ storyLocked:'Finish {n} units to unlock',storyDone:'Story complete!',shareStory:'📖 I read “{s}” in {lang} on Loba!',
+ practiceDue:'{n} words to review today · +1 ❤️',
+ leagueOff:'Leagues need the server connection.',loading:'Loading…',leagueEmpty:'Do a lesson to join this week\'s league!',leagueName:'{l} League',
+ leagueRule:'Top 7 move up',leagueLeft:'{d}d {h}h',zoneUp:'Promotion zone',zoneDown:'Demotion zone',learner:'Learner',you:'you',
+ tier0:'Copper',tier1:'Silver',tier2:'Gold',tier3:'Malachite',tier4:'Sapphire',tier5:'Diamond',
+ friends:'👫 Friends',myCode:'My friend code',shareCode:'Invite',friendCodePh:'Your friend\'s code',addFriend:'Add',badFriendCode:'Code not found.',friendAdded:'{n} added to your friends!',friendAddedAnon:'Friend added!',
+ thisWeek:'this week',challenge:'Challenge',noFriends:'Add friends with their code to compare your streaks.',
+ inviteText:'Learn {lang} with me on Loba! My friend code: {c}',challengeText:'{n}, I challenge you on Loba: {x} XP this week in {lang}. Can you beat me? My code: {c}',
  day:'Day'
 }};
 // Libellés de contenu propres à l'interface (motivations, voyage…)
@@ -939,6 +1201,9 @@ const motiveLabel=k=>MOTIVES[k][1]?t(MOTIVES[k][1]):tr(LG.voyage);
 const LEVELS={zero:['🌱','lZero'],passif:['👂🏾','lPassif'],moyen:['💬','lMoyen']};
 const GOALS=[[20,'g20','g20s'],[40,'g40','g40s'],[60,'g60','g60s']];
 const LPU=4,MAXH=5,REGEN=30*60*1000,REFILL=50;
+const MILES=[7,30,50,100,365],SRS=[0,1,2,4,7,14];let PENDING_MILE=0;
+const TIERS=[['Cuivre','🟤','#b87333'],['Argent','⚪','#9aa5b1'],['Or','🟡','#e0a812'],['Malachite','🟢','#1f9e6e'],['Saphir','🔵','#1E8FE1'],['Diamant','💎','#7b5cd6']];
+const PREMIUM_AV=[['🦄',60],['🐉',60],['🦚',60],['🐬',60],['🦉',60],['🎺',80],['💃🏾',80],['🕺🏾',80]];
 const QUESTS=[
  {id:'xp',ic:'⚡',t:()=>t('qXp',{n:S.goal}),goal:()=>S.goal,val:()=>S.q.xp,r:15},
  {id:'les',ic:'📘',t:()=>t('qLes'),goal:()=>2,val:()=>S.q.lessons,r:15},
@@ -957,9 +1222,9 @@ const BADGES=[
 /* ======================= ÉTAT + SAUVEGARDE ======================= */
 const KEY='loba-state-v4';
 const newQ=()=>({day:today(),xp:0,lessons:0,comboMax:0,flashBest:0,sent:0,claimed:[]});
-const freshLang=()=>({started:false,level:'zero',prog:{},chests:{},words:{},sit:{}});
+const freshLang=()=>({started:false,level:'zero',prog:{},chests:{},words:{},sit:{},stories:{}});
 const detectUi=()=>((navigator.language||'fr').toLowerCase().startsWith('fr')?'fr':'en');
-const fresh=()=>({v:5,savedAt:0,ui:detectUi(),onboarded:false,lang:'ln',motive:'famille',goal:40,hints:true,xp:0,gems:50,hearts:MAXH,heartTs:null,streak:0,bestStreak:0,lastDay:null,total:0,perfect:0,flashBest:0,sitDone:0,sentTotal:0,reviews:0,spoken:0,prof:{name:'',av:'🦜',col:0},remind:{on:false,h:19},voice:true,mic:true,micOff:0,donated:false,q:newQ(),per:{ln:freshLang(),sw:freshLang()}});
+const fresh=()=>({v:5,savedAt:0,ui:detectUi(),onboarded:false,lang:'ln',motive:'famille',goal:40,hints:true,xp:0,gems:50,hearts:MAXH,heartTs:null,streak:0,bestStreak:0,lastDay:null,total:0,perfect:0,flashBest:0,sitDone:0,sentTotal:0,reviews:0,spoken:0,prof:{name:'',av:'🦜',col:0},remind:{on:false,h:19},freeze:0,lost:null,miles:[],wk:{id:'',xp:0,les:0,days:[]},recap:null,boostUntil:0,ownedAv:[],lg:{tier:0,code:'',res:'',seen:''},voice:true,mic:true,micOff:0,donated:false,q:newQ(),per:{ln:freshLang(),sw:freshLang()}});
 
 // Nettoie un état venant du stockage ou du cloud : types attendus, valeurs bornées.
 function sanitize(o){
@@ -967,8 +1232,14 @@ function sanitize(o){
  const num=(v,d,min=0,max=1e9)=>Number.isFinite(+v)?Math.min(max,Math.max(min,+v)):d;
  const out={...S0};
  for(const k of ['xp','gems','streak','bestStreak','total','perfect','flashBest','sitDone','sentTotal','reviews','spoken'])out[k]=num(o[k],S0[k]);
- const pr=o.prof||{};out.prof={name:typeof pr.name==='string'?cleanName(pr.name):'',av:AVATARS.includes(pr.av)?pr.av:'🦜',col:num(pr.col,0,0,AV_COLORS.length-1)|0};
+ const pr=o.prof||{};out.prof={name:typeof pr.name==='string'?cleanName(pr.name):'',av:AVATARS.includes(pr.av)||PREMIUM_AV.some(x=>x[0]===pr.av&&(o.ownedAv||[]).includes(pr.av))?pr.av:'🦜',col:num(pr.col,0,0,AV_COLORS.length-1)|0};
  const rm=o.remind||{};out.remind={on:!!rm.on,h:num(rm.h,19,0,23)|0};
+ out.freeze=num(o.freeze,0,0,2)|0;out.lost=o.lost&&typeof o.lost.day==='string'?{n:num(o.lost.n,0,0,1e5)|0,day:o.lost.day.slice(0,20)}:null;
+ out.miles=Array.isArray(o.miles)?o.miles.filter(x=>MILES.includes(x)):[];
+ const wk=o.wk||{};out.wk={id:typeof wk.id==='string'?wk.id.slice(0,10):'',xp:num(wk.xp,0,0,1e5)|0,les:num(wk.les,0,0,1e4)|0,days:Array.isArray(wk.days)?wk.days.filter(d=>typeof d==='string').slice(0,7).map(d=>d.slice(0,20)):[]};
+ const rc=o.recap;out.recap=rc&&typeof rc.id==='string'?{id:rc.id.slice(0,10),xp:num(rc.xp,0,0,1e5)|0,les:num(rc.les,0,0,1e4)|0,days:num(rc.days,0,0,7)|0,streak:num(rc.streak,0,0,1e5)|0}:null;
+ out.boostUntil=num(o.boostUntil,0,0,1e15);out.ownedAv=Array.isArray(o.ownedAv)?o.ownedAv.filter(a=>PREMIUM_AV.some(p=>p[0]===a)):[];
+ const lg=o.lg||{};out.lg={tier:num(lg.tier,0,0,TIERS.length-1)|0,code:typeof lg.code==='string'?lg.code.replace(/[^A-Z0-9]/g,'').slice(0,8):'',res:['up','down','stay'].includes(lg.res)?lg.res:'',seen:typeof lg.seen==='string'?lg.seen.slice(0,10):''};
  out.voice=o.voice!==false;out.mic=o.mic!==false;out.micOff=num(o.micOff,0,0,1e15);
  out.savedAt=num(o.savedAt,0,0,1e15);out.hearts=num(o.hearts,MAXH,0,MAXH);out.heartTs=o.heartTs?num(o.heartTs,null,0,1e15):null;out.goal=[20,40,60].includes(+o.goal)?+o.goal:40;
  out.ui=o.ui==='en'?'en':o.ui==='fr'?'fr':S0.ui;out.lang=o.lang in LANGS?o.lang:'ln';out.motive=o.motive in MOTIVES?o.motive:'famille';
@@ -978,8 +1249,9 @@ function sanitize(o){
  for(const c in LANGS){const p=(o.per||{})[c]||{},L=LANGS[c],f=freshLang();
   f.started=!!p.started;f.level=p.level in LEVELS?p.level:'zero';
   L.units.forEach(u=>{if(p.prog&&p.prog[u.id])f.prog[u.id]=num(p.prog[u.id],0,0,LPU);if(p.chests&&p.chests[u.id])f.chests[u.id]=true});
-  for(const k in (p.words||{}))if(L.wm[k])f.words[k]={lvl:num(p.words[k].lvl,0,0,5),ko:num(p.words[k].ko,0,0,999)};
+  for(const k in (p.words||{}))if(L.wm[k])f.words[k]={lvl:num(p.words[k].lvl,0,0,5),ko:num(p.words[k].ko,0,0,999),due:num(p.words[k].due,0,0,1e15)};
   L.sits.forEach(s=>{if(p.sit&&p.sit[s.id])f.sit[s.id]=num(p.sit[s.id],0,0,3)});
+  (L.stories||[]).forEach(s=>{if(p.stories&&p.stories[s.id])f.stories[s.id]=1});
   out.per[c]=f}
  return out;
 }
@@ -1030,12 +1302,13 @@ const cloud={
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&cloud.timer){clearTimeout(cloud.timer);cloud.push()}});
 
 /* ======================= RÈGLES DE JEU ======================= */
-function dayCheck(){if(S.q.day!==today())S.q=newQ();if(S.lastDay&&S.lastDay!==today()&&S.lastDay!==yesterday())S.streak=0}
+function dayCheck(){if(S.q.day!==today())S.q=newQ();streakCheck();weekCheck()}
 function regen(){if(S.hearts>=MAXH){S.heartTs=null;return}if(!S.heartTs)S.heartTs=Date.now();const n=Math.floor((Date.now()-S.heartTs)/REGEN);if(n>0){S.hearts=Math.min(MAXH,S.hearts+n);S.heartTs=S.hearts>=MAXH?null:S.heartTs+n*REGEN}}
-function bumpStreak(){if(S.lastDay!==today()){S.streak=S.lastDay===yesterday()?S.streak+1:1;S.lastDay=today();S.bestStreak=Math.max(S.bestStreak,S.streak)}}
+function bumpStreak(){if(S.lastDay!==today()){S.streak=S.lastDay===yesterday()?S.streak+1:1;S.lastDay=today();S.bestStreak=Math.max(S.bestStreak,S.streak);if(MILES.includes(S.streak)&&!S.miles.includes(S.streak)){S.miles.push(S.streak);PENDING_MILE=S.streak}}
+ if(!S.wk.days.includes(today()))S.wk.days.push(today())}
 function loseHeart(){if(S.hearts===MAXH)S.heartTs=Date.now();S.hearts=Math.max(0,S.hearts-1)}
-function addXp(n){S.xp+=n;S.q.xp+=n}
-function track(li,ok){if(!LG.wm[li])return;const W=LP().words;const w=W[li]||(W[li]={lvl:0,ko:0});if(ok)w.lvl=Math.min(5,w.lvl+1);else{w.ko++;w.lvl=Math.max(0,w.lvl-2)}}
+function addXp(n){weekCheck();if(Date.now()<S.boostUntil)n*=2;S.xp+=n;S.q.xp+=n;S.wk.xp+=n;return n}
+function track(li,ok){if(!LG.wm[li])return;const W=LP().words;const w=W[li]||(W[li]={lvl:0,ko:0});if(ok)w.lvl=Math.min(5,w.lvl+1);else{w.ko++;w.lvl=Math.max(0,w.lvl-2)}w.due=Date.now()+(ok?SRS[w.lvl]*864e5:0)}
 const weakWords=()=>Object.entries(LP().words).filter(([k,v])=>v.ko>0&&v.lvl<4&&LG.wm[k]).sort((a,b)=>a[1].lvl-b[1].lvl||b[1].ko-a[1].ko).map(([k])=>LG.wm[k]);
 const unitOpen=i=>i===0||(LP().prog[LG.units[i-1].id]||0)>=LPU;
 const openWords=()=>LG.units.filter((u,i)=>unitOpen(i)).flatMap(u=>u.words);
@@ -1085,7 +1358,7 @@ async function copy(text){try{await navigator.clipboard.writeText(text);toast(t(
 const btn=(cls,label,fn)=>{const x=document.createElement('button');x.className=cls;x.textContent=label;x.onclick=fn;return x};
 
 /* ======================= NAVIGATION ======================= */
-const MAIN=['sLearn','sSit','sQuests','sProfile'];let tab='sLearn';
+const MAIN=['sLearn','sSit','sLeague','sQuests','sProfile'];let tab='sLearn';
 function show(id){
  document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('on',s.id===id));
  const main=MAIN.includes(id);$('topbar').style.display=$('nav').style.display=main?'':'none';
@@ -1098,7 +1371,7 @@ function render(){
  $('langBtn').textContent=LANG_NAMES.en[S.lang]+' ▾';
  $('tStreak').textContent=S.streak;$('tStreakW').classList.toggle('dim',S.lastDay!==today());$('tGems').textContent=S.gems;$('tHearts').textContent=S.hearts;
  $('navQ').classList.toggle('dot',questsReady()>0);
- ({sLearn:renderLearn,sSit:renderSits,sQuests:renderQuests,sProfile:renderProfile})[tab]();
+ ({sLearn:renderLearn,sSit:renderSits,sLeague:renderLeague,sQuests:renderQuests,sProfile:renderProfile})[tab]();
 }
 function langSheet(){
  $('sheet').innerHTML=`<h2>${t('whichLangSheet')}</h2><p>${t('sharedStats')}</p><div class="langlist" id="langList"></div>`;
@@ -1177,7 +1450,7 @@ function renderLearn(){
  hc.appendChild(m);
  const sent=()=>{if(!S.q.sent){S.q.sent=1;S.sentTotal++;save();sfx('coin');setTimeout(()=>{toast(t('familyLove'));render()},400)}};
  m.querySelector('#waBtn').onclick=sent;m.querySelector('#msgCopy').onclick=()=>{copy(li);sent()};
- const weak=weakWords(),r2=document.createElement('div');r2.className='row2';
+ const weak=practiceWords(),r2=document.createElement('div');r2.className='row2';
  r2.innerHTML=`<button class="card mini ${weak.length>=3?'':'off'}" id="revBtn">${weak.length>=3?`<span class="tag">${weak.length}</span>`:''}<div class="ic">🧠</div><b>${t('smartReview')}</b><small>${t(weak.length>=3?'reviewHard':'reviewFill')}</small></button>
   <button class="card mini" id="machBtn"><div class="ic">🧩</div><b>${t('machine')}</b><small>${t('buildOwn')}</small></button>`;
  hc.appendChild(r2);
@@ -1411,7 +1684,7 @@ function editProfile(){
   document.querySelectorAll('#eAvs button').forEach(b=>b.classList.toggle('on',b.textContent===P.av));document.querySelectorAll('#eCols button').forEach((b,i)=>b.classList.toggle('on',i===P.col));
   document.querySelectorAll('#eGoal button').forEach(b=>b.classList.toggle('on',+b.dataset.g===g))};
  $('eName').value=P.name;
- AVATARS.forEach(a=>$('eAvs').appendChild(btn('avb',a,()=>{P.av=a;paint()})));
+ [...AVATARS,...S.ownedAv].forEach(a=>$('eAvs').appendChild(btn('avb',a,()=>{P.av=a;paint()})));
  AV_COLORS.forEach((c,i)=>{const b=btn('colb','',()=>{P.col=i;paint()});b.style.background=c[0];b.setAttribute('aria-label','couleur '+(i+1));$('eCols').appendChild(b)});
  GOALS.forEach(([n,k])=>{const b=btn('',t(k),()=>{g=n;paint()});b.dataset.g=n;$('eGoal').appendChild(b)});
  paint();
@@ -1502,8 +1775,9 @@ function buildExercises(u){
 function startLesson(i){regen();if(S.hearts<=0)return noHearts(()=>startLesson(i));
  L={u:LG.units[i],queue:buildExercises(LG.units[i]),idx:0,total:8,correct:0,answered:0,errors:0,combo:0,comboMax:0,state:'answer',sel:null,retried:new Set()};show('lesson');renderEx()}
 function startReview(){
- const weak=weakWords().slice(0,6),pool=openWords();
- const q=shuffle(weak.map(w=>({type:'mc',dir:Math.random()<.5?'lf':'fl',item:w,pool:pool.length>=4?pool:LG.units[0].words})));
+ const weak=practiceWords().slice(0,7),pool=openWords(),P=pool.length>=4?pool:LG.units[0].words;
+ const q=shuffle(weak.map((w,i)=>VOX.ok&&S.voice&&i%3===2?{type:'listen',item:w,pool:P}:{type:'mc',dir:Math.random()<.5?'lf':'fl',item:w,pool:P}));
+ if(VOX.canListen()&&weak.length)q.push({type:'speak',li:weak[0][0],fr:weak[0][1],word:true});
  if(weak.length>=4)q.splice(2,0,{type:'match',pairs:weak.slice(0,4)});
  L={review:true,u:{id:'review'},queue:q,idx:0,total:q.length,correct:0,answered:0,errors:0,combo:0,comboMax:0,state:'answer',sel:null,retried:new Set()};
  show('lesson');renderEx();toast(t('reviewToast'));
@@ -1622,8 +1896,8 @@ function finishLesson(){
  if(L.review){
   const gain=S.hearts<MAXH;S.hearts=Math.min(MAXH,S.hearts+1);if(S.hearts>=MAXH)S.heartTs=null;S.reviews++;addXp(8);bumpStreak();save();sfx('win');
   showEnd({icon:'🧠',title:t('reviewDone'),sub:t(gain?'reviewGain':'reviewMax'),labA:t('xpWon'),a:'+8',labB:t('precision'),b:acc+'%',share:t('shareReview',{lang:lname(),p:acc}),back:'sLearn'});return}
- const xp=10+L.correct+(perfect?5:0)+(L.comboMax>=5?3:0);
- addXp(xp);S.q.lessons++;S.total++;if(perfect)S.perfect++;LP().prog[L.u.id]=Math.min(LPU,(LP().prog[L.u.id]||0)+1);bumpStreak();save();sfx('win');
+ let xp=10+L.correct+(perfect?5:0)+(L.comboMax>=5?3:0);
+ xp=addXp(xp);S.q.lessons++;S.total++;S.wk.les++;S.gems+=perfect?10:5;if(perfect)S.perfect++;LP().prog[L.u.id]=Math.min(LPU,(LP().prog[L.u.id]||0)+1);bumpStreak();save();sfx('win');
  showEnd({icon:perfect?'🌟':'🎉',title:t(perfect?'lessonPerfect':'lessonDone'),sub:perfect?t('perfectSub',{s:LG.strong}):t('doneSub',{g:LG.good}),labA:t('xpWon'),a:'+'+xp,labB:t('precision'),b:acc+'%',
   share:t('shareLesson',{d:S.streak,lang:lname(),u:tr(L.u.title),p:acc,hi:LG.hi}),back:'sLearn'});
 }
@@ -1638,10 +1912,162 @@ function showEnd(o){
 $('copyBtn').onclick=()=>copy($('shareTxt').textContent);
 $('homeBtn').onclick=()=>show(questsReady()?'sQuests':BACK);
 
+
+/* ======================= SÉRIE : GEL, RÉPARATION, BILAN DE LA SEMAINE ======================= */
+const dayDiff=(a,b)=>Math.round((new Date(b)-new Date(a))/864e5);
+// Semaine ISO en UTC (la même pour tout le monde, comme les ligues).
+function wkId(d=new Date()){const t=new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate()));const day=t.getUTCDay()||7;t.setUTCDate(t.getUTCDate()+4-day);
+ const y=t.getUTCFullYear(),w=Math.ceil(((t-Date.UTC(y,0,1))/864e5+1)/7);return `${y}-W${String(w).padStart(2,'0')}`}
+function weekEnd(){const d=new Date(),day=d.getUTCDay()||7;return Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate()+8-day)}
+function streakCheck(){
+ if(!S.lastDay||S.streak<=0)return;const gap=dayDiff(S.lastDay,today());if(gap<=1)return;
+ const missed=gap-1;
+ if(S.freeze>=missed){S.freeze-=missed;S.lastDay=yesterday();FROZE=missed;return}
+ if(S.streak>=3)S.lost={n:S.streak,day:today()};S.streak=0;
+}
+function weekCheck(){const id=wkId();if(S.wk.id===id)return;
+ if(S.wk.id&&(S.wk.xp>0||S.wk.les>0))S.recap={id:S.wk.id,xp:S.wk.xp,les:S.wk.les,days:S.wk.days.length,streak:S.streak};
+ S.wk={id,xp:0,les:0,days:[]}}
+let FROZE=0;
+const canRepair=()=>S.lost&&S.lost.n>=3&&dayDiff(S.lost.day,today())<=1;
+const REPAIR=200;
+function repairStreak(){if(!canRepair())return;if(S.gems<REPAIR)return toast(t('notEnoughGems',{n:REPAIR}));
+ S.gems-=REPAIR;S.streak=S.lost.n+(S.lastDay===today()?1:0);if(S.lastDay!==today())S.lastDay=yesterday();S.bestStreak=Math.max(S.bestStreak,S.streak);S.lost=null;save();sfx('win');confetti();toast(t('repaired',{n:S.streak}));render()}
+function startupNotices(){
+ if(FROZE){const n=FROZE;FROZE=0;sheet(`<div class="big">🧊</div><h2>${t('frozeTitle')}</h2><p>${t('frozeText',{n,s:S.streak})}</p>`,[{label:t('continue'),cls:'blue'}]);return}
+ let seenRep=false;try{seenRep=!!sessionStorage.getItem('loba-repair');sessionStorage.setItem('loba-repair','1')}catch(e){}
+ if(canRepair()&&!seenRep){
+  sheet(`<div class="big">💔</div><h2>${t('lostTitle',{n:S.lost.n})}</h2><p>${t('lostText',{n:REPAIR})}</p>`,[{label:t('repairBtn',{n:REPAIR}),cls:'gold',disabled:S.gems<REPAIR,fn:repairStreak},{label:t('later'),cls:'ghost'}]);return}
+ if(S.recap){const r=S.recap;S.recap=null;save();
+  sheet(`<div class="big mascot-bounce">🦜</div><h2>${t('recapTitle')}</h2><div class="recap"><div><b>${r.xp}</b><small>XP</small></div><div><b>${r.les}</b><small>${t('sLessons')}</small></div><div><b>${r.days}/7</b><small>${t('recapDays')}</small></div><div><b>🔥 ${r.streak}</b><small>${t('streakShort')}</small></div></div><p>${t(r.days>=5?'recapGreat':'recapNext')}</p>`,
+   [{label:t('recapShare'),cls:'blue',fn:()=>copy(t('shareRecap',{x:r.xp,l:r.les,d:r.days,s:r.streak,lang:lname()}))},{label:t('continue'),cls:'ghost'}]);return}
+ if(S.lg.res&&S.lg.seen!==wkId()){const up=S.lg.res==='up',tr0=TIERS[S.lg.tier];S.lg.seen=wkId();save();if(S.lg.res==='stay')return;
+  sheet(`<div class="big">${up?'🏆':'📉'}</div><h2>${t(up?'promoTitle':'demoTitle',{l:t('tier'+S.lg.tier)})}</h2><p>${t(up?'promoText':'demoText')}</p>`,[{label:t('seeLeague'),cls:'blue',fn:()=>show('sLeague')}]);if(up)confetti()}
+}
+
+/* ======================= CÉLÉBRATIONS ======================= */
+function confetti(n=60){
+ const box=document.createElement('div');box.className='confetti';const cols=['#1E8FE1','#FFC93C','#D7263D','#58CC02','#CE82FF','#FF9600'];
+ for(let i=0;i<n;i++){const p=document.createElement('i');p.style.left=Math.random()*100+'%';p.style.background=cols[i%cols.length];
+  p.style.animationDelay=Math.random()*.4+'s';p.style.animationDuration=1.6+Math.random()*1.2+'s';p.style.transform=`rotate(${Math.random()*360}deg)`;box.appendChild(p)}
+ document.body.appendChild(box);setTimeout(()=>box.remove(),3200)}
+const _showEnd=showEnd;
+showEnd=function(o){
+ _showEnd(o);
+ const ic=$('eIcon');ic.classList.remove('mascot-bounce');void ic.offsetWidth;ic.classList.add('mascot-bounce');
+ if(PENDING_MILE){const m=PENDING_MILE;PENDING_MILE=0;
+  $('eExtra').insertAdjacentHTML('afterbegin',`<div class="mile"><div class="fire">🔥</div><b>${t('mileTitle',{n:m})}</b><small>${t('mileText')}</small></div>`);
+  $('shareTxt').textContent=t('shareMile',{n:m,lang:lname()});confetti(90);return}
+ if(Date.now()<S.boostUntil)$('eExtra').insertAdjacentHTML('afterbegin',`<div class="boostnote">⚡ ${t('boostOn')}</div>`);
+ if(/🌟|🏅|🏆/.test(o.icon))confetti();
+};
+
+/* ======================= ENTRAÎNEMENT (révision espacée) ======================= */
+// Mots à revoir aujourd'hui (échéance passée), puis les mots fragiles.
+function practiceWords(){
+ const now=Date.now(),W=LP().words;
+ const due=Object.entries(W).filter(([k,v])=>LG.wm[k]&&(v.due||0)<=now&&(v.ko>0||v.lvl<5)).sort((a,b)=>(a[1].due||0)-(b[1].due||0)||a[1].lvl-b[1].lvl);
+ const seen=new Set(due.map(d=>d[0]));
+ return [...due.map(([k])=>LG.wm[k]),...weakWords().filter(w=>!seen.has(w[0]))];
+}
+
+/* ======================= BOUTIQUE ======================= */
+const SHOP=[
+ {id:'freeze',ic:'🧊',price:100,ok:()=>S.freeze<2,buy:()=>{S.freeze++},sub:()=>t('freezeSub',{n:S.freeze})},
+ {id:'boost',ic:'⚡',price:80,ok:()=>Date.now()>=S.boostUntil,buy:()=>{S.boostUntil=Date.now()+15*60e3},sub:()=>Date.now()<S.boostUntil?t('boostLeft',{n:Math.ceil((S.boostUntil-Date.now())/60e3)}):t('boostSub')},
+ {id:'hearts',ic:'❤️',price:REFILL,ok:()=>S.hearts<MAXH,buy:()=>{S.hearts=MAXH;S.heartTs=null},sub:()=>t('heartsSub',{n:S.hearts,m:MAXH})},
+];
+function renderShop(){
+ const box=$('shop');if(!box)return;box.innerHTML='';
+ SHOP.forEach(it=>{const d=document.createElement('div');d.className='card quest shopit';
+  d.innerHTML=`<div class="ic">${it.ic}</div><div class="bd"><div class="t">${t('shop_'+it.id)}</div><small>${it.sub()}</small></div>`;
+  const b=btn('claim','💎 '+it.price,()=>{if(!it.ok())return toast(t('shopMax'));if(S.gems<it.price)return toast(t('notEnoughGems',{n:it.price}));
+   S.gems-=it.price;it.buy();save();sfx('coin');toast(t('bought'));render()});
+  b.disabled=!it.ok();d.appendChild(b);box.appendChild(d)});
+ const av=document.createElement('div');av.className='card shopav';av.innerHTML=`<div class="t">${t('shop_av')}</div><small>${t('shopAvSub')}</small><div class="avgrid" id="shopAvs"></div>`;box.appendChild(av);
+ PREMIUM_AV.forEach(([a,p])=>{const own=S.ownedAv.includes(a);const b=btn('avb'+(own?' on':''),a,()=>{
+   if(own){S.prof.av=a;save();toast(t('profSaved'));return}
+   if(S.gems<p)return toast(t('notEnoughGems',{n:p}));
+   sheet(`<div class="big">${a}</div><h2>${t('buyAv')}</h2><p>${t('buyAvText',{n:p})}</p>`,[{label:'💎 '+p,cls:'gold',fn:()=>{S.gems-=p;S.ownedAv.push(a);S.prof.av=a;save();sfx('win');confetti(40);render()}},{label:t('cancel'),cls:'ghost'}])});
+  if(!own){const s=document.createElement('small');s.textContent=p;b.appendChild(s)}$('shopAvs').appendChild(b)});
+}
+const _renderQuests=renderQuests;renderQuests=function(){_renderQuests();renderShop()};
+
+/* ======================= HISTOIRES ======================= */
+let ST=null;
+const storyOpen=i=>Object.values(LP().prog).filter(v=>v>=LPU).length>=i*2;
+function renderStories(){
+ const box=$('stories');if(!box)return;box.innerHTML='';
+ (LG.stories||[]).forEach((s,i)=>{const open=storyOpen(i),done=LP().stories[s.id],x=document.createElement('button');x.className='card sit'+(open?'':' off');
+  x.innerHTML=`<div class="ic" style="background:#f3ecff">${open?s.ic:'🔒'}</div><div class="bd"><b>${esc(tr(s.title))}</b><small>${open?Object.values(s.chars).map(c=>c[1]+' '+esc(tr(c[0]))).join(' · '):t('storyLocked',{n:i*2})}</small>${done?'<div class="stars">✅</div>':''}</div><div style="font-size:22px;color:var(--muted)">›</div>`;
+  x.onclick=()=>open?startStory(s):toast(t('storyLocked',{n:i*2}));box.appendChild(x)});
+}
+const _renderSits=renderSits;renderSits=function(){_renderSits();renderStories()};
+function startStory(s){ST={s,i:0,miss:0};show('story');$('stTitle').textContent=tr(s.title);$('stLines').innerHTML='';stStep()}
+function stStep(){
+ const s=ST.s,el=s.lines[ST.i];$('stProg').style.width=(ST.i/s.lines.length*100)+'%';$('stOpts').innerHTML='';$('stNext').style.display='none';
+ if(!el)return stEnd();
+ if(el.q){const q=document.createElement('div');q.className='stq';q.textContent='❓ '+tr(el.q);$('stLines').appendChild(q);q.scrollIntoView({behavior:'smooth',block:'end'});
+  shuffle(el.opts).forEach(o=>{const b=btn('opt',tr(o[0]),()=>{if(o[1]){sfx('good');b.classList.add('good');[...$('stOpts').children].forEach(x=>x.disabled=true);q.textContent='✅ '+tr(o[0]);setTimeout(()=>{ST.i++;stStep()},650)}
+   else{ST.miss++;sfx('bad');b.classList.add('bad');b.disabled=true}});$('stOpts').appendChild(b)});return}
+ const c=s.chars[el.c],me=el.c===Object.keys(s.chars)[0],d=document.createElement('div');d.className='stl'+(me?' me':'');
+ d.innerHTML=`<div class="av">${c[1]}</div><div class="bb"><span class="who">${esc(tr(c[0]))}</span><b>${esc(el.li)}</b><small class="${S.hints?'':'hid'}">${esc(tr(el.fr))}</small></div>`;
+ d.onclick=()=>{d.querySelector('small').classList.remove('hid');VOX.speak(el.li)};$('stLines').appendChild(d);d.scrollIntoView({behavior:'smooth',block:'end'});VOX.speak(el.li);
+ $('stNext').style.display='';$('stNext').onclick=()=>{ST.i++;stStep()};
+}
+function stEnd(){
+ const s=ST.s,first=!LP().stories[s.id];LP().stories[s.id]=1;const xp=addXp(first?14:7);S.q.lessons++;S.wk.les++;bumpStreak();save();sfx('win');
+ showEnd({icon:'📖',title:t('storyDone'),sub:`${tr(s.title)} · ${t('errors',{n:ST.miss})}`,labA:t('xpWon'),a:'+'+xp,labB:t('precision'),b:Math.max(0,100-ST.miss*20)+'%',share:t('shareStory',{s:tr(s.title),lang:lname()}),back:'sSit'});ST=null}
+
+/* ======================= LIGUES ET AMIS ======================= */
+const league={
+ data:null,friends:null,busy:false,
+ async sync(){if(!sb||!S.onboarded)return;try{await cloud.session();weekCheck();
+  const {data,error}=await sb.rpc('sync_profile',{p_name:S.prof.name,p_av:S.prof.av,p_col:S.prof.col,p_streak:S.streak,p_xp:S.xp,p_week:S.wk.id,p_week_xp:S.wk.xp});
+  if(!error&&data){S.lg.tier=data.tier|0;if(data.code)S.lg.code=data.code;if(data.result)S.lg.res=data.result;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}}catch(e){}},
+ async load(){if(!sb||league.busy)return;league.busy=true;
+  try{await league.sync();const [b,f]=await Promise.all([sb.rpc('league_board'),sb.rpc('friends_list')]);league.data=b.data||null;league.friends=f.data||[]}catch(e){}
+  league.busy=false;if(tab==='sLeague')paintLeague()}
+};
+function renderLeague(){paintLeague();league.load()}
+function paintLeague(){
+ const box=$('leagueBox');if(!box)return;
+ if(!sb){box.innerHTML=`<div class="card empty">${t('leagueOff')}</div>`;return}
+ const tr0=TIERS[S.lg.tier]||TIERS[0],left=Math.max(0,weekEnd()-Date.now()),dd=Math.floor(left/864e5),hh=Math.floor(left%864e5/36e5);
+ let h=`<div class="lhead" style="--lc:${tr0[2]}"><div class="tiers">${TIERS.map((x,i)=>`<span class="${i===S.lg.tier?'on':i<S.lg.tier?'past':''}">${x[1]}</span>`).join('')}</div>
+  <h2>${t('leagueName',{l:t('tier'+S.lg.tier)})}</h2><small>${t('leagueRule')} · ⏳ ${t('leagueLeft',{d:dd,h:hh})}</small></div>`;
+ const rows=(league.data&&league.data.rows)||[];
+ if(!league.data)h+=`<div class="card empty">${t('loading')}</div>`;
+ else if(!rows.length)h+=`<div class="card empty">${t('leagueEmpty')}</div>`;
+ else{const n=rows.length;h+='<div class="card board">'+rows.map((r,i)=>{const z=i<7&&S.lg.tier<TIERS.length-1&&r.xp>=30?'up':n>=10&&i>=n-5&&S.lg.tier>0?'down':'';const c=AV_COLORS[r.col]||AV_COLORS[0];
+   return `${i===7&&S.lg.tier<TIERS.length-1?`<div class="zone up">⬆ ${t('zoneUp')}</div>`:''}${n>=10&&i===n-5&&S.lg.tier>0?`<div class="zone down">⬇ ${t('zoneDown')}</div>`:''}<div class="lrow ${r.me?'me':''} ${z}"><b class="rk">${i+1}</b><span class="av" style="background:${c[0]}">${esc(r.av)}</span><span class="nm">${esc(r.name||t('learner'))}${r.me?` (${t('you')})`:''}</span><b class="xp">${r.xp} XP</b></div>`}).join('')+'</div>'}
+ h+=`<div class="sec">${t('friends')}</div><div class="card friendcode"><div><small>${t('myCode')}</small><b>${esc(S.lg.code||'…')}</b></div></div>`;
+ box.innerHTML=h;
+ const fc=box.querySelector('.friendcode');
+ fc.appendChild(btn('pill',t('shareCode'),()=>copy(t('inviteText',{c:S.lg.code,lang:lname()})+' https://christophembadu.github.io/loba/')));
+ const add=document.createElement('div');add.className='card addfriend';add.innerHTML=`<input class="field" id="fCode" maxlength="8" placeholder="${t('friendCodePh')}" autocapitalize="characters">`;
+ add.appendChild(btn('btn',t('addFriend'),async(ev)=>{const c=$('fCode').value.toUpperCase().replace(/[^A-Z0-9]/g,'');if(c.length<6)return toast(t('badFriendCode'));ev.target.disabled=true;
+  try{await cloud.session();const {data,error}=await sb.rpc('follow_by_code',{p_code:c});if(error)throw error;toast(data&&data.name?t('friendAdded',{n:data.name}):t('friendAddedAnon'));league.load()}catch(e){toast(t('badFriendCode'))}ev.target.disabled=false}));
+ box.appendChild(add);
+ const fl=league.friends||[];
+ if(fl.length){const l=document.createElement('div');l.className='card board';
+  l.innerHTML=fl.map(f=>{const c=AV_COLORS[f.col]||AV_COLORS[0];return `<div class="lrow"><span class="av" style="background:${c[0]}">${esc(f.av)}</span><span class="nm">${esc(f.name||t('learner'))}<small>🔥 ${f.streak|0} · ${f.week_xp|0} XP ${t('thisWeek')}</small></span><button class="pill" data-u="${esc(f.user_id)}">${t('challenge')}</button></div>`}).join('');
+  l.querySelectorAll('button[data-u]').forEach((b,i)=>b.onclick=()=>{const f=fl[i];copy(t('challengeText',{n:f.name||'',x:S.wk.xp,lang:lname(),c:S.lg.code})+' https://christophembadu.github.io/loba/')});
+  box.appendChild(l)}
+ else{const e=document.createElement('div');e.className='card empty';e.textContent=t('noFriends');box.appendChild(e)}
+}
+// La sauvegarde cloud envoie aussi le profil public (ligue, amis).
+const _push=cloud.push.bind(cloud);cloud.push=async function(){await _push();league.sync()};
+$('stQuit').onclick=()=>{ST=null;try{speechSynthesis.cancel()}catch(e){}show('sSit')};
+// Accueil : carte de réparation de série + gel de série affiché.
+const _renderLearn=renderLearn;renderLearn=function(){_renderLearn();const hc=$('homeCards');
+ if(canRepair()){const c=document.createElement('button');c.className='card promo repair';c.innerHTML=`<div class="ic">🔧</div><div style="flex:1"><b>${t('repairCard',{n:S.lost.n})}</b><small>${t('repairCardSub')}</small></div><div class="go">💎 ${REPAIR}</div>`;c.onclick=repairStreak;hc.prepend(c)}
+ const rv=$('revBtn');if(rv){const n=practiceWords().length;const sm=rv.querySelector('small');if(sm)sm.textContent=n>=3?t('practiceDue',{n}):t('reviewFill')}};
+
 /* ======================= DÉMARRAGE ======================= */
 applyStatic();dayCheck();regen();
-if(S.onboarded&&LP().started)show('sLearn');else startOnb(S.onboarded);
-cloud.pull().then(()=>remind.sync());
+if(S.onboarded&&LP().started){show('sLearn');setTimeout(startupNotices,600)}else startOnb(S.onboarded);
+cloud.pull().then(()=>{remind.sync();league.sync()});
 setInterval(()=>{if(MAIN.includes(tab)&&$(tab).classList.contains('on'))render()},60000);
 // Application installable + hors ligne (seulement sur le vrai site, pas en aperçu)
 if('serviceWorker' in navigator&&location.protocol==='https:'&&window.top===window.self){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}

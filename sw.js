@@ -1,6 +1,6 @@
 // Service worker de Loba : l'appli fonctionne hors ligne (Kinshasa, coupures réseau…).
 // Change VERSION à chaque mise en ligne pour forcer la mise à jour du cache.
-const VERSION = 'loba-v8-0';
+const VERSION = 'loba-v9-0';
 const SHELL = ['./', 'index.html', 'privacy.html', 'manifest.webmanifest',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-512.png', 'icons/apple-touch-icon.png'];
 
