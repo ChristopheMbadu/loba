@@ -1,0 +1,34 @@
+name: Studio checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: studio_test
+          POSTGRES_PASSWORD: disposable_ci_password
+          POSTGRES_DB: studio_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U studio_test -d studio_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      TEST_DATABASE_URL: postgresql://studio_test:disposable_ci_password@localhost:5432/studio_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts --no-audit --no-fund
+      - run: npm run check
+      - run: npm test
+      - run: npm ci --prefix learn --no-audit --no-fund
+      - run: npm test --prefix learn
+      - run: npm run build --prefix learn

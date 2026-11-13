@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173e32">
+  <meta name="description" content="Loba Studio — your home for Lingala and Swahili lessons.">
+  <title>Loba Studio · Lesson workspace</title>
+  <link rel="icon" href="/icons/icon-192.png">
+  <link rel="stylesheet" href="/admin/tabler.css">
+  <link rel="stylesheet" href="/admin/style.css">
+  <script src="/admin/app.js" defer></script>
+</head>
+<body>
+  <div id="loading" class="loading"><span class="brand-mark">L</span><p>Opening your workspace…</p></div>
+  <section id="login" class="login" hidden>
+    <div class="login-form-wrap"><form id="login-form" class="login-form card card-body">
+      <span class="brand-mark">L</span><p class="eyebrow">LOBA STUDIO</p>
+      <h2>Sign in to Loba</h2><p class="muted">Manage your lessons, languages and team.</p>
+      <label>Email address<input class="form-control" type="email" name="email" autocomplete="username" placeholder="you@example.com" required maxlength="254"></label>
+      <label>Password<input class="form-control" type="password" name="password" autocomplete="current-password" placeholder="Enter your password" required maxlength="256"></label>
+      <p id="login-error" class="form-error" role="alert"></p>
+      <button class="button btn btn-primary" type="submit">Sign in to Studio <span>→</span></button>
+      <p class="login-note">New to Loba? <a href="/signup">Create an account</a></p>
+    </form>
+    <form id="signup-form" class="login-form card card-body" hidden>
+      <span class="brand-mark">L</span><p class="eyebrow">LOBA STUDIO</p>
+      <h2>Create your account.</h2><p class="muted">Everyone is welcome. An administrator approves access to the lesson workspace.</p>
+      <label>Email address<input class="form-control" type="email" name="email" autocomplete="username" required maxlength="254"></label>
+      <label>Password<input class="form-control" type="password" name="password" autocomplete="new-password" required minlength="14" maxlength="256" placeholder="At least 14 characters"></label>
+      <label>Confirm password<input class="form-control" type="password" name="confirmation" autocomplete="new-password" required minlength="14" maxlength="256"></label>
+      <p id="signup-error" class="form-error" role="alert"></p>
+      <p id="signup-success" role="status" hidden></p>
+      <button class="button btn btn-primary" type="submit">Create account →</button>
+      <p class="login-note">Already have an account? <a href="/">Sign in</a></p>
+    </form></div>
+  </section>
+  <div id="workspace" class="workspace page" hidden>
+    <aside class="sidebar navbar navbar-vertical navbar-dark" data-bs-theme="dark">
+      <a class="brand" href="/"><span class="logo-square">L</span> Loba <small>Studio</small></a>
+      <div class="workspace-label">Content management</div>
+      <p class="nav-label">WORKSPACE</p>
+      <nav class="navbar-nav" aria-label="Main navigation">
+        <button data-view="overview" class="nav-link active"><span>◫</span>Overview</button>
+        <button data-view="lessons" class="nav-link"><span>▤</span>Lessons <small id="nav-count">0</small></button>
+        <button data-view="languages" class="nav-link"><span>◎</span>Languages</button>
+        <button data-view="accounts" class="nav-link"><span>♧</span>Accounts</button>
+        <button data-view="activity" class="nav-link"><span>↺</span>Activity</button>
+      </nav>
+      <div class="sidebar-bottom">
+      <div class="account"><span id="avatar" class="avatar">L</span><div><b>Editor</b><small id="user-email"></small></div><button id="logout" class="icon-button btn btn-icon btn-ghost-secondary" title="Sign out" aria-label="Sign out">↪</button></div></div>
+    </aside>
+    <main class="page-wrapper">
+      <header class="topbar"><div><span class="muted">Workspace</span><span class="breadcrumb">/</span><b id="breadcrumb">Overview</b></div><div class="top-actions"><span class="badge bg-blue-lt">Administrator</span><a class="text-link" href="/learn" target="_blank" rel="noopener">Open learner app ↗</a></div></header>
+      <div class="page-heading"><div><p class="eyebrow">LOBA STUDIO</p><h1 id="page-title">Overview</h1><p id="page-subtitle" class="muted">Manage your curriculum and review recent changes.</p></div><button class="button btn btn-primary new-lesson">＋ Create lesson</button></div>
+      <div id="load-error" class="alert alert-info notice error" hidden role="alert"><span></span><button id="retry" class="button btn btn-outline-secondary">Try again</button></div>
+      <section id="overview-view" class="view">
+        <div id="stats" class="stats"></div>
+        <div class="overview-grid"><section class="card panel"><div class="section-heading"><div><p class="eyebrow">CURRICULUM</p><h2>Languages</h2></div><span class="muted">2 learning paths</span></div><div id="language-cards"></div></section><section class="card panel activity-panel"><div class="section-heading"><h2>Recent activity</h2><button id="all-activity" class="text-button">View all ↗</button></div><div id="recent-activity"></div></section></div>
+        <section class="card panel recent-lessons"><div class="section-heading"><div><h2>Recently updated lessons</h2><p class="muted">Your most recently updated lessons.</p></div><button id="all-lessons" class="text-button">All lessons →</button></div><div id="recent-table"></div></section>
+      </section>
+      <section id="lessons-view" class="view" hidden><div class="filters"><div class="filter-tabs" role="group" aria-label="Lesson status"><button class="selected" data-status="all">All lessons</button><button data-status="draft">Drafts</button><button data-status="published">Published</button><button data-status="changes">Unpublished changes</button></div><div class="filter-inputs"><label class="search-label"><span>⌕</span><input class="form-control" id="search" type="search" placeholder="Search lessons…" aria-label="Search lessons"></label><select class="form-select" id="language-filter" aria-label="Filter language"><option value="all">All languages</option><option value="ln">Lingala</option><option value="sw">Swahili</option></select></div></div><section class="card panel"><div id="lessons-table"></div></section></section>
+      <section id="languages-view" class="view" hidden><div id="language-detail" class="language-detail"></div></section>
+      <section id="activity-view" class="view" hidden><section class="card panel"><div class="section-heading"><h2>Editorial activity</h2><span class="muted">Latest 15 actions</span></div><div id="activity-list"></div></section></section>
+      <section id="accounts-view" class="view" hidden><section class="card panel"><div class="section-heading"><div><h2>Pending accounts</h2><p class="muted">Approve people you trust to create, edit, publish lessons and approve other accounts. Email ownership is not verified.</p></div><button id="refresh-accounts" class="button btn btn-outline-secondary">Refresh</button></div><p id="accounts-error" class="form-error" role="alert"></p><div id="accounts-list"></div></section></section>
+      <footer class="main-footer"><span>Loba Studio <span class="footer-dot">·</span> Lesson management</span><span>Built with <a href="https://github.com/tabler/tabler" target="_blank" rel="noopener">Tabler</a></span></footer>
+    </main>
+  </div>
+  <dialog id="editor" class="editor-dialog"><form id="lesson-form">
+    <div class="editor-top"><div><p class="eyebrow" id="editor-eyebrow">LESSON EDITOR</p><h2 id="editor-heading">Create a lesson</h2></div><button type="button" id="close-editor" class="icon-button btn btn-icon btn-ghost-secondary" aria-label="Close editor">✕</button></div>
+    <div class="editor-body"><div id="editor-notice" class="alert alert-info notice">Saved changes stay in draft until you publish them.</div>
+      <div class="field-grid"><label>Language<select class="form-select" name="language"><option value="ln">Lingala</option><option value="sw">Swahili</option></select></label><label>Position<input class="form-control" name="position" type="number" min="1" max="999" required></label><label>Icon<input class="form-control" name="icon" maxlength="20" required></label></div>
+      <div class="field-grid two"><label>Lesson title (French)<input class="form-control" name="title" maxlength="160" required placeholder="Mbote ! Saluer"></label><label>Lesson title (English)<input class="form-control" name="titleEn" maxlength="160" placeholder="Mbote! Greetings"></label></div>
+      <label>Teaching note<textarea class="form-control" name="tip" rows="3" maxlength="3000" placeholder="A cultural detail, pronunciation tip, or teaching note…"></textarea></label>
+      <div class="section-heading editor-section"><div><h3>Vocabulary</h3><p class="muted">A word or phrase, with its French and English meaning.</p></div><button type="button" id="add-word" class="button btn btn-outline-secondary small">＋ Add word</button></div><div id="word-rows"></div>
+      <div class="section-heading editor-section"><div><h3>Sentence practice</h3><p class="muted">A prompt, its correct answer, and optional distractor words.</p></div><button type="button" id="add-sentence" class="button btn btn-outline-secondary small">＋ Add sentence</button></div><div id="sentence-rows"></div>
+      <p id="editor-error" class="form-error" role="alert"></p>
+    </div><div class="editor-footer"><div><button type="button" id="delete-lesson" class="button btn btn-outline-danger">Delete</button><button type="button" id="unpublish-lesson" class="button btn btn-outline-secondary">Unpublish</button></div><div><button type="button" id="preview-lesson" class="button btn btn-outline-secondary">Preview</button><button type="submit" id="save-lesson" class="button btn btn-outline-secondary">Save draft</button><button type="button" id="publish-lesson" class="button btn btn-primary">Publish lesson ↗</button></div></div>
+  </form></dialog>
+  <dialog id="preview" class="preview-dialog"><div class="section-heading"><p class="eyebrow">LEARNER PREVIEW</p><button class="icon-button btn btn-icon btn-ghost-secondary" id="close-preview" aria-label="Close preview">✕</button></div><div id="preview-content"></div></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "Loba — Lingala & Swahili",
+  "short_name": "Loba",
+  "description": "Apprends le lingala et le swahili du Congo, quelques minutes par jour. Learn Congolese Lingala and Swahili, a few minutes a day.",
+  "lang": "fr",
+  "start_url": "/learn/?source=pwa",
+  "scope": "/learn/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#1c9bef",
+  "categories": ["education", "games"],
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}

@@ -413,6 +413,7 @@ select.pill{font:inherit;font-weight:800;padding:6px 10px;border-radius:12px;bor
 
 .nav button b{font-weight:800}
 </style>
+<link rel="stylesheet" href="learner.css?v=1">
 </head>
 <body>
 <div class="app">
@@ -420,6 +421,7 @@ select.pill{font:inherit;font-weight:800;padding:6px 10px;border-radius:12px;bor
   <header class="top" id="topbar">
     <div class="logo"><div class="flag"></div>Loba</div>
     <button class="langbtn" id="langBtn"></button>
+    <button id="soundToggle" class="sound-toggle" type="button" aria-label="Sound effects" aria-pressed="true">♫</button>
     <div class="stats">
       <div class="stat fire" id="tStreakW" data-i18n-title="streak">🔥 <span id="tStreak">0</span></div>
       <div class="stat gem" data-i18n-title="gems">💎 <span id="tGems">0</span></div>
@@ -428,7 +430,10 @@ select.pill{font:inherit;font-weight:800;padding:6px 10px;border-radius:12px;bor
   </header>
 
   <!-- APPRENDRE -->
-  <section class="screen" id="sLearn"><div class="pad"><div id="homeCards"></div><div id="path"></div></div></section>
+  <section class="screen" id="sLearn"><div class="pad learning-layout">
+    <main class="learning-main"><div id="journeyHero"></div><div class="mobile-tools"><button id="mobilePractice" type="button"></button><button id="mobileDaily" type="button" aria-expanded="false" aria-controls="learningAside"></button></div><div class="path-heading"><h2 id="journeyTitle"></h2><span id="journeyCount"></span></div><div id="path"></div></main>
+    <aside class="learning-aside" id="learningAside"><div id="dailyGoal"></div><div id="homeCards"></div><p class="roots-note">LINGALA · SWAHILI<br><span>Made for the way we connect.</span></p></aside>
+  </div></section>
 
   <!-- SITUATIONS -->
   <section class="screen" id="sSit"><div class="pad">
@@ -955,7 +960,7 @@ fr:{
  continue:'Continuer',tabLearn:'Apprendre',tabSit:'Situations',tabChallenges:'Défis',tabProfile:'Profil',
  donTitle:'Soutenir Loba',donSub:'Loba est gratuit et sans pub. Tes dons financent l\'audio, de nouvelles langues et les serveurs.',
  // onboarding
- helloTitle:'Mbote ! Jambo !<br>Moi c\'est Koko.',helloSub:'Le perroquet gris du Congo qui va te faire parler les langues du pays, 5 minutes par jour.',
+ helloTitle:'Mbote ! Jambo !<br>Moi c\'est Koko.',helloSub:'Ton compagnon pour découvrir les langues du Congo, 5 minutes par jour.',
  go:'C\'est parti',appLangQ:'Dans quelle langue veux-tu utiliser l\'appli ?',whichLang:'Quelle langue veux-tu apprendre ?',
  whyLearn:'Pourquoi tu apprends le {lang} ?',whereAt:'Tu en es où avec le {lang} ?',howLong:'Combien de temps par jour ?',
  mFamille:'Parler avec ma famille',mRacines:'Renouer avec mes racines',mBelle:'Ma belle-famille est congolaise',mCurio:'Par curiosité',
@@ -1062,7 +1067,7 @@ en:{
  privacy:'Privacy',reset:'Reset my progress',machine:'Sentence machine',streakShort:'Streak',copyShare:'Copy to share',
  continue:'Continue',tabLearn:'Learn',tabSit:'Situations',tabChallenges:'Challenges',tabProfile:'Profile',
  donTitle:'Support Loba',donSub:'Loba is free and ad-free. Your donations fund audio, new languages and servers.',
- helloTitle:'Mbote! Jambo!<br>I\'m Koko.',helloSub:'The Congolese grey parrot who will get you speaking the country\'s languages, 5 minutes a day.',
+ helloTitle:'Mbote! Jambo!<br>I\'m Koko.',helloSub:'Your companion for discovering the languages of Congo, 5 minutes a day.',
  go:'Let\'s go',appLangQ:'Which language do you want the app in?',whichLang:'Which language do you want to learn?',
  whyLearn:'Why are you learning {lang}?',whereAt:'How much {lang} do you know?',howLong:'How much time per day?',
  mFamille:'To talk with my family',mRacines:'To reconnect with my roots',mBelle:'My in-laws are Congolese',mCurio:'Out of curiosity',
@@ -1224,7 +1229,7 @@ const KEY='loba-state-v4';
 const newQ=()=>({day:today(),xp:0,lessons:0,comboMax:0,flashBest:0,sent:0,claimed:[]});
 const freshLang=()=>({started:false,level:'zero',prog:{},chests:{},words:{},sit:{},stories:{}});
 const detectUi=()=>((navigator.language||'fr').toLowerCase().startsWith('fr')?'fr':'en');
-const fresh=()=>({v:5,savedAt:0,ui:detectUi(),onboarded:false,lang:'ln',motive:'famille',goal:40,hints:true,xp:0,gems:50,hearts:MAXH,heartTs:null,streak:0,bestStreak:0,lastDay:null,total:0,perfect:0,flashBest:0,sitDone:0,sentTotal:0,reviews:0,spoken:0,prof:{name:'',av:'🦜',col:0},remind:{on:false,h:19},freeze:0,lost:null,miles:[],wk:{id:'',xp:0,les:0,days:[]},recap:null,boostUntil:0,ownedAv:[],lg:{tier:0,code:'',res:'',seen:''},voice:true,mic:true,micOff:0,donated:false,q:newQ(),per:{ln:freshLang(),sw:freshLang()}});
+const fresh=()=>({v:5,savedAt:0,ui:detectUi(),onboarded:false,lang:'ln',motive:'famille',goal:40,hints:true,xp:0,gems:50,hearts:MAXH,heartTs:null,streak:0,bestStreak:0,lastDay:null,total:0,perfect:0,flashBest:0,sitDone:0,sentTotal:0,reviews:0,spoken:0,prof:{name:'',av:'🦜',col:0},remind:{on:false,h:19},freeze:0,lost:null,miles:[],wk:{id:'',xp:0,les:0,days:[]},recap:null,boostUntil:0,ownedAv:[],lg:{tier:0,code:'',res:'',seen:''},sound:true,voice:true,mic:true,micOff:0,donated:false,q:newQ(),per:{ln:freshLang(),sw:freshLang()}});
 
 // Nettoie un état venant du stockage ou du cloud : types attendus, valeurs bornées.
 function sanitize(o){
@@ -1241,7 +1246,7 @@ function sanitize(o){
  out.boostUntil=num(o.boostUntil,0,0,1e15);out.ownedAv=Array.isArray(o.ownedAv)?o.ownedAv.filter(a=>PREMIUM_AV.some(p=>p[0]===a)):[];
  const lg=o.lg||{};out.lg={tier:num(lg.tier,0,0,TIERS.length-1)|0,code:typeof lg.code==='string'?lg.code.replace(/[^A-Z0-9]/g,'').slice(0,8):'',res:['up','down','stay'].includes(lg.res)?lg.res:'',seen:typeof lg.seen==='string'?lg.seen.slice(0,10):''};
  out.voice=o.voice!==false;out.mic=o.mic!==false;out.micOff=num(o.micOff,0,0,1e15);
- out.savedAt=num(o.savedAt,0,0,1e15);out.hearts=num(o.hearts,MAXH,0,MAXH);out.heartTs=o.heartTs?num(o.heartTs,null,0,1e15):null;out.goal=[20,40,60].includes(+o.goal)?+o.goal:40;
+ out.sound=o.sound!==false;out.savedAt=num(o.savedAt,0,0,1e15);out.hearts=num(o.hearts,MAXH,0,MAXH);out.heartTs=o.heartTs?num(o.heartTs,null,0,1e15):null;out.goal=[20,40,60].includes(+o.goal)?+o.goal:40;
  out.ui=o.ui==='en'?'en':o.ui==='fr'?'fr':S0.ui;out.lang=o.lang in LANGS?o.lang:'ln';out.motive=o.motive in MOTIVES?o.motive:'famille';
  out.onboarded=!!o.onboarded;out.hints=o.hints!==false;out.donated=!!o.donated;out.lastDay=typeof o.lastDay==='string'?o.lastDay:null;
  const q=o.q||{};out.q={day:typeof q.day==='string'?q.day:today(),xp:num(q.xp,0),lessons:num(q.lessons,0),comboMax:num(q.comboMax,0),flashBest:num(q.flashBest,0),sent:num(q.sent,0,0,1),claimed:Array.isArray(q.claimed)?q.claimed.filter(x=>QUESTS.some(Q=>Q.id===x)):[]};
@@ -1317,10 +1322,11 @@ const unitsDone=c=>LANGS[c].units.filter(u=>(S.per[c].prog[u.id]||0)>=LPU).lengt
 
 /* ======================= INTERFACE COMMUNE ======================= */
 let tt;function toast(m,ms=2200){const el=$('toast');el.textContent=m;el.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>el.classList.remove('on'),ms)}
-let AC;function sfx(kind){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+let AC;function sfx(kind){if(S.sound===false)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+ if(AC.state==='suspended')AC.resume().catch(()=>{});
  const seq={good:[[660,0],[880,.09]],bad:[[220,0],[180,.12]],win:[[523,0],[659,.1],[784,.2],[1046,.3]],coin:[[988,0],[1319,.07]],pop:[[740,0]]}[kind];
- seq.forEach(([f,d])=>{const o=AC.createOscillator(),g=AC.createGain();o.type=kind==='bad'?'sawtooth':'triangle';o.frequency.value=f;
-  g.gain.setValueAtTime(.0001,AC.currentTime+d);g.gain.exponentialRampToValueAtTime(kind==='pop'?.07:.18,AC.currentTime+d+.02);g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+d+.18);
+ seq.forEach(([f,d])=>{const o=AC.createOscillator(),g=AC.createGain();o.type='sine';o.frequency.value=f;
+  g.gain.setValueAtTime(.0001,AC.currentTime+d);g.gain.exponentialRampToValueAtTime(kind==='pop'?.04:.1,AC.currentTime+d+.02);g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+d+.18);
   o.connect(g).connect(AC.destination);o.start(AC.currentTime+d);o.stop(AC.currentTime+d+.2)})}catch(e){}}
 /* ======================= VOIX : ÉCOUTER ET PARLER ======================= */
 // Synthèse vocale du téléphone + reconnaissance vocale du navigateur. Rien n'est enregistré par Loba.
@@ -1364,6 +1370,8 @@ function show(id){
  const main=MAIN.includes(id);$('topbar').style.display=$('nav').style.display=main?'':'none';
  if(main){tab=id;document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('on',b.dataset.tab===id));render()}
  window.scrollTo(0,0);
+ document.body.classList.toggle('focus-mode',!main);
+ document.dispatchEvent(new Event('loba:screen'));
 }
 document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>show(b.dataset.tab));
 function render(){
@@ -1904,6 +1912,7 @@ function finishLesson(){
 function showEnd(o){
  $('eIcon').textContent=o.icon;$('eTitle').textContent=o.title;$('eSub').textContent=o.sub;$('eLabA').textContent=o.labA;$('eA').textContent=o.a;$('eLabB').textContent=o.labB;$('eB').textContent=o.b;$('eC').textContent='🔥 '+S.streak;
  $('eExtra').innerHTML=o.extra||'';
+ document.dispatchEvent(new Event('loba:celebrate'));
  const q=$('eQuests');q.innerHTML='';
  QUESTS.filter(x=>x.val()>=x.goal()&&!S.q.claimed.includes(x.id)).forEach(x=>{const d=document.createElement('div');d.textContent=t('questDone',{q:x.t(),r:x.r});q.appendChild(d)});
  if(donationsOn()&&S.total>0&&S.total%5===0&&!S.donated){const d=document.createElement('div');d.style.cssText='background:#fde9ec;color:var(--red-d);cursor:pointer';d.textContent=t('donAsk');d.onclick=openDonate;q.appendChild(d)}
@@ -1947,6 +1956,7 @@ function startupNotices(){
 
 /* ======================= CÉLÉBRATIONS ======================= */
 function confetti(n=60){
+ if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
  const box=document.createElement('div');box.className='confetti';const cols=['#1E8FE1','#FFC93C','#D7263D','#58CC02','#CE82FF','#FF9600'];
  for(let i=0;i<n;i++){const p=document.createElement('i');p.style.left=Math.random()*100+'%';p.style.background=cols[i%cols.length];
   p.style.animationDelay=Math.random()*.4+'s';p.style.animationDuration=1.6+Math.random()*1.2+'s';p.style.transform=`rotate(${Math.random()*360}deg)`;box.appendChild(p)}
@@ -2073,5 +2083,7 @@ setInterval(()=>{if(MAIN.includes(tab)&&$(tab).classList.contains('on'))render()
 if('serviceWorker' in navigator&&location.protocol==='https:'&&window.top===window.self){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
 
 </script>
+<script src="lottie.min.js"></script>
+<script src="learner.js?v=1"></script>
 </body>
 </html>

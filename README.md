@@ -1,5 +1,9 @@
 # 🇨🇩 Loba — Apprends le lingala et le swahili
 
+## Loba Studio — tableau de bord éditorial
+
+Un tableau de bord avec connexion, gestion des leçons, brouillons et publication est disponible dans ce dépôt. Backend Node.js/PostgreSQL, déploiement Railway via Docker et API de contenu pour une future application SwiftUI. Voir **[STUDIO.md](STUDIO.md)** pour l'installation, le déploiement et les limites actuelles. L'application historique ci-dessous conserve ses leçons intégrées et son backend Supabase.
+
 **Loba** (« parle ! » en lingala) est une application façon Duolingo pour apprendre le **lingala** de Kinshasa et le **swahili**, pensée pour la diaspora congolaise : celles et ceux qui comprennent la langue de la famille… mais n'osent pas la parler.
 
 👉 **Démo : https://christophembadu.github.io/loba/** (installable sur téléphone : « Ajouter à l'écran d'accueil »)

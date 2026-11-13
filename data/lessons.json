@@ -1,0 +1,1759 @@
+[
+  {
+    "id": "ln-mbote",
+    "language": "ln",
+    "position": 1,
+    "title": "Mbote ! Saluer",
+    "titleEn": "Mbote! Greetings",
+    "icon": "👋",
+    "tip": "À Kinshasa, on dit « Kende malamu » à celui qui part et « Tikala malamu » à celui qui reste.",
+    "words": [
+      {
+        "term": "Mbote",
+        "fr": "Bonjour",
+        "en": "Hello"
+      },
+      {
+        "term": "Sango nini?",
+        "fr": "Quoi de neuf ?",
+        "en": "What's new?"
+      },
+      {
+        "term": "Ozali malamu?",
+        "fr": "Tu vas bien ?",
+        "en": "Are you well?"
+      },
+      {
+        "term": "Nazali malamu",
+        "fr": "Je vais bien",
+        "en": "I'm fine"
+      },
+      {
+        "term": "Matondo",
+        "fr": "Merci",
+        "en": "Thank you"
+      },
+      {
+        "term": "Kende malamu",
+        "fr": "Au revoir (à celui qui part)",
+        "en": "Goodbye (to the one leaving)"
+      },
+      {
+        "term": "Tikala malamu",
+        "fr": "Au revoir (à celui qui reste)",
+        "en": "Goodbye (to the one staying)"
+      },
+      {
+        "term": "Nkombo na yo nani?",
+        "fr": "Comment tu t'appelles ?",
+        "en": "What's your name?"
+      }
+    ],
+    "sentences": [
+      {
+        "fr": "Je vais bien",
+        "en": "I'm fine",
+        "answer": "Nazali malamu",
+        "distractors": [
+          "Ozali",
+          "yo"
+        ]
+      },
+      {
+        "fr": "Comment tu t'appelles ?",
+        "en": "What's your name?",
+        "answer": "Nkombo na yo nani?",
+        "distractors": [
+          "ngai",
+          "malamu"
+        ]
+      },
+      {
+        "fr": "Merci, je vais bien",
+        "en": "Thank you, I'm fine",
+        "answer": "Matondo nazali malamu",
+        "distractors": [
+          "Mbote",
+          "yo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ln-survie",
+    "language": "ln",
+    "position": 2,
+    "title": "Loba malembe ! Survie",
+    "titleEn": "Loba malembe! Survival kit",
+    "icon": "🆘",
+    "tip": "Tu comprends un peu mais on parle trop vite ? La phrase magique : « Loba malembe » (parle doucement).",
+    "words": [
+      {
+        "term": "Loba malembe",
+        "fr": "Parle doucement",
+        "en": "Speak slowly"
+      },
+      {
+        "term": "Loba lisusu",
+        "fr": "Répète",
+        "en": "Repeat"
+      },
+      {
+        "term": "Nayoki te",
+        "fr": "Je ne comprends pas",
+        "en": "I don't understand"
+      },
+      {
+        "term": "Nayebi te",
+        "fr": "Je ne sais pas",
+        "en": "I don't know"
+      },
+      {
+        "term": "Ee",
+        "fr": "Oui",
+        "en": "Yes"
+      },
+      {
+        "term": "Te",
+        "fr": "Non",
+        "en": "No"
+      },
+      {
+        "term": "Moke",
+        "fr": "Un peu",
+        "en": "A little"
+      },
+      {
+        "term": "Nazali koyekola lingala",
+        "fr": "J'apprends le lingala",
+        "en": "I'm learning Lingala"
+      }
+    ],
+    "sentences": [
+      {
+        "fr": "Je ne comprends pas, répète",
+        "en": "I don't understand, repeat",
+        "answer": "Nayoki te loba lisusu",
+        "distractors": [
+          "malembe",
+          "Ee"
+        ]
+      },
+      {
+        "fr": "Un peu, j'apprends le lingala",
+        "en": "A little, I'm learning Lingala",
+        "answer": "Moke nazali koyekola lingala",
+        "distractors": [
+          "te",
+          "mingi"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ln-libota",
+    "language": "ln",
+    "position": 3,
+    "title": "Libota — La famille",
+    "titleEn": "Libota — Family",
+    "icon": "👪",
+    "tip": "Ndeko désigne un frère, une sœur… et souvent tout proche de la famille.",
+    "words": [
+      {
+        "term": "Mama",
+        "fr": "Mère",
+        "en": "Mother"
+      },
+      {
+        "term": "Tata",
+        "fr": "Père",
+        "en": "Father"
+      },
+      {
+        "term": "Ndeko",
+        "fr": "Frère / sœur",
+        "en": "Brother / sister"
+      },
+      {
+        "term": "Moninga",
+        "fr": "Ami",
+        "en": "Friend"
+      },
+      {
+        "term": "Mwana",
+        "fr": "Enfant",
+        "en": "Child"
+      },
+      {
+        "term": "Libota",
+        "fr": "Famille",
+        "en": "Family"
+      },
+      {
+        "term": "Mobali",
+        "fr": "Homme / mari",
+        "en": "Man / husband"
+      },
+      {
+        "term": "Mwasi",
+        "fr": "Femme / épouse",
+        "en": "Woman / wife"
+      }
+    ],
+    "sentences": [
+      {
+        "fr": "Mon ami",
+        "en": "My friend",
+        "answer": "Moninga na ngai",
+        "distractors": [
+          "yo",
+          "mama"
+        ]
+      },
+      {
+        "fr": "Ta famille",
+        "en": "Your family",
+        "answer": "Libota na yo",
+        "distractors": [
+          "ngai",
+          "tata"
+        ]
+      },
+      {
+        "fr": "Mon enfant",
+        "en": "My child",
+        "answer": "Mwana na ngai",
+        "distractors": [
+          "yo",
+          "ndeko"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ln-bilei",
+    "language": "ln",
+    "position": 4,
+    "title": "Bilei — Manger",
+    "titleEn": "Bilei — Food",
+    "icon": "🍲",
+    "tip": "Le pondu (feuilles de manioc) avec du mbisi (poisson), un classique à Kin.",
+    "words": [
+      {
+        "term": "Bilei",
+        "fr": "Nourriture",
+        "en": "Food"
+      },
+      {
+        "term": "Mai",
+        "fr": "Eau",
+        "en": "Water"
+      },
+      {
+        "term": "Mbisi",
+        "fr": "Poisson",
+        "en": "Fish"
+      },
+      {
+        "term": "Nyama",
+        "fr": "Viande",
+        "en": "Meat"
+      },
+      {
+        "term": "Pondu",
+        "fr": "Feuilles de manioc",
+        "en": "Cassava leaves"
+      },
+      {
+        "term": "Nazali na nzala",
+        "fr": "J'ai faim",
+        "en": "I'm hungry"
+      },
+      {
+        "term": "Nalingi kolia",
+        "fr": "Je veux manger",
+        "en": "I want to eat"
+      },
+      {
+        "term": "Komela",
+        "fr": "Boire",
+        "en": "To drink"
+      }
+    ],
+    "sentences": [
+      {
+        "fr": "J'ai faim",
+        "en": "I'm hungry",
+        "answer": "Nazali na nzala",
+        "distractors": [
+          "malamu",
+          "mai"
+        ]
+      },
+      {
+        "fr": "Je veux manger du poisson",
+        "en": "I want to eat fish",
+        "answer": "Nalingi kolia mbisi",
+        "distractors": [
+          "nyama",
+          "komela"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ln-mituya",
+    "language": "ln",
+    "position": 5,
+    "title": "Mituya — Compter",
+    "titleEn": "Mituya — Numbers",
+    "icon": "🔢",
+    "tip": "Surprise : au marché de Kin, les gros prix se disent souvent… en français !",
+    "words": [
+      {
+        "term": "Moko",
+        "fr": "1",
+        "en": ""
+      },
+      {
+        "term": "Mibale",
+        "fr": "2",
+        "en": ""
+      },
+      {
+        "term": "Misato",
+        "fr": "3",
+        "en": ""
+      },
+      {
+        "term": "Minei",
+        "fr": "4",
+        "en": ""
+      },
+      {
+        "term": "Mitano",
+        "fr": "5",
+        "en": ""
+      },
+      {
+        "term": "Motoba",
+        "fr": "6",
+        "en": ""
+      },
+      {
+        "term": "Nsambo",
+        "fr": "7",
+        "en": ""
+      },
+      {
+        "term": "Zomi",
+        "fr": "10",
+        "en": ""
+      },
+      {
+        "term": "Mbongo",
+        "fr": "Argent",
+        "en": "Money"
+      }
+    ],
+    "sentences": []
+  },
+  {
+    "id": "ln-misala",
+    "language": "ln",
+    "position": 6,
+    "title": "Misala — Les actions",
+    "titleEn": "Misala — Actions",
+    "icon": "🏃🏾",
+    "tip": "Les verbes à l'infinitif commencent par ko- : kolia, komela, koloba… Teste-les dans la 🧩 Machine à phrases.",
+    "words": [
+      {
+        "term": "Kokende",
+        "fr": "Aller",
+        "en": "To go"
+      },
+      {
+        "term": "Koya",
+        "fr": "Venir",
+        "en": "To come"
+      },
+      {
+        "term": "Kolala",
+        "fr": "Dormir",
+        "en": "Sleep"
+      },
+      {
+        "term": "Kosala",
+        "fr": "Travailler / faire",
+        "en": "To work / to do"
+      },
+      {
+        "term": "Koloba",
+        "fr": "Parler",
+        "en": "To speak"
+      },
+      {
+        "term": "Koyeba",
+        "fr": "Savoir",
+        "en": "To know"
+      },
+      {
+        "term": "Yaka!",
+        "fr": "Viens !",
+        "en": "Come!"
+      },
+      {
+        "term": "Zela!",
+        "fr": "Attends !",
+        "en": "Wait!"
+      }
+    ],
+    "sentences": [
+      {
+        "fr": "Je veux parler lingala",
+        "en": "I want to speak Lingala",
+        "answer": "Nalingi koloba lingala",
+        "distractors": [
+          "kolala",
+          "yo"
+        ]
+      },
+      {
+        "fr": "Je veux dormir",
+        "en": "I want to sleep",
+        "answer": "Nalingi kolala",
+        "distractors": [
+          "koya",
+          "malamu"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ln-ndako",
+    "language": "ln",
+    "position": 7,
+    "title": "Ndako — La maison",
+    "titleEn": "Ndako — Home",
+    "icon": "🏠",
+    "tip": "Kuku veut dire cuisine. Et « Kota » (entre !) est le mot de bienvenue sur le pas de la porte.",
+    "words": [
+      {
+        "term": "Ndako",
+        "fr": "Maison",
+        "en": "House"
+      },
+      {
+        "term": "Mbeto",
+        "fr": "Lit",
+        "en": "Bed"
+      },
+      {
+        "term": "Kiti",
+        "fr": "Chaise",
+        "en": "Chair"
+      },
+      {
+        "term": "Mesa",
+        "fr": "Table",
+        "en": "Table"
+      },
+      {
+        "term": "Ekuke",
+        "fr": "Porte",
+        "en": "Door"
+      },
+      {
+        "term": "Lininisa",
+        "fr": "Fenêtre",
+        "en": "Window"
+      },
+      {
+        "term": "Kuku",
+        "fr": "Cuisine",
+        "en": "Kitchen"
+      },
+      {
+        "term": "Kokota",
+        "fr": "Entrer",
+        "en": "To enter"
+      }
+    ],
+    "sentences": [
+      {
+        "fr": "Je suis à la maison",
+        "en": "I'm at home",
+        "answer": "Nazali na ndako",
+        "distractors": [
+          "mbeto",
+          "kokota"
+        ]
+      },
+      {
+        "fr": "Entre dans la maison",
+        "en": "Come into the house",
+        "answer": "Kota na ndako",
+        "distractors": [
+          "kiti",
+          "mesa"
+        ]
+      },
+      {
+        "fr": "Je veux dormir sur le lit",
+        "en": "I want to sleep on the bed",
+        "answer": "Nalingi kolala na mbeto",
+        "distractors": [
+          "mesa",
+          "ekuke"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ln-mobembo",
+    "language": "ln",
+    "position": 8,
+    "title": "Mobembo — Se déplacer",
+    "titleEn": "Mobembo — Getting around",
+    "icon": "🚕",
+    "tip": "Pour demander ton chemin : « … ezali wapi? » (… c'est où ?). Pene = près, mosika = loin.",
+    "words": [
+      {
+        "term": "Motuka",
+        "fr": "Voiture",
+        "en": "Car"
+      },
+      {
+        "term": "Nzela",
+        "fr": "Route / chemin",
+        "en": "Road / way"
+      },
+      {
+        "term": "Wapi?",
+        "fr": "Où ?",
+        "en": "Where?"
+      },
+      {
+        "term": "Awa",
+        "fr": "Ici",
+        "en": "Here"
+      },
+      {
+        "term": "Kuna",
+        "fr": "Là-bas",
+        "en": "Over there"
+      },
+      {
+        "term": "Pene",
+        "fr": "Près",
+        "en": "Near"
+      },
+      {
+        "term": "Mosika",
+        "fr": "Loin",
+        "en": "Far"
+      },
+      {
+        "term": "Mobembo",
+        "fr": "Voyage",
+        "en": "Trip"
+      }
+    ],
+    "sentences": [
+      {
+        "fr": "Où est la voiture ?",
+        "en": "Where is the car?",
+        "answer": "Motuka ezali wapi?",
+        "distractors": [
+          "awa",
+          "mosika"
+        ]
+      },
+      {
+        "fr": "C'est loin",
+        "en": "It's far",
+        "answer": "Ezali mosika",
+        "distractors": [
+          "pene",
+          "awa"
+        ]
+      },
+      {
+        "fr": "Je vais au marché",
+        "en": "I'm going to the market",
+        "answer": "Nazali kokende na zando",
+        "distractors": [
+          "ndako",
+          "motuka"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ln-mikolo",
+    "language": "ln",
+    "position": 9,
+    "title": "Mikolo — Le temps",
+    "titleEn": "Mikolo — Time",
+    "icon": "⏰",
+    "tip": "Piège : lobi veut dire à la fois hier et demain. C'est le temps du verbe qui fait la différence !",
+    "words": [
+      {
+        "term": "Lelo",
+        "fr": "Aujourd'hui",
+        "en": "Today"
+      },
+      {
+        "term": "Lobi",
+        "fr": "Hier / demain",
+        "en": "Yesterday / tomorrow"
+      },
+      {
+        "term": "Sikoyo",
+        "fr": "Maintenant",
+        "en": "Now"
+      },
+      {
+        "term": "Ntongo",
+        "fr": "Matin",
+        "en": "Morning"
+      },
+      {
+        "term": "Butu",
+        "fr": "Nuit",
+        "en": "Night"
+      },
+      {
+        "term": "Mokolo",
+        "fr": "Jour",
+        "en": "Day"
+      },
+      {
+        "term": "Poso",
+        "fr": "Semaine",
+        "en": "Week"
+      },
+      {
+        "term": "Ngonga boni?",
+        "fr": "Quelle heure est-il ?",
+        "en": "What time is it?"
+      }
+    ],
+    "sentences": [
+      {
+        "fr": "Je viendrai demain",
+        "en": "I'll come tomorrow",
+        "answer": "Nakoya lobi",
+        "distractors": [
+          "lelo",
+          "butu"
+        ]
+      },
+      {
+        "fr": "Aujourd'hui je travaille",
+        "en": "Today I'm working",
+        "answer": "Lelo nazali kosala",
+        "distractors": [
+          "lobi",
+          "ntongo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ln-nzoto",
+    "language": "ln",
+    "position": 10,
+    "title": "Nzoto — Corps et santé",
+    "titleEn": "Nzoto — Body and health",
+    "icon": "🩺",
+    "tip": "Monganga, c'est le médecin. Et « Nazali kobela » : la phrase à connaître si tu tombes malade à Kin.",
+    "words": [
+      {
+        "term": "Nzoto",
+        "fr": "Corps",
+        "en": "Body"
+      },
+      {
+        "term": "Loboko",
+        "fr": "Main / bras",
+        "en": "Hand / arm"
+      },
+      {
+        "term": "Lokolo",
+        "fr": "Pied / jambe",
+        "en": "Foot / leg"
+      },
+      {
+        "term": "Miso",
+        "fr": "Yeux",
+        "en": "Eyes"
+      },
+      {
+        "term": "Monoko",
+        "fr": "Bouche",
+        "en": "Mouth"
+      },
+      {
+        "term": "Nazali kobela",
+        "fr": "Je suis malade",
+        "en": "I'm sick"
+      },
+      {
+        "term": "Monganga",
+        "fr": "Médecin",
+        "en": "Doctor"
+      },
+      {
+        "term": "Kisi",
+        "fr": "Médicament",
+        "en": "Medicine"
+      }
+    ],
+    "sentences": [
+      {
+        "fr": "Je suis malade",
+        "en": "I'm sick",
+        "answer": "Nazali kobela",
+        "distractors": [
+          "malamu",
+          "miso"
+        ]
+      },
+      {
+        "fr": "Je veux voir le médecin",
+        "en": "I want to see the doctor",
+        "answer": "Nalingi komona monganga",
+        "distractors": [
+          "kisi",
+          "lokolo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ln-kosomba",
+    "language": "ln",
+    "position": 11,
+    "title": "Kosomba — Acheter",
+    "titleEn": "Kosomba — Shopping",
+    "icon": "💵",
+    "tip": "Au marché de Kin, les prix se disent en falanga (francs congolais)… ou en dollars !",
+    "words": [
+      {
+        "term": "Kosomba",
+        "fr": "Acheter",
+        "en": "To buy"
+      },
+      {
+        "term": "Koteka",
+        "fr": "Vendre",
+        "en": "To sell"
+      },
+      {
+        "term": "Zando",
+        "fr": "Marché",
+        "en": "Market"
+      },
+      {
+        "term": "Moteki",
+        "fr": "Vendeur",
+        "en": "Seller"
+      },
+      {
+        "term": "Falanga",
+        "fr": "Franc (monnaie)",
+        "en": "Franc (currency)"
+      },
+      {
+        "term": "Pesa ngai",
+        "fr": "Donne-moi",
+        "en": "Give me"
+      },
+      {
+        "term": "Ntalo makasi",
+        "fr": "C'est cher",
+        "en": "It's expensive"
+      },
+      {
+        "term": "Kitisa ntalo",
+        "fr": "Baisse le prix",
+        "en": "Lower the price"
+      }
+    ],
+    "sentences": [
+      {
+        "fr": "Je veux acheter du poisson",
+        "en": "I want to buy fish",
+        "answer": "Nalingi kosomba mbisi",
+        "distractors": [
+          "koteka",
+          "zando"
+        ]
+      },
+      {
+        "fr": "Donne-moi de l'eau",
+        "en": "Give me some water",
+        "answer": "Pesa ngai mai",
+        "distractors": [
+          "mbisi",
+          "ntalo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ln-mayoki",
+    "language": "ln",
+    "position": 12,
+    "title": "Mayoki — Les émotions",
+    "titleEn": "Mayoki — Feelings",
+    "icon": "💛",
+    "tip": "Esengo (la joie) revient dans beaucoup de chansons de rumba. Écoute bien la prochaine fois !",
+    "words": [
+      {
+        "term": "Nasepeli",
+        "fr": "Je suis content(e)",
+        "en": "I'm happy"
+      },
+      {
+        "term": "Nayoki mawa",
+        "fr": "Je suis triste",
+        "en": "I'm sad"
+      },
+      {
+        "term": "Nalembi",
+        "fr": "Je suis fatigué(e)",
+        "en": "I'm tired"
+      },
+      {
+        "term": "Nazali na nkanda",
+        "fr": "Je suis fâché(e)",
+        "en": "I'm angry"
+      },
+      {
+        "term": "Nabangi",
+        "fr": "J'ai peur",
+        "en": "I'm scared"
+      },
+      {
+        "term": "Nalingi yo",
+        "fr": "Je t'aime",
+        "en": "I love you"
+      },
+      {
+        "term": "Nazali kokanisa yo",
+        "fr": "Je pense à toi",
+        "en": "I'm thinking of you"
+      },
+      {
+        "term": "Esengo",
+        "fr": "Joie",
+        "en": "Joy"
+      }
+    ],
+    "sentences": [
+      {
+        "fr": "Je suis très content",
+        "en": "I'm very happy",
+        "answer": "Nasepeli mingi",
+        "distractors": [
+          "nalembi",
+          "mawa"
+        ]
+      },
+      {
+        "fr": "Je suis fatigué aujourd'hui",
+        "en": "I'm tired today",
+        "answer": "Nalembi lelo",
+        "distractors": [
+          "lobi",
+          "esengo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "sw-salamu",
+    "language": "sw",
+    "position": 1,
+    "title": "Jambo ! Saluer",
+    "titleEn": "Jambo! Greetings",
+    "icon": "👋",
+    "tip": "À « Habari gani ? », on répond presque toujours « Nzuri » (bien)… même quand ça ne va pas trop 😄",
+    "words": [
+      {
+        "term": "Jambo",
+        "fr": "Bonjour",
+        "en": "Hello"
+      },
+      {
+        "term": "Habari gani?",
+        "fr": "Quoi de neuf ?",
+        "en": "What's new?"
+      },
+      {
+        "term": "Habari yako?",
+        "fr": "Comment vas-tu ?",
+        "en": "How are you?"
+      },
+      {
+        "term": "Nzuri",
+        "fr": "Bien",
+        "en": "Good"
+      },
+      {
+        "term": "Asante",
+        "fr": "Merci",
+        "en": "Thank you"
+      },
+      {
+        "term": "Karibu",
+        "fr": "Bienvenue",
+        "en": "Welcome"
+      },
+      {
+        "term": "Kwaheri",
+        "fr": "Au revoir",
+        "en": "Goodbye"
+      },
+      {
+        "term": "Jina lako nani?",
+        "fr": "Comment tu t'appelles ?",
+        "en": "What's your name?"
+      }
+    ],
+    "sentences": [
+      {
+        "fr": "Merci beaucoup",
+        "en": "Thank you very much",
+        "answer": "Asante sana",
+        "distractors": [
+          "nzuri",
+          "wewe"
+        ]
+      },
+      {
+        "fr": "Comment tu t'appelles ?",
+        "en": "What's your name?",
+        "answer": "Jina lako nani?",
+        "distractors": [
+          "langu",
+          "sana"
+        ]
+      },
+      {
+        "fr": "Je m'appelle Amani",
+        "en": "My name is Amani",
+        "answer": "Jina langu ni Amani",
+        "distractors": [
+          "lako",
+          "nani"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "sw-msaada",
+    "language": "sw",
+    "position": 2,
+    "title": "Polepole ! Survie",
+    "titleEn": "Polepole! Survival kit",
+    "icon": "🆘",
+    "tip": "Le mot magique : « polepole » (doucement). « Sema polepole » = parle lentement.",
+    "words": [
+      {
+        "term": "Sema polepole",
+        "fr": "Parle lentement",
+        "en": "Speak slowly"
+      },
+      {
+        "term": "Rudia tafadhali",
+        "fr": "Répète, s'il te plaît",
+        "en": "Please repeat"
+      },
+      {
+        "term": "Sielewi",
+        "fr": "Je ne comprends pas",
+        "en": "I don't understand"
+      },
+      {
+        "term": "Sijui",
+        "fr": "Je ne sais pas",
+        "en": "I don't know"
+      },
+      {
+        "term": "Ndiyo",
+        "fr": "Oui",
+        "en": "Yes"
+      },
+      {
+        "term": "Hapana",
+        "fr": "Non",
+        "en": "No"
+      },
+      {
+        "term": "Kidogo",
+        "fr": "Un peu",
+        "en": "A little"
+      },
+      {
+        "term": "Ninajifunza Kiswahili",
+        "fr": "J'apprends le swahili",
+        "en": "I'm learning Swahili"
+      }
+    ],
+    "sentences": [
+      {
+        "fr": "Je ne comprends pas, répète s'il te plaît",
+        "en": "I don't understand, please repeat",
+        "answer": "Sielewi rudia tafadhali",
+        "distractors": [
+          "polepole",
+          "ndiyo"
+        ]
+      },
+      {
+        "fr": "Un peu, j'apprends le swahili",
+        "en": "A little, I'm learning Swahili",
+        "answer": "Kidogo ninajifunza Kiswahili",
+        "distractors": [
+          "hapana",
+          "sana"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "sw-familia",
+    "language": "sw",
+    "position": 3,
+    "title": "Familia — La famille",
+    "titleEn": "Familia — Family",
+    "icon": "👪",
+    "tip": "Ndugu veut dire frère, sœur… et plus largement « proche », comme ndeko en lingala.",
+    "words": [
+      {
+        "term": "Mama",
+        "fr": "Mère",
+        "en": "Mother"
+      },
+      {
+        "term": "Baba",
+        "fr": "Père",
+        "en": "Father"
+      },
+      {
+        "term": "Ndugu",
+        "fr": "Frère / sœur",
+        "en": "Brother / sister"
+      },
+      {
+        "term": "Rafiki",
+        "fr": "Ami",
+        "en": "Friend"
+      },
+      {
+        "term": "Mtoto",
+        "fr": "Enfant",
+        "en": "Child"
+      },
+      {
+        "term": "Familia",
+        "fr": "Famille",
+        "en": "Family"
+      },
+      {
+        "term": "Mume",
+        "fr": "Mari",
+        "en": "Husband"
+      },
+      {
+        "term": "Mke",
+        "fr": "Épouse",
+        "en": "Wife"
+      }
+    ],
+    "sentences": [
+      {
+        "fr": "Mon ami",
+        "en": "My friend",
+        "answer": "Rafiki yangu",
+        "distractors": [
+          "wako",
+          "mama"
+        ]
+      },
+      {
+        "fr": "Ta famille",
+        "en": "Your family",
+        "answer": "Familia yako",
+        "distractors": [
+          "yangu",
+          "baba"
+        ]
+      },
+      {
+        "fr": "Mon enfant",
+        "en": "My child",
+        "answer": "Mtoto wangu",
+        "distractors": [
+          "wako",
+          "ndugu"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "sw-chakula",
+    "language": "sw",
+    "position": 4,
+    "title": "Chakula — Manger",
+    "titleEn": "Chakula — Food",
+    "icon": "🍲",
+    "tip": "L'ugali (pâte de farine) s'appelle souvent bukari à Lubumbashi.",
+    "words": [
+      {
+        "term": "Chakula",
+        "fr": "Nourriture",
+        "en": "Food"
+      },
+      {
+        "term": "Maji",
+        "fr": "Eau",
+        "en": "Water"
+      },
+      {
+        "term": "Samaki",
+        "fr": "Poisson",
+        "en": "Fish"
+      },
+      {
+        "term": "Nyama",
+        "fr": "Viande",
+        "en": "Meat"
+      },
+      {
+        "term": "Bukari",
+        "fr": "Pâte de farine (ugali)",
+        "en": "Stiff porridge (ugali)"
+      },
+      {
+        "term": "Nina njaa",
+        "fr": "J'ai faim",
+        "en": "I'm hungry"
+      },
+      {
+        "term": "Nataka kula",
+        "fr": "Je veux manger",
+        "en": "I want to eat"
+      },
+      {
+        "term": "Kunywa",
+        "fr": "Boire",
+        "en": "To drink"
+      }
+    ],
+    "sentences": [
+      {
+        "fr": "J'ai faim",
+        "en": "I'm hungry",
+        "answer": "Nina njaa",
+        "distractors": [
+          "maji",
+          "sana"
+        ]
+      },
+      {
+        "fr": "Je veux manger du poisson",
+        "en": "I want to eat fish",
+        "answer": "Nataka kula samaki",
+        "distractors": [
+          "nyama",
+          "kunywa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "sw-hesabu",
+    "language": "sw",
+    "position": 5,
+    "title": "Hesabu — Compter",
+    "titleEn": "Hesabu — Numbers",
+    "icon": "🔢",
+    "tip": "Surprise : l'heure swahilie commence au lever du soleil. 7 h du matin se dit « saa moja », la 1re heure !",
+    "words": [
+      {
+        "term": "Moja",
+        "fr": "1",
+        "en": ""
+      },
+      {
+        "term": "Mbili",
+        "fr": "2",
+        "en": ""
+      },
+      {
+        "term": "Tatu",
+        "fr": "3",
+        "en": ""
+      },
+      {
+        "term": "Nne",
+        "fr": "4",
+        "en": ""
+      },
+      {
+        "term": "Tano",
+        "fr": "5",
+        "en": ""
+      },
+      {
+        "term": "Sita",
+        "fr": "6",
+        "en": ""
+      },
+      {
+        "term": "Saba",
+        "fr": "7",
+        "en": ""
+      },
+      {
+        "term": "Kumi",
+        "fr": "10",
+        "en": ""
+      },
+      {
+        "term": "Pesa",
+        "fr": "Argent",
+        "en": "Money"
+      }
+    ],
+    "sentences": []
+  },
+  {
+    "id": "sw-vitendo",
+    "language": "sw",
+    "position": 6,
+    "title": "Vitendo — Les actions",
+    "titleEn": "Vitendo — Actions",
+    "icon": "🏃🏾",
+    "tip": "Les verbes commencent par ku- : kula, kunywa, kwenda… Construis tes phrases dans la 🧩 Machine à phrases.",
+    "words": [
+      {
+        "term": "Kwenda",
+        "fr": "Aller",
+        "en": "To go"
+      },
+      {
+        "term": "Kuja",
+        "fr": "Venir",
+        "en": "To come"
+      },
+      {
+        "term": "Kulala",
+        "fr": "Dormir",
+        "en": "Sleep"
+      },
+      {
+        "term": "Kufanya kazi",
+        "fr": "Travailler",
+        "en": "To work"
+      },
+      {
+        "term": "Kuzungumza",
+        "fr": "Parler",
+        "en": "To speak"
+      },
+      {
+        "term": "Kujua",
+        "fr": "Savoir",
+        "en": "To know"
+      },
+      {
+        "term": "Njoo!",
+        "fr": "Viens !",
+        "en": "Come!"
+      },
+      {
+        "term": "Ngoja!",
+        "fr": "Attends !",
+        "en": "Wait!"
+      }
+    ],
+    "sentences": [
+      {
+        "fr": "Je veux parler swahili",
+        "en": "I want to speak Swahili",
+        "answer": "Nataka kuzungumza Kiswahili",
+        "distractors": [
+          "kulala",
+          "wewe"
+        ]
+      },
+      {
+        "fr": "Je veux dormir",
+        "en": "I want to sleep",
+        "answer": "Nataka kulala",
+        "distractors": [
+          "kuja",
+          "sana"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "sw-nyumba",
+    "language": "sw",
+    "position": 7,
+    "title": "Nyumba — La maison",
+    "titleEn": "Nyumba — Home",
+    "icon": "🏠",
+    "tip": "« Hodi ! » pour annoncer ton arrivée devant une maison. On te répond « Karibu ! ».",
+    "words": [
+      {
+        "term": "Nyumba",
+        "fr": "Maison",
+        "en": "House"
+      },
+      {
+        "term": "Kitanda",
+        "fr": "Lit",
+        "en": "Bed"
+      },
+      {
+        "term": "Kiti",
+        "fr": "Chaise",
+        "en": "Chair"
+      },
+      {
+        "term": "Meza",
+        "fr": "Table",
+        "en": "Table"
+      },
+      {
+        "term": "Mlango",
+        "fr": "Porte",
+        "en": "Door"
+      },
+      {
+        "term": "Dirisha",
+        "fr": "Fenêtre",
+        "en": "Window"
+      },
+      {
+        "term": "Jikoni",
+        "fr": "Cuisine",
+        "en": "Kitchen"
+      },
+      {
+        "term": "Kuingia",
+        "fr": "Entrer",
+        "en": "To enter"
+      }
+    ],
+    "sentences": [
+      {
+        "fr": "Je suis à la maison",
+        "en": "I'm at home",
+        "answer": "Niko nyumbani",
+        "distractors": [
+          "kitanda",
+          "kuingia"
+        ]
+      },
+      {
+        "fr": "Entre, s'il te plaît",
+        "en": "Come in, please",
+        "answer": "Ingia tafadhali",
+        "distractors": [
+          "meza",
+          "kiti"
+        ]
+      },
+      {
+        "fr": "Je veux dormir sur le lit",
+        "en": "I want to sleep on the bed",
+        "answer": "Nataka kulala kitandani",
+        "distractors": [
+          "mezani",
+          "mlango"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "sw-safari",
+    "language": "sw",
+    "position": 8,
+    "title": "Safari — Se déplacer",
+    "titleEn": "Safari — Getting around",
+    "icon": "🚕",
+    "tip": "Oui, safari veut simplement dire « voyage » en swahili ! Et « Simama hapa » fait arrêter le taxi.",
+    "words": [
+      {
+        "term": "Gari",
+        "fr": "Voiture",
+        "en": "Car"
+      },
+      {
+        "term": "Njia",
+        "fr": "Route / chemin",
+        "en": "Road / way"
+      },
+      {
+        "term": "Wapi?",
+        "fr": "Où ?",
+        "en": "Where?"
+      },
+      {
+        "term": "Hapa",
+        "fr": "Ici",
+        "en": "Here"
+      },
+      {
+        "term": "Pale",
+        "fr": "Là-bas",
+        "en": "Over there"
+      },
+      {
+        "term": "Mbali",
+        "fr": "Loin",
+        "en": "Far"
+      },
+      {
+        "term": "Safari",
+        "fr": "Voyage",
+        "en": "Trip"
+      },
+      {
+        "term": "Simama hapa",
+        "fr": "Arrête-toi ici",
+        "en": "Stop here"
+      }
+    ],
+    "sentences": [
+      {
+        "fr": "Où est la voiture ?",
+        "en": "Where is the car?",
+        "answer": "Gari liko wapi?",
+        "distractors": [
+          "hapa",
+          "mbali"
+        ]
+      },
+      {
+        "fr": "C'est loin",
+        "en": "It's far",
+        "answer": "Ni mbali",
+        "distractors": [
+          "hapa",
+          "pale"
+        ]
+      },
+      {
+        "fr": "Je vais au marché",
+        "en": "I'm going to the market",
+        "answer": "Ninaenda sokoni",
+        "distractors": [
+          "nyumbani",
+          "gari"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "sw-wakati",
+    "language": "sw",
+    "position": 9,
+    "title": "Wakati — Le temps",
+    "titleEn": "Wakati — Time",
+    "icon": "⏰",
+    "tip": "Jana = hier, leo = aujourd'hui, kesho = demain. Et l'heure swahilie commence à 7 h du matin !",
+    "words": [
+      {
+        "term": "Leo",
+        "fr": "Aujourd'hui",
+        "en": "Today"
+      },
+      {
+        "term": "Kesho",
+        "fr": "Demain",
+        "en": "Tomorrow"
+      },
+      {
+        "term": "Jana",
+        "fr": "Hier",
+        "en": "Yesterday"
+      },
+      {
+        "term": "Sasa",
+        "fr": "Maintenant",
+        "en": "Now"
+      },
+      {
+        "term": "Asubuhi",
+        "fr": "Matin",
+        "en": "Morning"
+      },
+      {
+        "term": "Usiku",
+        "fr": "Nuit",
+        "en": "Night"
+      },
+      {
+        "term": "Siku",
+        "fr": "Jour",
+        "en": "Day"
+      },
+      {
+        "term": "Saa ngapi?",
+        "fr": "Quelle heure est-il ?",
+        "en": "What time is it?"
+      }
+    ],
+    "sentences": [
+      {
+        "fr": "Je viendrai demain",
+        "en": "I'll come tomorrow",
+        "answer": "Nitakuja kesho",
+        "distractors": [
+          "leo",
+          "jana"
+        ]
+      },
+      {
+        "fr": "Aujourd'hui je travaille",
+        "en": "Today I'm working",
+        "answer": "Leo ninafanya kazi",
+        "distractors": [
+          "kesho",
+          "usiku"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "sw-mwili",
+    "language": "sw",
+    "position": 10,
+    "title": "Mwili — Corps et santé",
+    "titleEn": "Mwili — Body and health",
+    "icon": "🩺",
+    "tip": "Daktari, c'est le médecin, et dawa le médicament. Pour dire que ça fait mal : « … kinauma ».",
+    "words": [
+      {
+        "term": "Mwili",
+        "fr": "Corps",
+        "en": "Body"
+      },
+      {
+        "term": "Kichwa",
+        "fr": "Tête",
+        "en": "Head"
+      },
+      {
+        "term": "Mkono",
+        "fr": "Main / bras",
+        "en": "Hand / arm"
+      },
+      {
+        "term": "Mguu",
+        "fr": "Pied / jambe",
+        "en": "Foot / leg"
+      },
+      {
+        "term": "Macho",
+        "fr": "Yeux",
+        "en": "Eyes"
+      },
+      {
+        "term": "Mimi ni mgonjwa",
+        "fr": "Je suis malade",
+        "en": "I'm sick"
+      },
+      {
+        "term": "Daktari",
+        "fr": "Médecin",
+        "en": "Doctor"
+      },
+      {
+        "term": "Dawa",
+        "fr": "Médicament",
+        "en": "Medicine"
+      }
+    ],
+    "sentences": [
+      {
+        "fr": "Je suis malade",
+        "en": "I'm sick",
+        "answer": "Mimi ni mgonjwa",
+        "distractors": [
+          "mzima",
+          "macho"
+        ]
+      },
+      {
+        "fr": "Je veux voir le médecin",
+        "en": "I want to see the doctor",
+        "answer": "Nataka kumwona daktari",
+        "distractors": [
+          "dawa",
+          "mguu"
+        ]
+      },
+      {
+        "fr": "J'ai mal à la tête",
+        "en": "I have a headache",
+        "answer": "Kichwa kinauma",
+        "distractors": [
+          "mkono",
+          "dawa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "sw-kununua",
+    "language": "sw",
+    "position": 11,
+    "title": "Kununua — Acheter",
+    "titleEn": "Kununua — Shopping",
+    "icon": "💵",
+    "tip": "À Lubumbashi, on paie en francs congolais ou en dollars. « Bei gani? » reste ta meilleure amie.",
+    "words": [
+      {
+        "term": "Kununua",
+        "fr": "Acheter",
+        "en": "To buy"
+      },
+      {
+        "term": "Kuuza",
+        "fr": "Vendre",
+        "en": "To sell"
+      },
+      {
+        "term": "Soko",
+        "fr": "Marché",
+        "en": "Market"
+      },
+      {
+        "term": "Muuzaji",
+        "fr": "Vendeur",
+        "en": "Seller"
+      },
+      {
+        "term": "Ghali",
+        "fr": "Cher",
+        "en": "Expensive"
+      },
+      {
+        "term": "Nipe",
+        "fr": "Donne-moi",
+        "en": "Give me"
+      },
+      {
+        "term": "Punguza bei",
+        "fr": "Baisse le prix",
+        "en": "Lower the price"
+      },
+      {
+        "term": "Bei gani?",
+        "fr": "C'est combien ?",
+        "en": "How much is it?"
+      }
+    ],
+    "sentences": [
+      {
+        "fr": "Je veux acheter du poisson",
+        "en": "I want to buy fish",
+        "answer": "Nataka kununua samaki",
+        "distractors": [
+          "kuuza",
+          "soko"
+        ]
+      },
+      {
+        "fr": "Donne-moi de l'eau",
+        "en": "Give me some water",
+        "answer": "Nipe maji",
+        "distractors": [
+          "samaki",
+          "bei"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "sw-hisia",
+    "language": "sw",
+    "position": 12,
+    "title": "Hisia — Les émotions",
+    "titleEn": "Hisia — Feelings",
+    "icon": "💛",
+    "tip": "Nimefurahi (je suis content) : le -me- montre que l'état est déjà là, comme un passé composé.",
+    "words": [
+      {
+        "term": "Nimefurahi",
+        "fr": "Je suis content(e)",
+        "en": "I'm happy"
+      },
+      {
+        "term": "Nina huzuni",
+        "fr": "Je suis triste",
+        "en": "I'm sad"
+      },
+      {
+        "term": "Nimechoka",
+        "fr": "Je suis fatigué(e)",
+        "en": "I'm tired"
+      },
+      {
+        "term": "Nimekasirika",
+        "fr": "Je suis fâché(e)",
+        "en": "I'm angry"
+      },
+      {
+        "term": "Ninaogopa",
+        "fr": "J'ai peur",
+        "en": "I'm scared"
+      },
+      {
+        "term": "Nakupenda",
+        "fr": "Je t'aime",
+        "en": "I love you"
+      },
+      {
+        "term": "Nakukumbuka",
+        "fr": "Tu me manques",
+        "en": "I miss you"
+      },
+      {
+        "term": "Furaha",
+        "fr": "Joie",
+        "en": "Joy"
+      }
+    ],
+    "sentences": [
+      {
+        "fr": "Je suis très content",
+        "en": "I'm very happy",
+        "answer": "Nimefurahi sana",
+        "distractors": [
+          "nimechoka",
+          "huzuni"
+        ]
+      },
+      {
+        "fr": "Je suis fatigué aujourd'hui",
+        "en": "I'm tired today",
+        "answer": "Nimechoka leo",
+        "distractors": [
+          "kesho",
+          "furaha"
+        ]
+      }
+    ]
+  }
+]
