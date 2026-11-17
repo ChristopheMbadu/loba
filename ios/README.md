@@ -20,7 +20,9 @@ iOS 17 and later. No third-party packages.
 | `Loba/Views/` | Screens: welcome and sign-in, onboarding, river path, lesson player, practice, quests, shop, profile, story book |
 | `Loba/Resources/Sounds/` | The website's sound cues, rendered from its synthesizer (`learn/src/audio/sfx.ts`) |
 | `Loba/Resources/Fonts/` | Fredoka and Nunito (SIL Open Font License, licence files alongside) |
-| `Loba/Assets.xcassets` | Loba's poses, the illustrated icons and the story book pages, exported from the web app |
+| `Loba/Assets.xcassets` | The illustrated icons, and each story page as two layers (`story-back-N` landscape, `story-cast-N` characters), exported from the web app |
+| `Loba/Views/Loba.swift` | Loba, drawn and animated in code from the website's shapes (blink, wave, flap, hop) |
+| `Loba/Views/Effects.swift` | Sparks, night sky and fireflies, clouds and birds, sun rays, goal ring, week strip |
 
 ## Google sign-in
 

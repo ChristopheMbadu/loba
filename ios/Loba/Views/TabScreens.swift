@@ -191,6 +191,11 @@ struct ProfileView: View {
                     stat("trophy", "\(s.bestStreak)", L("Meilleure série", "Best streak"))
                 }
 
+                VStack(alignment: .leading, spacing: 10) {
+                    Text(L("Cette semaine", "This week")).font(.display(22)).foregroundStyle(Color.ink)
+                    WeekStrip().padding(.vertical, 12).padding(.horizontal, 6).card()
+                }
+
                 section(L("Réglages", "Settings")) {
                     row(L("J’apprends", "I’m learning")) {
                         Picker("", selection: Binding(get: { s.lang }, set: { store.setLang($0) })) {

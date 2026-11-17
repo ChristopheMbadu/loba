@@ -25,6 +25,7 @@ struct LessonView: View {
     @State private var confirmQuit = false
     @State private var outOfHearts = false
     @State private var shake = false
+    @State private var sparks = 0
 
     var body: some View {
         ZStack {
@@ -51,6 +52,7 @@ struct LessonView: View {
             }
         }
         .background(Color.white)
+        .overlay(alignment: .bottom) { Burst(trigger: sparks).frame(height: 420).padding(.bottom, 60) }
         .onAppear(perform: begin)
         #if DEBUG
         .task {
@@ -193,6 +195,7 @@ struct LessonView: View {
             if mode.isLesson { store.loseHeart() }
         } else {
             Sfx.play(.correct, session.combo); Haptic.success()
+            sparks += 1
             if case .listen = e.kind {} else if let w = e.word { Voice.say(w) }
         }
     }
@@ -460,7 +463,12 @@ private struct CompleteView: View {
         ZStack {
             VStack(spacing: 18) {
                 Spacer()
-                LobaView(mood: .cheer, size: 190).offset(y: shown ? 0 : 40)
+                ZStack {
+                    Circle().fill(RadialGradient(colors: [Color.sunTint, .white.opacity(0)], center: .center, startRadius: 20, endRadius: 170)).frame(width: 340, height: 340)
+                    SunRays().frame(width: 330, height: 330).opacity(shown ? 0.55 : 0)
+                    LobaView(mood: .cheer, size: 190).offset(y: shown ? 0 : 40)
+                }
+                .frame(height: 250)
                 Text(reward.perfect ? L("Sans faute !", "Flawless!") : practice ? L("Pratique terminée !", "Practice done!") : L("Leçon terminée !", "Lesson complete!"))
                     .font(.display(34)).foregroundStyle(Color.ink)
                 HStack(spacing: 10) {

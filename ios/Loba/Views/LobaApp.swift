@@ -76,6 +76,7 @@ struct LandingView: View {
     @State private var story = false
     @State private var greeting = 0
     @State private var appeared = false
+    @State private var bob = false
 
     private var greetings: [(String, String)] {
         let all = store.catalog.languages.filter { !$0.greeting.isEmpty }.map { ("\($0.greeting) !", $0.name(store.state.ui).capitalized) }
@@ -93,12 +94,16 @@ struct LandingView: View {
 
             Spacer(minLength: 12)
             ZStack(alignment: .topLeading) {
-                Circle().fill(Color.skyTint).frame(width: 290, height: 290)
-                    .overlay(alignment: .topTrailing) { Circle().fill(Color.sun).frame(width: 64, height: 64).padding(.top, 44).padding(.trailing, 40).shadow(color: .sun.opacity(0.5), radius: 18) }
+                Circle().fill(LinearGradient(colors: [Color(hex: "cfeafd"), Color.skyTint, Color(hex: "fff3d6")], startPoint: .top, endPoint: .bottom)).frame(width: 290, height: 290)
+                    .overlay(alignment: .topTrailing) {
+                        ZStack { SunRays().frame(width: 118, height: 118); Circle().fill(Color.sun).frame(width: 64, height: 64).shadow(color: .sun.opacity(0.6), radius: 16) }
+                            .padding(.top, 18).padding(.trailing, 14)
+                    }
+                    .overlay { DaySky().clipShape(Circle()) }
                     .overlay(alignment: .bottom) { River().frame(height: 96).clipShape(Circle().size(width: 290, height: 290).offset(y: -194)) }
                     .overlay(alignment: .bottom) { Pirogue().frame(width: 250, height: 52).offset(y: -46) }
-                    .overlay { LobaView(mood: .wave, size: 180).offset(y: -8) }
-                    .overlay(alignment: .bottom) { Pirogue(front: true).frame(width: 250, height: 52).offset(y: -46) }
+                    .overlay { LobaView(mood: .wave, size: 180).offset(y: -8 + (bob ? -3 : 3)).rotationEffect(.degrees(bob ? -1.5 : 1.5), anchor: .bottom) }
+                    .overlay(alignment: .bottom) { Pirogue(front: true).frame(width: 250, height: 52).offset(y: -46 + (bob ? -3 : 3)).rotationEffect(.degrees(bob ? -1.5 : 1.5), anchor: .bottom) }
                 let g = greetings[greeting % greetings.count]
                 Bubble {
                     VStack(spacing: 0) {
@@ -134,7 +139,10 @@ struct LandingView: View {
             .padding(.horizontal, 24).padding(.bottom, 12)
         }
         .background(Color.white)
-        .onAppear { withAnimation(.spring(duration: 0.6, bounce: 0.4)) { appeared = true } }
+        .onAppear {
+            withAnimation(.spring(duration: 0.6, bounce: 0.4)) { appeared = true }
+            withAnimation(.easeInOut(duration: 1.7).repeatForever(autoreverses: true)) { bob = true }
+        }
         .task {
             while !Task.isCancelled {
                 try? await Task.sleep(for: .seconds(2.6))
