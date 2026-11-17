@@ -2,6 +2,7 @@ import { useSelector } from '@tanstack/react-store'
 import type { Exercise } from '../../game/exercises'
 import { game } from '../../game/store'
 import { useT } from '../../i18n/useT'
+import { Loba } from '../Loba'
 import type { Answer } from './answer'
 
 export function TypeIn({ ex, answer, onAnswer, onSubmit, locked }: { ex: Extract<Exercise, { kind: 'type' }>; answer: Answer | null; onAnswer: (a: Answer) => void; onSubmit: () => void; locked: boolean }) {
@@ -13,8 +14,9 @@ export function TypeIn({ ex, answer, onAnswer, onSubmit, locked }: { ex: Extract
         {ex.retry && <span className="ex-tag retry">↻ {t('previousMistake')}</span>}
         <h1>{t('typeAnswer', { lang })}</h1>
       </div>
-      <div className="prompt">
-        <span className="prompt-text">{meaning(ex.word)}</span>
+      <div className="speech">
+        <Loba mood="think" />
+        <p className="bubble"><span className="prompt-text">{meaning(ex.word)}</span></p>
       </div>
       <textarea
         className="type-input"

@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { playWord } from '../../audio/voice'
-import { sfx } from '../../audio/sfx'
+import { buzz, sfx } from '../../audio/sfx'
+import { burstFrom } from '../fx'
 import type { Exercise } from '../../game/exercises'
 import { shuffle } from '../../game/random'
 import { useT } from '../../i18n/useT'
@@ -17,7 +18,7 @@ export function Match({ ex, onAnswer }: { ex: Extract<Exercise, { kind: 'match' 
   const [matched, setMatched] = useState<Set<string>>(new Set())
   const [miss, setMiss] = useState<string | null>(null)
 
-  const tap = (side: Side, term: string) => {
+  const tap = (side: Side, term: string, el: Element) => {
     if (matched.has(term)) return
     if (side === 'term') playWord(ex.pairs.find((w) => w.term === term)!)
     if (!pick || pick.side === side) {
@@ -29,10 +30,13 @@ export function Match({ ex, onAnswer }: { ex: Extract<Exercise, { kind: 'match' 
       const next = new Set(matched).add(term)
       setMatched(next)
       setPick(null)
-      sfx('correct')
+      sfx('correct', next.size)
+      buzz(10)
+      burstFrom(el, { count: 8, power: 4.5, size: 7, life: 40 })
       if (next.size === ex.pairs.length) onAnswer({ kind: 'match', done: true })
     } else {
       sfx('wrong')
+      buzz(30)
       setMiss(`${side}:${term}`)
       setPick(null)
       setTimeout(() => setMiss(null), 350)
@@ -47,7 +51,7 @@ export function Match({ ex, onAnswer }: { ex: Extract<Exercise, { kind: 'match' 
         className={`choice ${matched.has(term) ? 'matched' : ''} ${miss === key ? 'shake' : ''}`}
         aria-pressed={pick?.side === side && pick.term === term}
         disabled={matched.has(term)}
-        onClick={() => tap(side, term)}
+        onClick={(e) => tap(side, term, e.currentTarget)}
       >
         {text}
       </button>

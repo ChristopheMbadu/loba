@@ -88,6 +88,8 @@ To add another administrator, run `npm run admin:reset -- --create` in the appli
 
 ## Editorial workflow
 
+The lesson editor has three tabs. **Details** shows a live preview of how learners see the unit, then the language (coloured buttons), the unit's position in the course (with a warning if another unit already uses that number), a topic picture chosen from a set of icons, the French and optional English titles, and an optional teaching note. **Words** holds the vocabulary and recordings (learners need at least four words; the tab count turns amber below that). **Sentences** holds the optional sentence-building exercises.
+
 Creating and saving a lesson produces a draft. On an already published lesson, **Save draft** changes only the editable content. Learners keep receiving the last published snapshot. **Publish lesson** saves your edits and makes the new snapshot public. **Unpublish** removes it from the public API. Deletion is allowed only after unpublishing, and requires confirmation.
 
 Concurrent edits use revision checks: an out-of-date editor receives a conflict instead of overwriting someone else's work. Close and reopen the editor after refreshing to load the latest revision; copy any unsaved work before discarding it.
@@ -152,7 +154,11 @@ Learners sign up with a first name, an email and a password of at least 8 charac
 | `POST /api/learn/logout` | Ends the session. |
 | `DELETE /api/learn/account` | `{password}` deletes the account and its progress. |
 
-All writes need the configured origin and JSON, like the editor API. The **Learners** figure on the Studio overview counts accounts. There is no password reset or email verification yet; both need an email provider.
+All writes need the configured origin and JSON, like the editor API.
+
+### Learners in Studio
+
+**Learners** lists every account: name, email, the language being learned, XP, current streak (only if they practised today or yesterday), lessons completed, words learned, last practice day and join date. Search by name or email, filter by language, and sort by recent activity, XP, streak or newest. Selecting a learner shows their numbers and every unit of their course as complete, in progress (n of 4 lessons) or not started. The summary comes from `GET /api/admin/learners` (editors only); the progress is the learner app's own save, checked and clamped on the server, and password hashes are never returned. The privacy page tells learners that the team can see this. There is no password reset or email verification yet; both need an email provider.
 
 ## Checks
 

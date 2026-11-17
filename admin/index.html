@@ -32,6 +32,9 @@
     <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
     <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/></symbol>
     <symbol id="i-send" viewBox="0 0 24 24"><path d="M4 12 20 4l-6 16-2.5-6.5z"/></symbol>
+    <symbol id="i-cap" viewBox="0 0 24 24"><path d="M2 9l10-5 10 5-10 5zM6 11v5c3 2.5 9 2.5 12 0v-5M22 9v6"/></symbol>
+    <symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 3c1 4 6 5.5 6 11a6 6 0 0 1-12 0c0-3 1.5-4.5 2.6-5.6.3 1.8 1 2.8 2 3.4C10 8 10.8 5.2 12 3z"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
     <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8M4 4v4h4M4 13a8 8 0 0 0 14.3 4.9L20 16M20 20v-4h-4"/></symbol>
   </svg>
 
@@ -70,6 +73,7 @@
         <button data-view="overview" class="nav-item"><svg><use href="#i-home"/></svg><span>Overview</span></button>
         <button data-view="lessons" class="nav-item"><svg><use href="#i-book"/></svg><span>Lessons</span><small id="nav-count"></small></button>
         <button data-view="languages" class="nav-item"><svg><use href="#i-globe"/></svg><span>Languages</span><small id="nav-languages"></small></button>
+        <button data-view="learners" class="nav-item"><svg><use href="#i-cap"/></svg><span>Learners</span><small id="nav-learners"></small></button>
         <button data-view="accounts" class="nav-item"><svg><use href="#i-users"/></svg><span>Team</span><small id="nav-pending" class="alert-count" hidden></small></button>
         <button data-view="activity" class="nav-item"><svg><use href="#i-activity"/></svg><span>Activity</span></button>
       </nav>
@@ -126,6 +130,19 @@
         <section class="panel"><div id="languages-table"></div></section>
       </section>
 
+      <section id="learners-view" class="view" hidden>
+        <div id="learner-stats" class="stats"></div>
+        <div class="toolbar">
+          <label class="search"><svg><use href="#i-search"/></svg><input id="learner-search" type="search" placeholder="Search names and emails" aria-label="Search learners"></label>
+          <div class="toolbar-right">
+            <select id="learner-language" aria-label="Language"></select>
+            <select id="learner-sort" aria-label="Sort"><option value="recent">Recently active</option><option value="xp">Most XP</option><option value="streak">Longest streak</option><option value="new">Newest accounts</option></select>
+          </div>
+        </div>
+        <p id="learners-error" class="form-error" role="alert"></p>
+        <section class="panel"><div id="learners-table"></div></section>
+      </section>
+
       <section id="accounts-view" class="view" hidden>
         <section class="panel">
           <header class="panel-head"><div><h2>Access requests</h2><p class="muted">Approved people can create, edit and publish lessons, and approve others. Email addresses are not verified, so only approve people you know.</p></div><button id="refresh-accounts" class="btn"><svg><use href="#i-refresh"/></svg>Refresh</button></header>
@@ -147,28 +164,35 @@
         <span id="editor-status"></span>
         <button type="button" id="close-editor" class="icon-btn" aria-label="Close"><svg><use href="#i-x"/></svg></button>
       </header>
+      <nav class="sheet-tabs" role="tablist" aria-label="Lesson parts">
+        <button type="button" role="tab" data-tab="details" aria-selected="true">Details</button>
+        <button type="button" role="tab" data-tab="words" aria-selected="false">Words <span id="word-count" class="count"></span></button>
+        <button type="button" role="tab" data-tab="sentences" aria-selected="false">Sentences <span id="sentence-count" class="count"></span></button>
+      </nav>
       <div class="sheet-body">
         <p id="editor-notice" class="banner"></p>
-        <section class="form-section">
-          <h3>Details</h3>
-          <div class="grid-3">
-            <label class="field">Language<select name="language" id="editor-language"></select></label>
-            <label class="field">Unit number<input name="position" type="number" min="1" max="999" required></label>
-            <label class="field">Icon<input name="icon" maxlength="20" required></label>
+        <section class="form-section" data-panel="details">
+          <div class="unit-preview" aria-live="polite">
+            <span id="preview-icon" class="unit-preview-icon"></span>
+            <div><small id="preview-meta"></small><b id="preview-title"></b><span id="preview-sub"></span></div>
+            <em>How learners see this unit</em>
           </div>
+          <fieldset class="field"><legend>Language</legend><div id="editor-language" class="chips" role="radiogroup"></div></fieldset>
+          <label class="field">Position in the course<input name="position" type="number" min="1" max="999" required class="narrow"><small id="position-hint">Learners unlock units in this order.</small></label>
+          <fieldset class="field"><legend>Topic picture</legend><div id="icon-picker" class="icon-picker" role="radiogroup"></div></fieldset>
           <div class="grid-2">
-            <label class="field">Title in French<input name="title" maxlength="160" required placeholder="Mbote ! Saluer"></label>
-            <label class="field">Title in English<input name="titleEn" maxlength="160" placeholder="Mbote! Greetings"></label>
+            <label class="field">Title in French<input name="title" maxlength="160" required placeholder="Mbote ! Saluer"><small>The main title. Shown to everyone.</small></label>
+            <label class="field">Title in English <span class="opt">optional</span><input name="titleEn" maxlength="160" placeholder="Mbote! Greetings"><small>Shown instead when the app is in English.</small></label>
           </div>
-          <label class="field">Teaching note<textarea name="tip" rows="3" maxlength="3000" placeholder="A cultural detail or pronunciation tip learners see before the unit."></textarea></label>
+          <label class="field">Teaching note <span class="opt">optional</span><textarea name="tip" rows="3" maxlength="3000" placeholder="À Kinshasa, on dit « Kende malamu » à celui qui part…"></textarea><small>A cultural tip or pronunciation hint learners read before starting the unit.</small></label>
         </section>
-        <section class="form-section">
-          <div class="section-row"><div><h3>Vocabulary <span id="word-count" class="count"></span></h3><p class="muted">Each word with its French and English meaning, and a recording if you have one.</p></div><button type="button" id="add-word" class="btn"><svg><use href="#i-plus"/></svg>Add word</button></div>
+        <section class="form-section" data-panel="words" hidden>
+          <div class="section-row"><div><h3>Words</h3><p class="muted">Each word or phrase with its meaning. Learners need at least 4 words. Record how it sounds if you can.</p></div><button type="button" id="add-word" class="btn"><svg><use href="#i-plus"/></svg>Add word</button></div>
           <div class="rows-head vocab-grid" aria-hidden="true"><span>#</span><span>Word or phrase</span><span>French</span><span>English</span><span>Recording</span><span></span></div>
           <div id="word-rows"></div>
         </section>
-        <section class="form-section">
-          <div class="section-row"><div><h3>Sentences <span id="sentence-count" class="count"></span></h3><p class="muted">Learners rebuild the answer from tiles. Distractors add wrong tiles.</p></div><button type="button" id="add-sentence" class="btn"><svg><use href="#i-plus"/></svg>Add sentence</button></div>
+        <section class="form-section" data-panel="sentences" hidden>
+          <div class="section-row"><div><h3>Sentences <span class="opt">optional</span></h3><p class="muted">Learners see the prompt and rebuild the answer from word tiles. Extra wrong tiles make it harder.</p></div><button type="button" id="add-sentence" class="btn"><svg><use href="#i-plus"/></svg>Add sentence</button></div>
           <div id="sentence-rows"></div>
         </section>
         <p id="editor-error" class="form-error" role="alert"></p>
@@ -206,6 +230,13 @@
       </div>
       <footer class="modal-foot"><button type="button" id="delete-language" class="btn danger-ghost"><svg><use href="#i-trash"/></svg>Delete</button><span></span><button type="button" id="cancel-language" class="btn">Cancel</button><button type="submit" class="btn primary">Save language</button></footer>
     </form>
+  </dialog>
+
+  <dialog id="learner-dialog" class="sheet narrow" aria-labelledby="learner-heading">
+    <div class="sheet-inner">
+      <header class="sheet-head"><span id="learner-avatar" class="me-avatar big"></span><div><h2 id="learner-heading"></h2><p id="learner-email" class="eyebrow"></p></div><button type="button" id="close-learner" class="icon-btn" aria-label="Close"><svg><use href="#i-x"/></svg></button></header>
+      <div id="learner-body" class="sheet-body"></div>
+    </div>
   </dialog>
 
   <dialog id="preview" class="modal preview" aria-labelledby="preview-heading">

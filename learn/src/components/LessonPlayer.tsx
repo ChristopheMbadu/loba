@@ -1,7 +1,7 @@
 import { useNavigate } from '@tanstack/react-router'
 import { useSelector } from '@tanstack/react-store'
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react'
-import { sfx } from '../audio/sfx'
+import { buzz, sfx } from '../audio/sfx'
 import { trainedWord, type Exercise } from '../game/exercises'
 import { PRICES } from '../game/state'
 import type { Reward } from '../game/rules'
@@ -15,6 +15,7 @@ import { Choice } from './exercises/Choice'
 import { Match } from './exercises/Match'
 import { TypeIn } from './exercises/TypeIn'
 import { Art } from './Art'
+import { burstFrom } from './fx'
 import { Icon } from './Icon'
 import { Loba } from './Loba'
 import { LessonComplete } from './LessonComplete'
@@ -69,13 +70,17 @@ export function LessonPlayer({ exercises, mode, unitId, lessonIndex }: Props) {
     if (ex.kind === 'match') for (const w of ex.pairs) actions.recordWord(lang, w.term, true)
     if (g === 'wrong') {
       sfx('wrong')
+      buzz([30, 50, 30])
       if (usesHearts) actions.loseHeart()
     } else {
-      sfx('correct')
+      // Match pairs have already rung out one by one.
+      if (ex.kind !== 'match') sfx('correct', session.combo + 1)
+      buzz(12)
+      burstFrom(document.querySelector('.lesson-body .choice[aria-pressed="true"], .lesson-body .answer-line, .lesson-body .type-input, .lesson-body .match'), { count: 16 + Math.min(session.combo, 6) * 3 })
       const pool = [...(PRAISE[lang] ?? []), ...(cheer ? [cheer] : [])]
       setPraise(pool.length && Math.random() < 0.5 ? pool[Math.floor(Math.random() * pool.length)]! : t('correct'))
     }
-  }, [ex, status, answer, lang, cheer, usesHearts, t])
+  }, [ex, status, answer, lang, cheer, usesHearts, t, session.combo])
 
   const next = useCallback(() => {
     if (status === 'answering') return
@@ -84,6 +89,7 @@ export function LessonPlayer({ exercises, mode, unitId, lessonIndex }: Props) {
       return
     }
     setAnswer(null)
+    sfx('whoosh')
     dispatch({ type: 'next' })
   }, [status, usesHearts])
 
@@ -91,6 +97,7 @@ export function LessonPlayer({ exercises, mode, unitId, lessonIndex }: Props) {
     if (!ex || status !== 'answering') return
     dispatch({ type: 'graded', result: 'wrong' })
     sfx('wrong')
+    buzz([30, 50, 30])
     if (usesHearts) actions.loseHeart()
   }
 
@@ -124,21 +131,28 @@ export function LessonPlayer({ exercises, mode, unitId, lessonIndex }: Props) {
   const locked = status !== 'answering'
 
   return (
-    <div className="lesson">
+    <div className={`lesson is-${status}`}>
       <header className="lesson-head">
         <button className="icon-btn" onClick={() => (session.solved > 0 ? setQuitOpen(true) : exit())} aria-label={t('endSession')}>
           <Icon name="close" />
         </button>
         <div className={`meter ${session.combo >= 3 ? 'hot' : ''}`} role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progressOf(session) * 100)}>
-          <span style={{ width: `${Math.max(progressOf(session) * 100, 2)}%` }} />
+          <span style={{ width: `${Math.max(progressOf(session) * 100, 2)}%` }}>
+            {session.solved > 0 && <i className="meter-spark" key={session.solved} />}
+          </span>
         </div>
         {usesHearts && (
           <span key={hearts} className={`lesson-hearts ${status === 'wrong' ? 'hit' : ''}`} aria-label={`${t('hearts')}: ${hearts}`}>
             <Art name={hearts > 0 ? 'heart' : 'heartOff'} /> {hearts}
+            {status === 'wrong' && <b className="heart-minus" aria-hidden="true">−1</b>}
           </span>
         )}
       </header>
-      {session.combo >= 3 && status === 'correct' && <span className="combo-flag">{t('combo', { n: session.combo })}</span>}
+      {session.combo >= 3 && (
+        <span className="combo-flag" key={session.combo} style={{ '--heat': Math.min(session.combo, 10) } as React.CSSProperties}>
+          <Art name="flame" size={22} /> {t('combo', { n: session.combo })}
+        </span>
+      )}
 
       <main className="lesson-body" key={ex.id}>
         {(ex.kind === 'meaning' || ex.kind === 'term' || ex.kind === 'listen') && <Choice ex={ex} answer={answer} onAnswer={setAnswer} locked={locked} />}
@@ -159,8 +173,9 @@ export function LessonPlayer({ exercises, mode, unitId, lessonIndex }: Props) {
           ) : (
             <>
               <div className="feedback">
-                <span className="feedback-icon">
-                  <Icon name={status === 'wrong' ? 'x' : 'check'} />
+                <span className="feedback-loba">
+                  <Loba mood={status === 'wrong' ? 'sad' : 'cheer'} />
+                  <i className="feedback-icon"><Icon name={status === 'wrong' ? 'x' : 'check'} /></i>
                 </span>
                 <div>
                   <h2>{status === 'correct' ? praise : status === 'typo' ? t('correctTypo') : t('wrong')}</h2>

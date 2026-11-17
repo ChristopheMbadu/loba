@@ -1,21 +1,62 @@
-export type Mood = 'idle' | 'happy' | 'cheer' | 'sad' | 'think' | 'wave'
+import { useEffect, useRef } from 'react'
+
+export type Mood = 'idle' | 'happy' | 'cheer' | 'sad' | 'think' | 'wave' | 'dance'
 
 const GREY = '#98a2b8', GREY_D = '#77819a', BELLY = '#c9d0de', MASK = '#f6f8fc', BEAK = '#322e40', RED = '#f0524f', RED_D = '#c93a3c'
+
+/* Every Loba on screen watches the pointer. One listener serves them all. */
+const watchers = new Set<SVGSVGElement>()
+let px = 0, py = 0, queued = false
+function look() {
+  queued = false
+  for (const el of watchers) {
+    const r = el.getBoundingClientRect()
+    if (!r.width) continue
+    const dx = px - (r.left + r.width / 2), dy = py - (r.top + r.height * 0.36)
+    const d = Math.hypot(dx, dy) || 1
+    const reach = Math.min(1, d / 180)
+    el.style.setProperty('--lx', ((dx / d) * reach * 3.4).toFixed(2))
+    el.style.setProperty('--ly', ((dy / d) * reach * 2.8).toFixed(2))
+  }
+}
+function onMove(e: PointerEvent) {
+  px = e.clientX
+  py = e.clientY
+  if (!queued) {
+    queued = true
+    requestAnimationFrame(look)
+  }
+}
 
 /**
  * Loba, the mascot: an African grey parrot (native to the Congo basin) with a flag-blue scarf.
  * Drawn in code so every pose stays consistent and themeable; animated with CSS.
  */
 export function Loba({ mood = 'idle', className = '' }: { mood?: Mood; className?: string }) {
-  const wingsUp = mood === 'cheer'
-  const smile = mood === 'happy' || mood === 'cheer'
+  const ref = useRef<SVGSVGElement>(null)
+  useEffect(() => {
+    const el = ref.current
+    if (!el || !matchMedia('(pointer: fine) and (prefers-reduced-motion: no-preference)').matches) return
+    watchers.add(el)
+    if (watchers.size === 1) addEventListener('pointermove', onMove, { passive: true })
+    return () => {
+      watchers.delete(el)
+      if (!watchers.size) removeEventListener('pointermove', onMove)
+    }
+  }, [])
+
+  const wingsUp = mood === 'cheer' || mood === 'dance'
+  const smile = mood === 'happy' || mood === 'cheer' || mood === 'dance'
+  const open = mood === 'cheer' || mood === 'wave' || mood === 'dance'
   return (
-    <svg className={`loba loba-${mood} ${className}`} viewBox="0 0 200 200" aria-hidden="true">
-      <ellipse cx="100" cy="190" rx="46" ry="6" fill="#000" opacity=".08" />
+    <svg ref={ref} className={`loba loba-${mood} ${className}`} viewBox="0 0 200 200" aria-hidden="true">
+      <ellipse className="loba-shadow" cx="100" cy="190" rx="46" ry="6" fill="#000" opacity=".08" />
       <g className="loba-body">
         {/* tail */}
-        <ellipse cx="148" cy="170" rx="10" ry="24" transform="rotate(-58 148 170)" fill={RED_D} />
-        <ellipse cx="144" cy="176" rx="10" ry="24" transform="rotate(-74 144 176)" fill={RED} />
+        <g className="loba-tail">
+          <ellipse cx="148" cy="170" rx="10" ry="24" transform="rotate(-58 148 170)" fill={RED_D} />
+          <ellipse cx="144" cy="176" rx="10" ry="24" transform="rotate(-74 144 176)" fill={RED} />
+        </g>
         {/* feet */}
         <ellipse cx="82" cy="184" rx="13" ry="7" fill="#4b465b" />
         <ellipse cx="118" cy="184" rx="13" ry="7" fill="#4b465b" />
@@ -35,7 +76,7 @@ export function Loba({ mood = 'idle', className = '' }: { mood?: Mood; className
         {!wingsUp && mood !== 'wave' && <ellipse cx="148" cy="134" rx="15" ry="34" transform="rotate(-10 148 134)" fill={GREY_D} />}
         {/* head */}
         <g className="loba-head">
-          <path d="M84 34q4-12 10-4 5-12 10 0 7-8 10 6z" fill={GREY_D} />
+          <path className="loba-crest" d="M84 34q4-12 10-4 5-12 10 0 7-8 10 6z" fill={GREY_D} />
           <circle cx="100" cy="74" r="46" fill={GREY} />
           <ellipse cx="80" cy="72" rx="23" ry="25" fill={MASK} />
           <ellipse cx="120" cy="72" rx="23" ry="25" fill={MASK} />
@@ -44,23 +85,25 @@ export function Loba({ mood = 'idle', className = '' }: { mood?: Mood; className
           {smile ? (
             <path d="M72 74q10-14 20 0M108 74q10-14 20 0" stroke={BEAK} strokeWidth="5.5" fill="none" strokeLinecap="round" />
           ) : (
-            <g className="loba-eyes">
-              <circle cx={mood === 'think' ? 85 : 82} cy={mood === 'think' ? 67 : 71} r="9.5" fill={BEAK} />
-              <circle cx={mood === 'think' ? 121 : 118} cy={mood === 'think' ? 67 : 71} r="9.5" fill={BEAK} />
-              <circle cx={mood === 'think' ? 88 : 85} cy={mood === 'think' ? 63 : 67} r="3.2" fill="#fff" />
-              <circle cx={mood === 'think' ? 124 : 121} cy={mood === 'think' ? 63 : 67} r="3.2" fill="#fff" />
+            <g className="loba-look">
+              <g className="loba-eyes">
+                <circle cx={mood === 'think' ? 85 : 82} cy={mood === 'think' ? 67 : 71} r="9.5" fill={BEAK} />
+                <circle cx={mood === 'think' ? 121 : 118} cy={mood === 'think' ? 67 : 71} r="9.5" fill={BEAK} />
+                <circle cx={mood === 'think' ? 88 : 85} cy={mood === 'think' ? 63 : 67} r="3.2" fill="#fff" />
+                <circle cx={mood === 'think' ? 124 : 121} cy={mood === 'think' ? 63 : 67} r="3.2" fill="#fff" />
+              </g>
             </g>
           )}
           {mood === 'sad' && <path d="M68 58l22-8M132 58l-22-8" stroke={BEAK} strokeWidth="4.5" strokeLinecap="round" />}
-          {mood === 'sad' && <path d="M133 86q5 8 0 12-5-4 0-12z" fill="#6cc7ff" />}
+          {mood === 'sad' && <path className="loba-tear" d="M133 86q5 8 0 12-5-4 0-12z" fill="#6cc7ff" />}
           {/* beak */}
-          {(mood === 'cheer' || mood === 'wave') && <ellipse cx="100" cy="104" rx="8" ry="7" fill="#e8608a" />}
-          <path d="M100 72c-12 0-17 14-11 24 4 7 11 11 11 11s7-4 11-11c6-10 1-24-11-24z" fill={BEAK} transform={mood === 'cheer' || mood === 'wave' ? 'translate(0 -5)' : undefined} />
-          <path d="M94 80q3-4 8-3" stroke="#fff" strokeOpacity=".35" strokeWidth="3" fill="none" strokeLinecap="round" transform={mood === 'cheer' || mood === 'wave' ? 'translate(0 -5)' : undefined} />
+          {open && <ellipse cx="100" cy="104" rx="8" ry="7" fill="#e8608a" />}
+          <path d="M100 72c-12 0-17 14-11 24 4 7 11 11 11 11s7-4 11-11c6-10 1-24-11-24z" fill={BEAK} transform={open ? 'translate(0 -5)' : undefined} />
+          <path d="M94 80q3-4 8-3" stroke="#fff" strokeOpacity=".35" strokeWidth="3" fill="none" strokeLinecap="round" transform={open ? 'translate(0 -5)' : undefined} />
         </g>
         {/* scarf */}
         <path d="M60 106q40 26 80 0l3 12q-43 28-86 0z" fill="#1c9bef" />
-        <path d="M126 118l14 24-16-4-6 10-4-26z" fill="#1479bf" />
+        <path className="loba-scarf-end" d="M126 118l14 24-16-4-6 10-4-26z" fill="#1479bf" />
         <path d="m100 120 1.8 3.8 4.2.5-3.1 2.9.8 4.1-3.7-2-3.7 2 .8-4.1-3.1-2.9 4.2-.5z" fill="#ffc22e" />
       </g>
     </svg>

@@ -21,7 +21,7 @@ export function Week() {
         return (
           <div key={i}>
             <span className={key === today ? 'today' : ''}>{letter}</span>
-            <i className={`${on ? 'on' : ''} ${key === today && !on ? 'now' : ''}`}>{on && <Icon name="check" />}</i>
+            <i className={`${on ? 'on' : ''} ${key === today ? (on ? 'today-on' : 'now') : ''}`}>{on && <Icon name="check" />}</i>
           </div>
         )
       })}

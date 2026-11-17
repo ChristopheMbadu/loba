@@ -56,6 +56,9 @@ test('PostgreSQL bootstrap, transactions, snapshots, conflicts and deletion', {s
     assert.equal(await store.session('learner-session'),undefined,'Learner sessions never open Studio');
     await store.saveProgress(learner.id,{v:1,xp:50});assert.equal((await store.progress(learner.id)).state.xp,50);
     assert.equal(await store.learnerCount(),1);
+    await store.saveProgress(learner.id,{v:1,lang:'ln',xp:'50',progress:{'ln-mbote':4},words:{'ln:Mbote':{level:2},'ln:Te':{level:0},bad:3}});
+    const [row]=await store.learnerList();
+    assert.equal(row.lang,'ln');assert.equal(row.xp,'50');assert.equal(row.words,1);assert.deepEqual(row.progress,{'ln-mbote':4});
     await store.deleteLearner(learner.id);
     assert.equal(await store.learnerSession('learner-session'),undefined);assert.equal(await store.progress(learner.id),null);
   }finally{await pool.end()}

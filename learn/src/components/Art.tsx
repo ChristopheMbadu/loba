@@ -187,8 +187,10 @@ export function Scenery({ kind, className = '' }: { kind: number; className?: st
     <>
       <ellipse cx="60" cy="112" rx="34" ry="6" fill="#000" opacity=".07" />
       <path d="M56 110c2-26 0-44 6-62l8 2c-6 18-2 36-4 60z" fill="#b96a2b" /><path d="M58 96h9M59 82h8M61 68h8" stroke="#8f4f1c" strokeWidth="3" strokeLinecap="round" />
-      <path d="M66 50C50 30 30 30 16 40c16-2 30 2 44 14zM66 50C60 26 44 14 26 14c16 8 26 20 34 38zM66 50c4-24 22-34 40-30-16 4-26 14-36 32zM66 50c16-12 34-10 46 2-16-4-30-2-44 4zM66 50c8 4 20 14 22 30-8-12-16-18-26-24z" fill="#2bb673" />
-      <path d="M66 50C50 30 30 30 16 40c16-2 30 2 44 14zM66 50c16-12 34-10 46 2-16-4-30-2-44 4z" fill="#1e8f58" />
+      <g className="sway">
+        <path d="M66 50C50 30 30 30 16 40c16-2 30 2 44 14zM66 50C60 26 44 14 26 14c16 8 26 20 34 38zM66 50c4-24 22-34 40-30-16 4-26 14-36 32zM66 50c16-12 34-10 46 2-16-4-30-2-44 4zM66 50c8 4 20 14 22 30-8-12-16-18-26-24z" fill="#2bb673" />
+        <path d="M66 50C50 30 30 30 16 40c16-2 30 2 44 14zM66 50c16-12 34-10 46 2-16-4-30-2-44 4z" fill="#1e8f58" />
+      </g>
       <circle cx="62" cy="54" r="5" fill="#8f4f1c" /><circle cx="70" cy="56" r="5" fill="#b96a2b" />
     </>,
     // drum
@@ -197,14 +199,15 @@ export function Scenery({ kind, className = '' }: { kind: number; className?: st
       <path d="M30 38h60l-10 70a4 4 0 0 1-4 3H44a4 4 0 0 1-4-3z" fill="#d98b3d" />
       <path d="M33 58h54l-2 12H35zM38 88h44l-1 8H39z" fill="#f0524f" /><path d="M36 64l6-6 6 6 6-6 6 6 6-6 6 6 6-6 6 6" stroke="#ffc22e" strokeWidth="3" fill="none" strokeLinejoin="round" />
       <ellipse cx="60" cy="38" rx="30" ry="9" fill="#ffe9c2" stroke="#b96a2b" strokeWidth="4" />
-      <path d="M92 16 70 34M100 30 76 38" stroke="#8f4f1c" strokeWidth="5" strokeLinecap="round" /><circle cx="92" cy="16" r="6" fill="#b96a2b" /><circle cx="100" cy="30" r="6" fill="#b96a2b" />
+      <g className="stick a"><path d="M92 16 70 34" stroke="#8f4f1c" strokeWidth="5" strokeLinecap="round" /><circle cx="92" cy="16" r="6" fill="#b96a2b" /></g>
+      <g className="stick b"><path d="M100 30 76 38" stroke="#8f4f1c" strokeWidth="5" strokeLinecap="round" /><circle cx="100" cy="30" r="6" fill="#b96a2b" /></g>
     </>,
     // hut
     <>
       <ellipse cx="60" cy="112" rx="42" ry="6" fill="#000" opacity=".07" />
       <rect x="26" y="62" width="68" height="48" rx="4" fill="#ffd99a" /><path d="M26 76h68M26 92h68" stroke="#e8b86a" strokeWidth="3" />
       <path d="M60 14 10 66h100z" fill="#b96a2b" /><path d="M60 14 10 66h14L60 28l36 38h14z" fill="#8f4f1c" />
-      <path d="M50 110V86a10 10 0 0 1 20 0v24z" fill="#8f4f1c" /><circle cx="84" cy="80" r="6" fill="#6cc4fa" />
+      <path d="M50 110V86a10 10 0 0 1 20 0v24z" fill="#8f4f1c" /><circle className="window" cx="84" cy="80" r="6" fill="#6cc4fa" />
     </>,
   ]
   return (

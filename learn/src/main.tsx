@@ -1,6 +1,7 @@
 import '@fontsource-variable/nunito'
 import '@fontsource-variable/fredoka'
 import './styles/app.css'
+import './styles/motion.css'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { createRouter, RouterProvider } from '@tanstack/react-router'
 import { StrictMode } from 'react'
@@ -17,6 +18,7 @@ const router = createRouter({
   context: { queryClient },
   defaultPreload: 'intent',
   scrollRestoration: true,
+  defaultViewTransition: true,
 })
 
 declare module '@tanstack/react-router' {

@@ -56,6 +56,20 @@ function sendAudio(req, res, {mime, data}) {
 const PROGRESS_MAX_BYTES = 600_000;
 const readCookie = (req, name) => String(req.headers.cookie || '').split(';').map(v => v.trim()).find(v => v.startsWith(name + '='))?.slice(name.length + 1) || '';
 const publicLearner = l => ({ name: l.name, email: l.email });
+const count = v => { const n = Number(v); return Number.isFinite(n) && n > 0 ? Math.floor(n) : 0; };
+/** What editors see about a learner: account details and a summary of their saved progress. */
+function learnerSummary(row) {
+  const progress = {};
+  for (const [unit, n] of Object.entries(row.progress || {}).slice(0, 500)) if (count(n)) progress[String(unit).slice(0, 80)] = Math.min(4, count(n));
+  const day = /^\d{4}-\d{2}-\d{2}$/.test(row.last_active_day || '') ? row.last_active_day : null;
+  // A streak only counts if the learner practised today or yesterday (allowing for time zones).
+  const current = day && Date.now() - Date.parse(day + 'T00:00:00Z') < 3 * 86400000 ? count(row.streak) : 0;
+  return {
+    id: row.id, name: row.name, email: row.email, joined: row.created_at, lastSync: row.updated_at || null,
+    language: /^[a-z]{2,3}$/.test(row.lang || '') ? row.lang : null, xp: count(row.xp), streak: current, bestStreak: count(row.best_streak),
+    lessonsDone: count(row.lessons_done), lastActiveDay: day, goal: count(row.goal), wordsLearned: count(row.words), progress,
+  };
+}
 /** Progress is the learner app's own save format; the server only checks it is a plain object. */
 function progressState(value) {
   if (!value || typeof value !== 'object' || Array.isArray(value)) throw fail(400, 'Invalid progress.');
@@ -184,6 +198,7 @@ export function createApp(store, {origin, production = false, learnDir = new URL
         if (!user) throw fail(401, 'Sign in to continue.');
         if (path === '/api/auth/me' && method === 'GET') return json(200,{user});
         if (path === '/api/auth/logout' && method === 'POST') { await store.logout(tokenHash); res.setHeader('Set-Cookie',cookie('',0)); return json(200,{ok:true}); }
+        if (path === '/api/admin/learners' && method === 'GET') return json(200,{learners:(await store.learnerList()).map(learnerSummary)});
         if (path === '/api/admin/accounts' && method === 'GET') return json(200,{accounts:await store.pendingAccounts()});
         const approval=path.match(/^\/api\/admin\/accounts\/([0-9a-f-]{36})\/approve$/i);
         if (approval && method === 'POST') { await store.approveAccount(approval[1],user.email); return json(200,{ok:true}); }

@@ -2,9 +2,9 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useSelector } from '@tanstack/react-store'
 import { sfx } from '../../audio/sfx'
 import { Art } from '../../components/Art'
+import { flyGems } from '../../components/fx'
 import { DailyGoalCard, QUEST_ART, QUEST_LABEL as LABEL, StreakCard } from '../../components/Rail'
 import { Stats } from '../../components/Stats'
-import { RewardSticker } from '../../components/RewardSticker'
 import { dayKey } from '../../game/state'
 import { dailyQuests } from '../../game/rules'
 import { actions, game } from '../../game/store'
@@ -27,7 +27,7 @@ function QuestsPage() {
             <h1>{t('questsTitle')}</h1>
             <p>{t('questsReset')}</p>
           </div>
-          <RewardSticker kind="sparkle" size={88} />
+          <Art name="chestOpen" size={88} className="quest-hero-art" />
         </header>
         <section className="card">
           {dailyQuests(s, today).map((q) => {
@@ -48,9 +48,10 @@ function QuestsPage() {
                 <button
                   className={`btn small ${complete && !isClaimed ? 'sun' : 'outline'}`}
                   disabled={!complete || isClaimed}
-                  onClick={() => {
+                  onClick={(e) => {
                     actions.claimQuest(q.id)
-                    sfx('coin')
+                    sfx('chest')
+                    flyGems(e.currentTarget, 6)
                   }}
                 >
                   {isClaimed ? t('claimed') : <><span className="price" style={{ color: 'inherit' }}><Art name="gem" /> {q.reward}</span></>}

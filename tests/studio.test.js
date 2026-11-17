@@ -28,6 +28,7 @@ function fakeStore() {
     async learner(email){return [...this.learnersMap.values()].find(l=>l.email===email)},async learnerById(id){return this.learnersMap.get(id)},
     async createLearnerSession(hash,id){this.learnerSessions.set(hash,id)},async learnerSession(hash){const id=this.learnerSessions.get(hash);const l=id&&this.learnersMap.get(id);return l&&{id:l.id,email:l.email,name:l.name}},
     async learnerLogout(hash){this.learnerSessions.delete(hash)},async progress(id){return this.progressMap.get(id)||null},async saveProgress(id,state){this.progressMap.set(id,{state,updated_at:'later'});return{updated_at:'later'}},
+    async learnerList(){return [...this.learnersMap.values()].map(l=>{const st=this.progressMap.get(l.id)?.state||{};return{id:l.id,name:l.name,email:l.email,created_at:'2026-11-01T00:00:00Z',updated_at:null,lang:st.lang??null,xp:st.xp==null?null:String(st.xp),streak:st.streak==null?null:String(st.streak),best_streak:null,lessons_done:st.lessonsDone==null?null:String(st.lessonsDone),last_active_day:st.lastActiveDay??null,goal:null,progress:st.progress||{},words:Object.values(st.words||{}).filter(w=>w.level>=1).length}})},
     async renameLearner(id,name){this.learnersMap.get(id).name=name},async deleteLearner(id){this.learnersMap.delete(id);this.progressMap.delete(id)},
     async healthy(){},async loginAllowed(){return this.allowed},async admin(){return this.user},
     async createSession(hash,id){sessions.set(hash,{id,email:this.user.email})},async session(hash){return sessions.get(hash)},async logout(hash){sessions.delete(hash)},
@@ -245,4 +246,19 @@ test('learners sign up with name, email and password and keep progress on their 
   assert.equal((await invoke(app,{url:'/api/learn/account',method:'DELETE',headers:{...h,cookie:learnerCookie},data:{password:'wrong-password'}})).status,401);
   const removed=await invoke(app,{url:'/api/learn/account',method:'DELETE',headers:{...h,cookie:learnerCookie},data:{password:'kinshasa2026'}});
   assert.equal(removed.status,200);assert.match(removed.headers['set-cookie'],/Max-Age=0/);assert.equal(store.learnersMap.size,0);assert.equal(store.progressMap.size,0);
+});
+
+test('editors see every learner and a safe summary of their progress',async()=>{
+  const {store,app,headers}=authenticated();
+  const h={origin,'content-type':'application/json'};
+  assert.equal((await invoke(app,{url:'/api/admin/learners'})).status,401);
+  const today=new Date().toISOString().slice(0,10);
+  await invoke(app,{url:'/api/learn/signup',method:'POST',headers:h,data:{name:'Nadia',email:'nadia@example.com',password:'kinshasa2026',state:{v:1,lang:'ln',xp:640,streak:12,lessonsDone:26,lastActiveDay:today,progress:{'ln-mbote':4,'ln-survie':9,'ln-x':'lots'},words:{'ln:Mbote':{level:2},'ln:Te':{level:0}}}}});
+  await invoke(app,{url:'/api/learn/signup',method:'POST',headers:h,data:{name:'Joël',email:'joel@example.com',password:'kinshasa2026',state:{v:1,lang:'<script>',xp:'abc',streak:5,lastActiveDay:'2020-01-01'}}});
+  const {data}=await invoke(app,{url:'/api/admin/learners',headers});
+  const nadia=data.learners.find(l=>l.name==='Nadia'), joel=data.learners.find(l=>l.name==='Joël');
+  assert.deepEqual({language:nadia.language,xp:nadia.xp,streak:nadia.streak,lessonsDone:nadia.lessonsDone,wordsLearned:nadia.wordsLearned},{language:'ln',xp:640,streak:12,lessonsDone:26,wordsLearned:1});
+  assert.deepEqual(nadia.progress,{'ln-mbote':4,'ln-survie':4},'Unit progress is clamped and junk dropped');
+  assert.equal(nadia.password_hash,undefined);
+  assert.equal(joel.language,null);assert.equal(joel.xp,0);assert.equal(joel.streak,0,'An old streak no longer counts');
 });

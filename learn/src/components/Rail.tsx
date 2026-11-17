@@ -36,7 +36,7 @@ export function DailyGoalCard() {
   return (
     <section className="card">
       <div className="goal">
-        {pct >= 100 ? <RewardSticker kind="sparkle" size={52} /> : <Art name="bolt" />}
+        <Art name={pct >= 100 ? 'star' : 'bolt'} className={pct >= 100 ? 'goal-done' : ''} />
         <div className="goal-body">
           <h3>{pct >= 100 ? t('goalDone') : t('dailyGoal')}</h3>
           <div className="meter-row">

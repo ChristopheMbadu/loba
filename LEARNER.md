@@ -51,7 +51,13 @@ cookie (`loba_learner`, 60 days) and never grant access to Studio.
 | `src/components/` | UI, including `LessonPlayer` and one component per exercise type. |
 | `src/routes/` | Screens: path, practice, quests, shop, profile, onboarding, lesson, practice session. |
 | `src/i18n/` | French and English UI strings. |
-| `src/styles/app.css` | Design tokens and all styles, light and dark. |
+| `src/styles/app.css` | Design tokens and layout. One white-first palette, whatever the device theme. |
+| `src/styles/motion.css` | Everything that moves: the river path, Loba's reactions, lesson feedback, celebrations. |
+| `src/audio/sfx.ts` | Sound effects, synthesized in the browser (likembe, ngoma drum, shaker); no audio files. |
+| `src/components/fx.ts` | Confetti, answer bursts and flying gems, drawn on one canvas. |
+
+Motion is decoration only: with "reduce motion" switched on in the device settings the effects are
+skipped and the app works the same. Sounds and vibration follow the Sound setting in the profile.
 
 Each unit has 4 lessons that ramp up (meet half the words → the other half → mix with
 sentences → recall by typing) followed by a chest. Exercise types: meaning, recall,

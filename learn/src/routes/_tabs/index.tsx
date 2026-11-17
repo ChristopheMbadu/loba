@@ -1,12 +1,14 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useSelector } from '@tanstack/react-store'
 import { useEffect, useRef, useState, type CSSProperties, type RefObject } from 'react'
-import { sfx } from '../../audio/sfx'
+import { buzz, sfx } from '../../audio/sfx'
+import { playWord } from '../../audio/voice'
+import { burstFrom, flyGems } from '../../components/fx'
 import { Art, Scenery } from '../../components/Art'
 import { Icon, Star, type IconName } from '../../components/Icon'
 import { Loba } from '../../components/Loba'
 import { Rail } from '../../components/Rail'
-import { LESSONS_PER_UNIT, type Unit } from '../../content/types'
+import { LESSONS_PER_UNIT, type Unit, type Word } from '../../content/types'
 import { currentUnitIndex, unitProgress, unitUnlocked } from '../../game/rules'
 import { REWARDS } from '../../game/state'
 import { actions, game } from '../../game/store'
@@ -28,6 +30,8 @@ const OFFSETS = [0, 56, 84, 56, 0]
 const STEP = 98
 const NODE_H = 70
 const LESSON_ICONS: IconName[] = ['book', 'speaker', 'practice']
+/** Lessons done per unit the last time the path was on screen, so new progress can be played out. */
+const lastSeen = new Map<string, number>()
 
 function PathPage() {
   const units = useUnits()
@@ -58,22 +62,24 @@ function PathPage() {
   )
 }
 
-/** Smooth dotted trail through the node centres, relative to the column's centre line. */
-function trailPath(flip: number, upTo: number) {
-  let d = ''
-  for (let n = 0; n <= upTo; n++) {
-    const x = OFFSETS[n]! * flip, y = n * STEP + NODE_H / 2
-    if (n === 0) d = `M${x} ${y}`
-    else {
-      const px = OFFSETS[n - 1]! * flip, py = (n - 1) * STEP + NODE_H / 2
-      d += ` C${px} ${py + STEP / 2} ${x} ${y - STEP / 2} ${x} ${y}`
-    }
+/**
+ * The path is the Congo river. It runs through the node centres (x is relative to the column's
+ * centre line), from node `from` to node `to`, optionally flowing in from `top` and out to `bottom`.
+ */
+function river(flip: number, from: number, to: number, top?: number, bottom?: number) {
+  const at = (n: number) => [OFFSETS[n]! * flip, n * STEP + NODE_H / 2] as const
+  const [x0, y0] = at(from)
+  let d = top === undefined ? `M${x0} ${y0}` : `M${x0} ${top}L${x0} ${y0}`
+  for (let n = from + 1; n <= to; n++) {
+    const [px, py] = at(n - 1), [x, y] = at(n)
+    d += ` C${px} ${py + STEP / 2} ${x} ${y - STEP / 2} ${x} ${y}`
   }
+  if (bottom !== undefined) d += `L${at(to)[0]} ${bottom}`
   return d
 }
 
 function UnitSection({ unit, index, isCurrent, unlocked, currentRef }: { unit: Unit; index: number; isCurrent: boolean; unlocked: boolean; currentRef: RefObject<HTMLDivElement | null> }) {
-  const { t, unitTitle } = useT()
+  const { t, unitTitle, meaning } = useT()
   const done = useSelector(game, (s) => (unlocked ? unitProgress(s, unit) : 0))
   const chestOpen = useSelector(game, (s) => !!s.chests[unit.id])
   const [showTip, setShowTip] = useState(false)
@@ -82,6 +88,38 @@ function UnitSection({ unit, index, isCurrent, unlocked, currentRef }: { unit: U
   const flip = index % 2 ? -1 : 1
   const style = { '--unit': c, '--unit-shade': shade } as CSSProperties
   const lobaAt = Math.min(done, LESSONS_PER_UNIT)
+  const height = LESSONS_PER_UNIT * STEP + 110
+  // Each stretch of river ends under a unit banner, which crosses it like a bridge.
+  const top = -62, bottom = height + 62
+  const [before] = useState(() => lastSeen.get(unit.id) ?? done)
+  const advanced = done > before
+  const freshNode = useRef<HTMLDivElement>(null)
+  const [said, setSaid] = useState<{ word: Word; n: number } | null>(null)
+  const [poke, setPoke] = useState(0)
+
+  useEffect(() => {
+    lastSeen.set(unit.id, done)
+    if (!advanced) return
+    const id = setTimeout(() => {
+      sfx('pop')
+      burstFrom(freshNode.current, { count: 14, power: 6, colors: [c, '#ffc22e', '#ffffff', shade] })
+    }, 650)
+    return () => clearTimeout(id)
+  }, [unit.id, done, advanced, c, shade])
+
+  useEffect(() => {
+    if (!said) return
+    const id = setTimeout(() => setSaid(null), 2600)
+    return () => clearTimeout(id)
+  }, [said])
+
+  // Tap Loba and he says a word from this unit.
+  const speak = () => {
+    const word = unit.words[(said ? said.n + 1 : Math.floor(Math.random() * unit.words.length)) % unit.words.length]!
+    setSaid({ word, n: unit.words.indexOf(word) })
+    sfx('tile', said ? said.n + 1 : 2)
+    playWord(word)
+  }
 
   // Close the popover when clicking elsewhere.
   useEffect(() => {
@@ -113,17 +151,50 @@ function UnitSection({ unit, index, isCurrent, unlocked, currentRef }: { unit: U
         </p>
       )}
 
-      <div className="path" style={{ height: LESSONS_PER_UNIT * STEP + 110 }}>
-        <svg className="trail" style={{ left: '50%', width: 1 }} aria-hidden="true">
-          <path d={trailPath(flip, LESSONS_PER_UNIT)} />
-          {done > 0 && <path className="walked" d={trailPath(flip, Math.min(done, LESSONS_PER_UNIT))} />}
+      <div className="path" style={{ height }}>
+        <svg className="river" style={{ left: '50%', width: 1 }} aria-hidden="true">
+          <path className="river-bank" d={river(flip, 0, LESSONS_PER_UNIT, top, bottom)} />
+          <path className="river-water" d={river(flip, 0, LESSONS_PER_UNIT, top, bottom)} />
+          {unlocked && <path className="river-walked" d={river(flip, 0, advanced ? before : lobaAt, top, done >= LESSONS_PER_UNIT && !advanced ? bottom : undefined)} />}
+          {advanced && <path className="river-walked river-new" pathLength={1} d={river(flip, before, lobaAt, undefined, done >= LESSONS_PER_UNIT ? bottom : undefined)} />}
+          {unlocked && (
+            <g className="river-waves">
+              <path d={river(flip, 0, LESSONS_PER_UNIT, top, bottom)} transform="translate(-13 0)" />
+              <path d={river(flip, 0, LESSONS_PER_UNIT, top, bottom)} transform="translate(13 0)" />
+            </g>
+          )}
         </svg>
-        <div style={{ position: 'absolute', left: `calc(50% + ${flip * 206}px)`, top: STEP * 1.1, translate: '-50% 0' }}>
-          <Scenery kind={index} />
-        </div>
+        {unlocked && (
+          <span className="fish" style={{ left: `calc(50% + ${((OFFSETS[index % 3 + 1]! + OFFSETS[index % 3 + 2]!) / 2) * flip}px)`, top: (index % 3 + 1) * STEP + NODE_H / 2 + STEP / 2, animationDelay: `${(index * 1.7) % 5}s`, '--flip': flip } as CSSProperties} aria-hidden="true">
+            <svg viewBox="0 0 40 24"><path d="M2 12c6-9 18-10 26-3l8-6v18l-8-6C20 22 8 21 2 12z" fill="#ff8a1f" /><path d="M10 12c4-4 10-5 15-2-5 4-11 5-15 2z" fill="#ffc22e" /><circle cx="9" cy="10" r="1.8" fill="#322e40" /></svg>
+          </span>
+        )}
+        <button
+          className={`scenery-btn scenery-${index % 3}`}
+          style={{ left: `calc(50% + ${flip * 206}px)`, top: STEP * 1.1 }}
+          tabIndex={-1}
+          aria-hidden="true"
+          onClick={() => {
+            sfx(index % 3 === 1 ? 'drum' : index % 3 === 0 ? 'shaker' : 'tap', poke)
+            setPoke((n) => n + 1)
+          }}
+        >
+          <Scenery kind={index} key={poke} className={poke ? 'poked' : ''} />
+        </button>
         {isCurrent && (
-          <div className="path-loba" style={{ left: `calc(50% + ${OFFSETS[lobaAt]! * flip - flip * 128}px)`, top: lobaAt * STEP - 34, translate: '-50% 0' }}>
-            <Loba mood="wave" />
+          <div
+            className={`path-loba ${advanced ? 'travel' : ''}`}
+            style={{ left: `calc(50% + ${OFFSETS[lobaAt]! * flip - flip * 128}px)`, top: lobaAt * STEP - 34, '--fx': `${(OFFSETS[before]! - OFFSETS[lobaAt]!) * flip}px`, '--fy': `${(before - lobaAt) * STEP}px` } as CSSProperties}
+          >
+            {said && (
+              <p className="loba-says" key={said.n} aria-live="polite">
+                <b lang={unit.language}>{said.word.term}</b>
+                <span>{meaning(said.word)}</span>
+              </p>
+            )}
+            <button className="loba-tap" onClick={speak} aria-label="Loba">
+              <Loba mood={said ? 'cheer' : 'wave'} />
+            </button>
           </div>
         )}
         {Array.from({ length: LESSONS_PER_UNIT + 1 }, (_, n) => {
@@ -131,7 +202,7 @@ function UnitSection({ unit, index, isCurrent, unlocked, currentRef }: { unit: U
           const state = !unlocked || n > done ? 'locked' : n < done ? 'done' : 'current'
           const x = OFFSETS[n]! * flip
           return (
-            <div key={n} className="node-wrap" style={{ top: n * STEP, marginLeft: x }} ref={isCurrent && state === 'current' ? currentRef : undefined}>
+            <div key={n} className={`node-wrap ${advanced && n === done - 1 ? 'fresh' : ''}`} style={{ top: n * STEP, marginLeft: x, '--n': n } as CSSProperties} ref={isCurrent && state === 'current' ? currentRef : advanced && n === done - 1 ? freshNode : undefined}>
               {isChest ? (
                 <ChestNode unit={unit} available={unlocked && done >= LESSONS_PER_UNIT} opened={chestOpen} />
               ) : (
@@ -189,9 +260,12 @@ function ChestNode({ unit, available, opened }: { unit: Unit; available: boolean
         className={`node chest ${available && !opened ? 'ready' : ''}`}
         aria-label={available && !opened ? t('openChest') : t('chest')}
         disabled={!available || opened}
-        onClick={() => {
+        onClick={(e) => {
           actions.openChest(unit)
-          sfx('coin')
+          sfx('chest')
+          buzz([20, 40, 60])
+          burstFrom(e.currentTarget, { count: 26, power: 9 })
+          flyGems(e.currentTarget, 8)
           setBurst(true)
           setTimeout(() => setBurst(false), 2200)
         }}

@@ -2,7 +2,7 @@ import { Link } from '@tanstack/react-router'
 import { useMemo, useState } from 'react'
 import { sfx } from '../audio/sfx'
 import { Art } from '../components/Art'
-import { Confetti } from '../components/Confetti'
+import { confetti } from '../components/fx'
 import { Loba } from '../components/Loba'
 import { LangBadge } from '../components/Stats'
 import { useCurriculum, useLanguages } from '../hooks'
@@ -50,6 +50,7 @@ export function MiniLesson({ taste, setTaste }: { taste: Taste; setTaste: (t: Ta
   const next = () => {
     if (step === questions.length - 1) {
       sfx('complete')
+      confetti()
       setPhase('done')
       return
     }
@@ -91,8 +92,7 @@ export function MiniLesson({ taste, setTaste }: { taste: Taste; setTaste: (t: Ta
 
       {phase === 'done' ? (
         <div className="ml-done">
-          <Confetti count={60} />
-          <Loba mood="cheer" />
+          <Loba mood="dance" />
           <h3>{t('doneTitle')}</h3>
           <p>{t('doneText')}</p>
           <div className="ml-score">

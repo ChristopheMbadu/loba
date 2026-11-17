@@ -1,12 +1,12 @@
 import { useSelector } from '@tanstack/react-store'
-import { useEffect, useState, type CSSProperties } from 'react'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { sfx } from '../audio/sfx'
 import type { Reward } from '../game/rules'
 import { accuracyOf, type Session } from '../game/session'
 import { game } from '../game/store'
 import { useT } from '../i18n/useT'
-import { Art } from './Art'
-import { Confetti } from './Confetti'
+import { Art, Scenery } from './Art'
+import { confetti } from './fx'
 import { Icon } from './Icon'
 import { Loba } from './Loba'
 import { Week } from './Week'
@@ -18,19 +18,30 @@ const fmtTime = (ms: number) => {
 }
 
 /** Counts up to `target` for a little reward drama. */
-function useCountUp(target: number, ms = 700) {
-  const [n, setN] = useState(0)
+function useCountUp(target: number, { ms = 900, delay = 0, from = 0, ticks = false } = {}) {
+  const [n, setN] = useState(from)
   useEffect(() => {
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) return setN(target)
-    const start = performance.now()
+    const start = performance.now() + delay
+    let lastTick = 0
     let id = requestAnimationFrame(function tick(now) {
-      const p = Math.min(1, (now - start) / ms)
-      setN(Math.round(target * (1 - (1 - p) ** 3)))
+      const p = Math.max(0, Math.min(1, (now - start) / ms))
+      setN(Math.round(from + (target - from) * (1 - (1 - p) ** 3)))
+      if (ticks && p > 0 && p < 1 && now - lastTick > 70) {
+        lastTick = now
+        sfx('tick')
+      }
       if (p < 1) id = requestAnimationFrame(tick)
     })
     return () => cancelAnimationFrame(id)
-  }, [target, ms])
+  }, [target, ms, delay, from, ticks])
   return n
+}
+
+/** The streak number rolls over from yesterday's count once the flame has landed. */
+function StreakCount({ streak }: { streak: number }) {
+  const n = useCountUp(streak, { from: Math.max(0, streak - 1), delay: 550, ms: 300 })
+  return <div className="num" key={n}>{n}</div>
 }
 
 export function LessonComplete({ reward, session, mode, onContinue }: { reward: Reward; session: Session; mode: 'lesson' | 'practice'; onContinue: () => void }) {
@@ -38,12 +49,20 @@ export function LessonComplete({ reward, session, mode, onContinue }: { reward: 
   const streak = useSelector(game, (s) => s.streak)
   const [step, setStep] = useState<'summary' | 'streak'>('summary')
   const [elapsed] = useState(() => fmtTime(Date.now() - session.startedAt))
-  const xp = useCountUp(reward.xp)
-  const accuracy = useCountUp(accuracyOf(session))
+  const xp = useCountUp(reward.xp, { delay: 500, ticks: true })
+  const accuracy = useCountUp(accuracyOf(session), { delay: 650 })
+  const title = mode === 'lesson' ? t('lessonComplete') : t('practiceComplete')
+  const fired = useRef(false)
+
+  useEffect(() => {
+    if (fired.current) return
+    fired.current = true
+    confetti()
+  }, [])
 
   const next = () => {
     if (step === 'summary' && reward.streakExtended) {
-      sfx('coin')
+      sfx('streak')
       setStep('streak')
     } else onContinue()
   }
@@ -58,14 +77,16 @@ export function LessonComplete({ reward, session, mode, onContinue }: { reward: 
     <div className="complete">
       {step === 'summary' ? (
         <div className="complete-body" key="summary">
-          <Confetti />
           <div className="rays" />
           <div className="celebration-art">
-            <RewardSticker kind="sparkle" size={80} className="celebration-sparkle" />
-            <Loba mood="cheer" />
-            <RewardSticker kind="heart" size={64} className="celebration-heart" />
+            <Scenery kind={1} className="celebration-drum" />
+            <Loba mood="dance" />
           </div>
-          <h1>{mode === 'lesson' ? t('lessonComplete') : t('practiceComplete')}</h1>
+          <h1 className="wave-title" aria-label={title}>
+            {[...title].map((ch, i) => (
+              <span key={i} aria-hidden="true" style={{ '--i': i } as CSSProperties}>{ch === ' ' ? '\u00a0' : ch}</span>
+            ))}
+          </h1>
           <div className="tiles">
             <div className="result-tile" style={{ '--c': 'var(--sun)' } as CSSProperties}>
               <div className="label">{t('totalXp')}</div>
@@ -88,7 +109,7 @@ export function LessonComplete({ reward, session, mode, onContinue }: { reward: 
         <div className="complete-body streak-step" key="streak">
           <div className="streak-hero">
             <RewardSticker kind="flame" size={170} />
-            <div className="num">{streak}</div>
+            <StreakCount streak={streak} />
           </div>
           <h1>{t(streak === 1 ? 'streakDay' : 'streakDays', { n: streak })}</h1>
           <Week />

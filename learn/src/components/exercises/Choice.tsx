@@ -1,8 +1,10 @@
-import { useEffect } from 'react'
+import { useEffect, useState, type CSSProperties } from 'react'
 import type { Word } from '../../content/types'
 import { hasVoice, playWord } from '../../audio/voice'
 import { sfx } from '../../audio/sfx'
+import { useSelector } from '@tanstack/react-store'
 import type { Exercise } from '../../game/exercises'
+import { game } from '../../game/store'
 import { useT } from '../../i18n/useT'
 import { Icon } from '../Icon'
 import { Loba } from '../Loba'
@@ -12,17 +14,20 @@ type ChoiceExercise = Extract<Exercise, { kind: 'meaning' | 'term' | 'listen' }>
 
 export function SpeakButton({ word, big }: { word: Word; big?: boolean }) {
   const { t } = useT()
+  const [ring, setRing] = useState(0)
   if (!hasVoice(word)) return null
   return (
-    <button className={`speak-btn ${big ? 'big' : ''}`} onClick={() => playWord(word)} aria-label={t('play')}>
+    <button className={`speak-btn ${big ? 'big' : ''}`} onClick={() => { playWord(word); setRing((n) => n + 1) }} aria-label={t('play')}>
       <Icon name="speaker" />
+      {ring > 0 && <i className="speak-ring" key={ring} />}
     </button>
   )
 }
 
 /** Meaning, recall and listening exercises: pick one of four. Keys 1–4 select. */
 export function Choice({ ex, answer, onAnswer, locked }: { ex: ChoiceExercise; answer: Answer | null; onAnswer: (a: Answer) => void; locked: boolean }) {
-  const { t, meaning } = useT()
+  const { t, meaning, langName } = useT()
+  const lang = useSelector(game, (s) => s.lang)
   const selected = answer?.kind === 'choice' ? answer.index : null
   const label = (w: Word) => (ex.kind === 'meaning' ? meaning(w) : w.term)
 
@@ -48,16 +53,22 @@ export function Choice({ ex, answer, onAnswer, locked }: { ex: ChoiceExercise; a
     <>
       <div className="ex-head">
         {ex.retry ? <span className="ex-tag retry">↻ {t('previousMistake')}</span> : ex.kind === 'meaning' && ex.isNew && <span className="ex-tag">✦ {t('newWord')}</span>}
-        <h1>{ex.kind === 'meaning' ? t('pickMeaning') : ex.kind === 'term' ? t('pickTerm', { text: meaning(ex.word) }) : t('listenPick')}</h1>
+        <h1>{ex.kind === 'meaning' ? t('pickMeaning') : ex.kind === 'term' ? t('sayIn', { lang: langName(lang) }) : t('listenPick')}</h1>
       </div>
 
       {ex.kind === 'meaning' && (
         <div className="speech">
-          <Loba mood={locked ? 'happy' : 'idle'} />
+          <Loba mood="idle" />
           <div className="bubble">
             <SpeakButton word={ex.word} />
             <span className="prompt-text">{ex.word.term}</span>
           </div>
+        </div>
+      )}
+      {ex.kind === 'term' && (
+        <div className="speech">
+          <Loba mood="think" />
+          <p className="bubble"><span className="prompt-text">{meaning(ex.word)}</span></p>
         </div>
       )}
       {ex.kind === 'listen' && (
@@ -74,6 +85,7 @@ export function Choice({ ex, answer, onAnswer, locked }: { ex: ChoiceExercise; a
             <button
               key={w.term}
               className={`choice ${state}`}
+              style={{ '--i': i } as CSSProperties}
               aria-pressed={selected === i}
               disabled={locked}
               onClick={() => {
