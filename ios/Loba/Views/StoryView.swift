@@ -67,8 +67,7 @@ struct StoryView: View {
             .padding(.horizontal, 16).padding(.vertical, 8)
 
             VStack(spacing: 10) {
-                Image("story-\(min(page, 7))").resizable().scaledToFill()
-                    .scaleEffect(drift ? 1.07 : 1.0, anchor: page.isMultiple(of: 2) ? .bottomLeading : .bottomTrailing)
+                StoryStage(page: min(page, 7), drift: drift, shout: "\(word("sibling")) !")
                     .frame(maxWidth: .infinity).aspectRatio(330 / 264, contentMode: .fit)
                     .overlay { if page == 0 { cover(ui) } }
                     .clipShape(RoundedRectangle(cornerRadius: 18))
@@ -115,7 +114,9 @@ struct StoryView: View {
         .onAppear {
             if Tale.words["croc"]!.forms[store.state.lang] != nil { code = store.state.lang }
             #if DEBUG
-            page = min(last, UserDefaults.standard.integer(forKey: "page"))
+            var still = Transaction()
+            still.disablesAnimations = true
+            withTransaction(still) { page = min(last, UserDefaults.standard.integer(forKey: "page")) }
             #endif
             withAnimation(.easeInOut(duration: 9).repeatForever(autoreverses: true)) { drift = true }
         }
@@ -222,5 +223,51 @@ struct StoryView: View {
             Text(L("Conte kongo, raconté d’après la version notée par R. E. Dennett en 1898.", "A Kongo tale, retold from the version written down by R. E. Dennett in 1898."))
                 .font(.text(12)).foregroundStyle(Color(hex: "a8763e")).multilineTextAlignment(.center)
         }
+    }
+}
+
+/// One page's picture: the landscape, a living sky, and the characters, who arrive, breathe and jump when tapped.
+private struct StoryStage: View {
+    let page: Int
+    let drift: Bool
+    let shout: String
+    @State private var arrived = false
+    @State private var hop = false
+    private var night: Bool { page >= 7 }
+    private var dusk: Bool { page == 5 || page == 6 }
+
+    var body: some View {
+        ZStack {
+            Image("story-back-\(page)").resizable().scaledToFill()
+            if night { NightSky() } else { DaySky().opacity(dusk ? 0.6 : 1) }
+            TimelineView(.animation) { timeline in
+                let t = timeline.date.timeIntervalSinceReferenceDate
+                Image("story-cast-\(page)").resizable().scaledToFill()
+                    .offset(y: sin(t * 2.2) * 2.2 + (hop ? -16 : 0))
+                    .rotationEffect(.degrees(sin(t * 1.1) * 0.6), anchor: .bottom)
+            }
+            .offset(x: arrived ? 0 : (page.isMultiple(of: 2) ? -70 : 70))
+            .opacity(arrived ? 1 : 0)
+            .onTapGesture {
+                Sfx.play(page.isMultiple(of: 2) ? .drum : .pop, page); Haptic.thud()
+                withAnimation(.spring(duration: 0.18, bounce: 0.4)) { hop = true }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.18) { withAnimation(.spring(duration: 0.5, bounce: 0.7)) { hop = false } }
+            }
+        }
+        .overlay {
+            // The hen's cry, in the learner's language.
+            if page == 3 || page == 4 {
+                GeometryReader { geo in
+                    Text(shout).font(.display(26)).foregroundStyle(Color.coral)
+                        .shadow(color: .white, radius: 0, x: 0, y: 0).shadow(color: .white, radius: 1.5).shadow(color: .white, radius: 1.5)
+                        .rotationEffect(.degrees(-8)).scaleEffect(arrived ? 1 : 0.2).opacity(arrived ? 1 : 0)
+                        .position(x: geo.size.width * 0.62, y: geo.size.height * 0.4)
+                }
+                .allowsHitTesting(false)
+            }
+        }
+        // Slightly enlarged so the slow drift never shows an edge.
+        .scaleEffect(drift ? 1.1 : 1.05, anchor: page.isMultiple(of: 2) ? .bottomLeading : .bottomTrailing)
+        .onAppear { withAnimation(.spring(duration: 0.9, bounce: 0.35).delay(0.25)) { arrived = true } }
     }
 }

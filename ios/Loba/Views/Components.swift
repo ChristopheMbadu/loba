@@ -111,32 +111,6 @@ struct Art: View {
     var body: some View { Image("art-\(name)").resizable().scaledToFit().frame(width: size, height: size) }
 }
 
-/// Loba, the African grey parrot. It breathes, and jumps when tapped.
-struct LobaView: View {
-    enum Mood: String { case idle, happy, cheer, sad, think, wave }
-    var mood: Mood = .idle
-    var size: CGFloat = 140
-    var tappable = true
-    @State private var breathing = false
-    @State private var hop = false
-
-    var body: some View {
-        Image("loba-\(mood.rawValue)")
-            .resizable().scaledToFit().frame(width: size, height: size)
-            .scaleEffect(x: 1, y: breathing ? 1.025 : 0.985, anchor: .bottom)
-            .offset(y: hop ? -size * 0.16 : 0)
-            .rotationEffect(.degrees(hop ? -6 : 0), anchor: .bottom)
-            .onAppear { withAnimation(.easeInOut(duration: 1.6).repeatForever(autoreverses: true)) { breathing = true } }
-            .onTapGesture {
-                guard tappable else { return }
-                Sfx.play(.pop); Haptic.tap()
-                withAnimation(.spring(duration: 0.22, bounce: 0.5)) { hop = true }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.22) { withAnimation(.spring(duration: 0.4, bounce: 0.6)) { hop = false } }
-            }
-            .accessibilityHidden(true)
-    }
-}
-
 /// A band of Kuba cloth: the diamond pattern woven in the Kasaï.
 struct KubaBand: View {
     var color: Color = .cocoa

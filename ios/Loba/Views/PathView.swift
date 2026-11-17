@@ -65,6 +65,7 @@ struct PathView: View {
         ScrollViewReader { proxy in
             ScrollView {
                 LazyVStack(spacing: 0) {
+                    TodayCard()
                     ForEach(Array(units.enumerated()), id: \.element.id) { i, unit in
                         UnitSection(unit: unit, number: i + 1, colors: unitColors[i % unitColors.count], unlocked: Rules.unitUnlocked(s, units, i),
                                     isCurrent: i == current, flip: !i.isMultiple(of: 2), guide: $guide) { index in
@@ -168,7 +169,15 @@ private struct UnitSection: View {
         return ZStack {
             path.stroke(Color.sand, style: StrokeStyle(lineWidth: 84, lineCap: .butt, lineJoin: .round))
             path.stroke(unlocked ? Color(hex: "d5ebfb") : Color(hex: "ecebf0"), style: StrokeStyle(lineWidth: 68, lineCap: .butt, lineJoin: .round))
-            path.stroke(.white.opacity(0.85), style: StrokeStyle(lineWidth: 3, lineCap: .round, dash: [12, 22]))
+            // The current: dashes that drift downstream, and a second, fainter set that moves slower.
+            TimelineView(.animation(paused: !unlocked)) { timeline in
+                let t = timeline.date.timeIntervalSinceReferenceDate
+                ZStack {
+                    path.stroke(.white.opacity(0.9), style: StrokeStyle(lineWidth: 3, lineCap: .round, dash: [12, 22], dashPhase: -t * 26))
+                    path.offsetBy(dx: 15, dy: 0).stroke(.white.opacity(0.45), style: StrokeStyle(lineWidth: 2, lineCap: .round, dash: [5, 44], dashPhase: -t * 15))
+                    path.offsetBy(dx: -17, dy: 0).stroke(.white.opacity(0.45), style: StrokeStyle(lineWidth: 2, lineCap: .round, dash: [7, 58], dashPhase: -t * 19))
+                }
+            }
         }
     }
 }
@@ -186,6 +195,14 @@ private struct NodeView: View {
         let edge: Color = state == .locked ? .lineShade : state == .done ? .sunShade : colors.1
         Button(action: { Sfx.play(.tap); Haptic.tap(); action() }) {
             ZStack {
+                if state == .current {
+                    // Ripples spreading from the stone the learner is on.
+                    ForEach(0..<2, id: \.self) { i in
+                        Ellipse().stroke(colors.0.opacity(pulse ? 0 : 0.55), lineWidth: 4)
+                            .frame(width: 78, height: 70).scaleEffect(pulse ? 1.75 : 1).offset(y: 4)
+                            .animation(.easeOut(duration: 1.8).repeatForever(autoreverses: false).delay(Double(i) * 0.9), value: pulse)
+                    }
+                }
                 Ellipse().fill(edge).frame(width: 78, height: 70).offset(y: 8)
                 Ellipse().fill(face).frame(width: 78, height: 70)
                 Ellipse().fill(.white.opacity(0.28)).frame(width: 30, height: 16).offset(x: -12, y: -18)
@@ -290,5 +307,30 @@ private struct GuideSheet: View {
             .padding(22)
         }
         .presentationDragIndicator(.visible)
+    }
+}
+
+/// Today at a glance: the daily goal filling up, and the week's streak.
+private struct TodayCard: View {
+    @Environment(AppStore.self) private var store
+
+    var body: some View {
+        let s = store.state, xp = s.daily.day == store.today ? s.daily.xp : 0, done = xp >= s.goal
+        VStack(spacing: 14) {
+            HStack(spacing: 14) {
+                GoalRing(value: Double(xp) / Double(max(1, s.goal)))
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(done ? L("Objectif atteint !", "Goal reached!") : L("Objectif du jour", "Today’s goal")).font(.display(20)).foregroundStyle(.white)
+                    Text("\(min(xp, s.goal)) / \(s.goal) XP").font(.text(15, .bold)).foregroundStyle(.white.opacity(0.85)).contentTransition(.numericText())
+                }
+                Spacer()
+                LobaView(mood: done ? .cheer : .happy, size: 62)
+            }
+            WeekStrip().padding(.vertical, 10).padding(.horizontal, 6).background(RoundedRectangle(cornerRadius: 16).fill(.white))
+        }
+        .padding(16)
+        .background(RoundedRectangle(cornerRadius: 24).fill(LinearGradient(colors: [Color(hex: "2aa9f5"), .skyShade], startPoint: .topLeading, endPoint: .bottomTrailing)).overlay(KubaWeave()).clipShape(RoundedRectangle(cornerRadius: 24)))
+        .background(RoundedRectangle(cornerRadius: 24).fill(Color(hex: "0f5f99")).offset(y: 5))
+        .padding(.horizontal, 16).padding(.top, 14).padding(.bottom, 6)
     }
 }
