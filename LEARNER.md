@@ -54,7 +54,9 @@ cookie (`loba_learner`, 60 days) and never grant access to Studio.
 | `src/styles/app.css` | Design tokens and layout. One white-first palette, whatever the device theme. |
 | `src/styles/motion.css` | Everything that moves: the river path, Loba's reactions, lesson feedback, celebrations. |
 | `src/audio/sfx.ts` | Sound effects, synthesized in the browser (likembe, ngoma drum, shaker); no audio files. |
+| `src/story/` | Masapo, the story book at `/learn/story` (open to everyone). `tale.ts` holds a tale: title, pages in French and English, the words shown in the learner's language, and an optional recording id per page. `Scene.tsx` is the illustrated world; `styles/story.css` stages it page by page. |
 | `src/components/fx.ts` | Confetti, answer bursts and flying gems, drawn on one canvas. |
+| `src/lottie/` | Seven animations from the LottieFiles library, recoloured to Loba's palette and played by `components/Lottie.tsx` (player and files load on demand). Sources: `heart` broken-heart-mHD1OEG6Mp, `fish` (id 273-download "fish", d692f45e…/muIHYJpwts), `elephant` cute elephant animal (FjmMTJKl8r), `gem` diamond-ZGfZSUJ4Jx, `africa` africa-a1BslGW9CW, `pirogue` canoe-oMGQJmz2gx, `sparkle` shine (BosckeUhJl). Check each file's licence on lottiefiles.com before launch. |
 
 Motion is decoration only: with "reduce motion" switched on in the device settings the effects are
 skipped and the app works the same. Sounds and vibration follow the Sound setting in the profile.

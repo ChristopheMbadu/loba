@@ -108,15 +108,15 @@
 .unit.locked .scenery-btn { pointer-events: none; }
 @media (max-width: 620px) { .scenery-btn { display: none; } }
 
-.fish { position: absolute; z-index: 1; width: 26px; height: 16px; translate: -50% -50%; opacity: 0; pointer-events: none; animation: fish-leap 7s ease-in-out infinite; }
-.fish svg { display: block; width: 100%; height: 100%; transform: scaleX(calc(var(--flip) * -1)); }
-@keyframes fish-leap {
-  0%, 84% { opacity: 0; transform: translate(calc(var(--flip) * -20px), 8px) rotate(calc(var(--flip) * -55deg)) scale(0.7); }
-  86% { opacity: 1; }
-  92% { transform: translate(0, -24px) rotate(0deg) scale(1); }
-  98% { opacity: 1; }
-  100% { opacity: 0; transform: translate(calc(var(--flip) * 20px), 8px) rotate(calc(var(--flip) * 55deg)) scale(0.7); }
-}
+.fish { position: absolute; z-index: 1; width: 84px; height: 84px; translate: -50% -62%; pointer-events: none; }
+.fish .lottie { transform: scaleX(var(--flip)); }
+.lottie { display: block; }
+.lottie svg { display: block; }
+.scenery-btn .lottie.scenery { width: 132px; height: 132px; }
+.scenery-3 .lottie.scenery { scale: 1.25; }
+.chest-sparkle { position: absolute; inset: -26px -18px -6px; pointer-events: none; }
+.heart-break { width: 132px; height: 132px; margin: -14px 0 -18px; }
+.shop-gem { flex: none; width: 96px; height: 96px; cursor: pointer; }
 
 /* ---------- Shell ---------- */
 .sidebar::after { content: ''; position: absolute; inset: auto 0 0 0; height: 16px; background: var(--kuba); background-size: 32px; border-top: 3px solid var(--cocoa); }
@@ -215,3 +215,9 @@ button.tile-card:hover:not(:disabled), a.tile-card:hover { transform: translateY
   .complete .result-tile .label { font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .complete .result-tile .value { padding: 12px 2px; font-size: 20px; gap: 4px; }
 }
+
+/* The unit tip opens over the river, not under it. */
+.unit-tip { z-index: 2; }
+.sidebar-ui { margin-top: auto; margin-bottom: 22px; align-self: flex-start; margin-left: 12px; }
+.topbar .ui-switch button { padding: 5px 9px; font-size: 13px; }
+@media (max-width: 380px) { .topbar .stat { padding: 8px 6px; } .topbar .stats { gap: 0; } }

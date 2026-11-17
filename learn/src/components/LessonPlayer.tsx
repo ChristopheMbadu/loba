@@ -16,6 +16,7 @@ import { Match } from './exercises/Match'
 import { TypeIn } from './exercises/TypeIn'
 import { Art } from './Art'
 import { burstFrom } from './fx'
+import { Lottie } from './Lottie'
 import { Icon } from './Icon'
 import { Loba } from './Loba'
 import { LessonComplete } from './LessonComplete'
@@ -202,7 +203,7 @@ export function LessonPlayer({ exercises, mode, unitId, lessonIndex }: Props) {
       </Modal>
 
       <Modal open={heartsOpen} onClose={exit} labelledBy="hearts-title">
-        <div className="modal-art"><Art name="heartOff" /></div>
+        <div className="modal-art"><Lottie name="heart" className="heart-break" /></div>
         <h2 id="hearts-title">{t('outOfHeartsTitle')}</h2>
         <p>{t('outOfHeartsText')}</p>
         <div className="modal-actions">

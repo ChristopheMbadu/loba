@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type CSSProperties, type RefObject } from 
 import { buzz, sfx } from '../../audio/sfx'
 import { playWord } from '../../audio/voice'
 import { burstFrom, flyGems } from '../../components/fx'
+import { Lottie } from '../../components/Lottie'
 import { Art, Scenery } from '../../components/Art'
 import { Icon, Star, type IconName } from '../../components/Icon'
 import { Loba } from '../../components/Loba'
@@ -96,6 +97,15 @@ function UnitSection({ unit, index, isCurrent, unlocked, currentRef }: { unit: U
   const freshNode = useRef<HTMLDivElement>(null)
   const [said, setSaid] = useState<{ word: Word; n: number } | null>(null)
   const [poke, setPoke] = useState(0)
+  // Beside the path: palm, drum, hut, then a forest elephant.
+  const scene = index % 4
+  const [walking, setWalking] = useState(false)
+  useEffect(() => {
+    if (!poke || scene !== 3) return
+    setWalking(true)
+    const id = setTimeout(() => setWalking(false), 2400)
+    return () => clearTimeout(id)
+  }, [poke, scene])
 
   useEffect(() => {
     lastSeen.set(unit.id, done)
@@ -165,21 +175,21 @@ function UnitSection({ unit, index, isCurrent, unlocked, currentRef }: { unit: U
           )}
         </svg>
         {unlocked && (
-          <span className="fish" style={{ left: `calc(50% + ${((OFFSETS[index % 3 + 1]! + OFFSETS[index % 3 + 2]!) / 2) * flip}px)`, top: (index % 3 + 1) * STEP + NODE_H / 2 + STEP / 2, animationDelay: `${(index * 1.7) % 5}s`, '--flip': flip } as CSSProperties} aria-hidden="true">
-            <svg viewBox="0 0 40 24"><path d="M2 12c6-9 18-10 26-3l8-6v18l-8-6C20 22 8 21 2 12z" fill="#ff8a1f" /><path d="M10 12c4-4 10-5 15-2-5 4-11 5-15 2z" fill="#ffc22e" /><circle cx="9" cy="10" r="1.8" fill="#322e40" /></svg>
+          <span className="fish" style={{ left: `calc(50% + ${((OFFSETS[index % 3 + 1]! + OFFSETS[index % 3 + 2]!) / 2) * flip}px)`, top: (index % 3 + 1) * STEP + NODE_H / 2 + STEP / 2, '--flip': flip } as CSSProperties}>
+            <Lottie name="fish" autoplay={false} rest={0} every={6000 + (index % 4) * 1300} />
           </span>
         )}
         <button
-          className={`scenery-btn scenery-${index % 3}`}
+          className={`scenery-btn scenery-${scene}`}
           style={{ left: `calc(50% + ${flip * 206}px)`, top: STEP * 1.1 }}
           tabIndex={-1}
           aria-hidden="true"
           onClick={() => {
-            sfx(index % 3 === 1 ? 'drum' : index % 3 === 0 ? 'shaker' : 'tap', poke)
+            sfx(scene === 1 ? 'drum' : scene === 0 ? 'shaker' : scene === 3 ? 'pop' : 'tap', poke)
             setPoke((n) => n + 1)
           }}
         >
-          <Scenery kind={index} key={poke} className={poke ? 'poked' : ''} />
+          {scene === 3 ? <Lottie name="elephant" className="scenery" loop autoplay={walking} rest={0.3} /> : <Scenery kind={scene} key={poke} className={poke ? 'poked' : ''} />}
         </button>
         {isCurrent && (
           <div
@@ -271,6 +281,7 @@ function ChestNode({ unit, available, opened }: { unit: Unit; available: boolean
         }}
       >
         <Art name={opened ? 'chestOpen' : available ? 'chest' : 'chestLocked'} />
+        {available && !opened && <Lottie name="sparkle" className="chest-sparkle" loop />}
       </button>
     </>
   )

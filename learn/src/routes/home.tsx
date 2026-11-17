@@ -14,7 +14,10 @@ import { HeroScene } from '../landing/HeroScene'
 import { MiniLesson } from '../landing/MiniLesson'
 import { ChatPhone, MicDemo, RumbaDrum, StreakDemo } from '../landing/Showcase'
 import { useLanding } from '../landing/useLanding'
+import { Lottie } from '../components/Lottie'
+import { Scene } from '../story/Scene'
 import '../styles/landing.css'
+import '../styles/story.css'
 
 export const Route = createFileRoute('/home')({ component: Home })
 
@@ -31,6 +34,8 @@ function UiSwitch() {
 }
 
 function Home() {
+  // The flag waves unless the visitor has asked their device for less motion.
+  const [waving] = useState(() => !matchMedia('(prefers-reduced-motion: reduce)').matches)
   const t = useLanding()
   const { ui, langName, region } = useT()
   const onboarded = useSelector(game, (s) => s.onboarded)
@@ -89,6 +94,13 @@ function Home() {
           </div>
         </section>
 
+        <div className="lp-river" aria-hidden="true">
+          <div className="lp-boat">
+            <Loba mood="idle" />
+            <Lottie name="pirogue" loop viewBox="40 190 920 470" />
+          </div>
+        </div>
+
         <nav className="lp-langs" aria-label={t('langsLabel')}>
           <div className="lp-wrap lp-langs-inner">
             {languages.map((l) => (
@@ -138,6 +150,24 @@ function Home() {
           </div>
         </section>
 
+        <section className="lp-story">
+          <div className="lp-wrap lp-row">
+            <div className="lp-row-art">
+              <Link to="/story" className="lp-book" aria-label={t('storyCta')}>
+                <span className="lp-book-art stage" data-page="0" data-phase="dawn"><Scene shout="" /></span>
+                <span className="lp-book-title">{t('storyName')}</span>
+                <span className="lp-book-call" lang="ln" aria-hidden="true">Lisapo !</span>
+              </Link>
+            </div>
+            <div className="lp-row-copy">
+              <span className="lp-eyebrow">{t('storyEyebrow')}</span>
+              <h2>{t('storyTitle')}</h2>
+              <p>{t('storyText')}</p>
+              <Link to="/story" className="btn sun">{t('storyCta')}</Link>
+            </div>
+          </div>
+        </section>
+
         <section className="lp-rumba">
           <div className="lp-wrap lp-row flip">
             <div className="lp-row-art"><RumbaDrum /></div>
@@ -158,25 +188,31 @@ function Home() {
             <div className="lp-final-art" aria-hidden="true">
               <svg className="lp-flag" viewBox="0 0 300 280">
                 <defs>
-                  <clipPath id="lp-flag-cloth"><path d="M46 22c56-22 128 18 214-4v138c-86 22-158-18-214 4z" /></clipPath>
+                  {/* The cloth's outline ripples from the pole outwards, and a band of light and shade travels across it. */}
+                  <clipPath id="lp-flag-cloth">
+                    <path d="M46 22c56-22 128 18 214-4v138c-86 22-158-18-214 4z">
+                      {waving && <animate attributeName="d" dur="2.8s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.45 0 0.55 1;0.45 0 0.55 1"
+                        values="M46 22c56-22 128 18 214-4v138c-86 22-158-18-214 4z;M46 22c56 18 128-20 214 6v138c-86-26-158 20-214-2z;M46 22c56-22 128 18 214-4v138c-86 22-158-18-214 4z" />}
+                    </path>
+                  </clipPath>
+                  <linearGradient id="lp-flag-shade" x1="0" x2="0.5" spreadMethod="reflect">
+                    <stop offset="0" stopColor="#000" stopOpacity="0" />
+                    <stop offset=".5" stopColor="#000" stopOpacity=".13" />
+                    <stop offset="1" stopColor="#fff" stopOpacity=".16" />
+                    {waving && <animateTransform attributeName="gradientTransform" type="translate" from="0 0" to="1 0" dur="2.8s" repeatCount="indefinite" />}
+                  </linearGradient>
                 </defs>
                 <rect x="34" y="12" width="10" height="262" rx="5" fill="#8f4f1c" />
                 <circle cx="39" cy="12" r="9" fill="#ffc22e" />
                 <g clipPath="url(#lp-flag-cloth)">
-                  <rect x="40" y="0" width="230" height="190" fill="#1c9bef" />
-                  <path d="M20 156 290-33v54L20 210z" fill="#ffc22e" />
-                  <path d="M20 166 290-23v34L20 200z" fill="#ef4e4e" />
-                  <path d="m84 32 6.5 13.2 14.5 2.1-10.5 10.2 2.5 14.5L84 65.2l-13 6.8 2.5-14.5L63 47.3l14.5-2.1z" fill="#ffc22e" />
-                  <path d="M46 22c56-22 128 18 214-4v138c-86 22-158-18-214 4z" fill="url(#lp-flag-shade)" />
+                  <g className="lp-flag-cloth">
+                    <rect x="40" y="-10" width="240" height="210" fill="#1c9bef" />
+                    <path d="M20 156 290-33v54L20 210z" fill="#ffc22e" />
+                    <path d="M20 166 290-23v34L20 200z" fill="#ef4e4e" />
+                    <path d="m84 32 6.5 13.2 14.5 2.1-10.5 10.2 2.5 14.5L84 65.2l-13 6.8 2.5-14.5L63 47.3l14.5-2.1z" fill="#ffc22e" />
+                  </g>
+                  <rect x="40" y="-10" width="240" height="210" fill="url(#lp-flag-shade)" />
                 </g>
-                <defs>
-                  <linearGradient id="lp-flag-shade" x1="0" x2="1">
-                    <stop offset="0" stopColor="#000" stopOpacity="0" />
-                    <stop offset=".35" stopColor="#000" stopOpacity=".1" />
-                    <stop offset=".7" stopColor="#fff" stopOpacity=".12" />
-                    <stop offset="1" stopColor="#000" stopOpacity=".08" />
-                  </linearGradient>
-                </defs>
               </svg>
               <Loba mood="cheer" />
             </div>
@@ -196,7 +232,7 @@ function Home() {
           </nav>
           <UiSwitch />
         </div>
-        <p className="lp-wrap lp-foot-base">{t('madeIn')} · 🇨🇩</p>
+        <p className="lp-wrap lp-foot-base"><Lottie name="africa" className="lp-africa" /> {t('madeIn')}</p>
       </footer>
     </div>
   )

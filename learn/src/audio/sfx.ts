@@ -6,6 +6,7 @@ export type Cue =
   | 'coin' | 'chest' | 'tick'
   | 'complete' | 'streak'
   | 'drum' | 'shaker'
+  | 'page' | 'splash' | 'call'
 
 /**
  * Loba's sounds are played live, not downloaded: a likembe (the Congolese thumb piano),
@@ -146,6 +147,24 @@ const CUES: Record<Cue, (c: AudioContext, t: number, n: number) => void> = {
     for (const i of [0, 5, 7, 8]) likembe(c, note(i), t + 12 * STEP, 0.8)
   },
   drum: (c, t, n) => ngoma(c, [98, 131, 82][n % 3]!, t, 0.9),
+  // Story book: a page turning, each with its own three-note phrase.
+  page: (c, t, n) => {
+    noise(c, t, 0.06, 0.22, 'bandpass', 900, 2600)
+    const phrase = [[0, 2, 4], [2, 4, 5], [4, 2, 0], [3, 5, 7], [5, 4, 2], [1, 3, 5], [4, 5, 7], [7, 5, 4]][n % 8]!
+    phrase.forEach((i, k) => likembe(c, note(i), t + 0.14 + k * 0.13, 0.75))
+  },
+  splash: (c, t) => {
+    noise(c, t, 0.16, 0.45, 'lowpass', 2400, 300)
+    ngoma(c, 69, t, 0.9)
+    ngoma(c, 62, t + 0.22, 0.6)
+  },
+  // The storyteller's call: two beats of the drum, then the likembe answers.
+  call: (c, t) => {
+    ngoma(c, 98, t, 0.9)
+    ngoma(c, 98, t + 0.2, 0.7)
+    ngoma(c, 131, t + 0.4, 0.9)
+    ;[2, 4, 5, 7, 5].forEach((i, k) => likembe(c, note(i), t + 0.6 + k * 0.12))
+  },
   shaker: (c, t) => {
     shaker(c, t)
     shaker(c, t + 0.09, 0.7)
@@ -170,5 +189,71 @@ export function buzz(pattern: number | number[]) {
     navigator.vibrate?.(pattern)
   } catch {
     /* not supported */
+  }
+}
+
+let ambient: { stop: () => void } | null = null
+
+/**
+ * A quiet bed of sound under the story book: the river by day, and at night a slower river
+ * with crickets. Pass null to fade it out. Must first be started from a tap, like every sound.
+ */
+export function ambience(kind: 'river' | 'night' | null) {
+  ambient?.stop()
+  ambient = null
+  if (!kind || !game.get().sound) return
+  try {
+    const c = engine()
+    const master = c.createGain()
+    master.gain.setValueAtTime(0.0001, c.currentTime)
+    master.gain.exponentialRampToValueAtTime(1, c.currentTime + 1.5)
+    master.connect(out)
+    const water = c.createBufferSource()
+    water.buffer = noiseBuffer
+    water.loop = true
+    const filter = c.createBiquadFilter()
+    filter.type = 'lowpass'
+    filter.frequency.value = kind === 'night' ? 380 : 620
+    const level = c.createGain()
+    level.gain.value = kind === 'night' ? 0.03 : 0.045
+    // The water swells and settles every few seconds.
+    const swell = c.createOscillator()
+    swell.frequency.value = 0.21
+    const depth = c.createGain()
+    depth.gain.value = 0.018
+    swell.connect(depth).connect(level.gain)
+    water.connect(filter).connect(level).connect(master)
+    water.start()
+    swell.start()
+    const crickets = kind === 'night'
+      ? setInterval(() => {
+          const t = c.currentTime + 0.02
+          for (let k = 0; k < 3; k++) {
+            const osc = c.createOscillator()
+            osc.frequency.value = 4300
+            const g = c.createGain()
+            g.gain.setValueAtTime(0.0001, t + k * 0.07)
+            g.gain.exponentialRampToValueAtTime(0.012, t + k * 0.07 + 0.005)
+            g.gain.exponentialRampToValueAtTime(0.0001, t + k * 0.07 + 0.045)
+            osc.connect(g).connect(master)
+            osc.start(t + k * 0.07)
+            osc.stop(t + k * 0.07 + 0.06)
+          }
+        }, 1300)
+      : undefined
+    ambient = {
+      stop: () => {
+        clearInterval(crickets)
+        master.gain.cancelScheduledValues(c.currentTime)
+        master.gain.setTargetAtTime(0.0001, c.currentTime, 0.25)
+        setTimeout(() => {
+          water.stop()
+          swell.stop()
+          master.disconnect()
+        }, 1500)
+      },
+    }
+  } catch {
+    /* audio is best-effort */
   }
 }

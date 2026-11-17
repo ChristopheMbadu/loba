@@ -13,6 +13,7 @@ import { Route as TabsRouteImport } from './routes/_tabs'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as SessionRouteImport } from './routes/session'
+import { Route as StoryRouteImport } from './routes/story'
 import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as TabsIndexRouteImport } from './routes/_tabs/index'
 import { Route as TabsPracticeRouteImport } from './routes/_tabs/practice'
@@ -38,6 +39,11 @@ const HomeRoute = HomeRouteImport.update({
 const SessionRoute = SessionRouteImport.update({
   id: '/session',
   path: '/session',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StoryRoute = StoryRouteImport.update({
+  id: '/story',
+  path: '/story',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WelcomeRoute = WelcomeRouteImport.update({
@@ -81,6 +87,7 @@ export interface FileRoutesByFullPath {
   '/account': typeof AccountRoute
   '/home': typeof HomeRoute
   '/session': typeof SessionRoute
+  '/story': typeof StoryRoute
   '/welcome': typeof WelcomeRoute
   '/practice': typeof TabsPracticeRoute
   '/profile': typeof TabsProfileRoute
@@ -92,6 +99,7 @@ export interface FileRoutesByTo {
   '/account': typeof AccountRoute
   '/home': typeof HomeRoute
   '/session': typeof SessionRoute
+  '/story': typeof StoryRoute
   '/welcome': typeof WelcomeRoute
   '/practice': typeof TabsPracticeRoute
   '/profile': typeof TabsProfileRoute
@@ -106,6 +114,7 @@ export interface FileRoutesById {
   '/account': typeof AccountRoute
   '/home': typeof HomeRoute
   '/session': typeof SessionRoute
+  '/story': typeof StoryRoute
   '/welcome': typeof WelcomeRoute
   '/_tabs/practice': typeof TabsPracticeRoute
   '/_tabs/profile': typeof TabsProfileRoute
@@ -121,6 +130,7 @@ export interface FileRouteTypes {
     | '/account'
     | '/home'
     | '/session'
+    | '/story'
     | '/welcome'
     | '/practice'
     | '/profile'
@@ -132,6 +142,7 @@ export interface FileRouteTypes {
     | '/account'
     | '/home'
     | '/session'
+    | '/story'
     | '/welcome'
     | '/practice'
     | '/profile'
@@ -145,6 +156,7 @@ export interface FileRouteTypes {
     | '/account'
     | '/home'
     | '/session'
+    | '/story'
     | '/welcome'
     | '/_tabs/practice'
     | '/_tabs/profile'
@@ -159,6 +171,7 @@ export interface RootRouteChildren {
   AccountRoute: typeof AccountRoute
   HomeRoute: typeof HomeRoute
   SessionRoute: typeof SessionRoute
+  StoryRoute: typeof StoryRoute
   WelcomeRoute: typeof WelcomeRoute
   LessonUnitIdRoute: typeof LessonUnitIdRoute
 }
@@ -191,6 +204,13 @@ declare module '@tanstack/react-router' {
       path: '/session'
       fullPath: '/session'
       preLoaderRoute: typeof SessionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/story': {
+      id: '/story'
+      path: '/story'
+      fullPath: '/story'
+      preLoaderRoute: typeof StoryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/welcome': {
@@ -268,6 +288,7 @@ const rootRouteChildren: RootRouteChildren = {
   AccountRoute: AccountRoute,
   HomeRoute: HomeRoute,
   SessionRoute: SessionRoute,
+  StoryRoute: StoryRoute,
   WelcomeRoute: WelcomeRoute,
   LessonUnitIdRoute: LessonUnitIdRoute,
 }

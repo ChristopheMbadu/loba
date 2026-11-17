@@ -5,6 +5,7 @@ import { useSelector } from '@tanstack/react-store'
 import { Art, type ArtName } from '../components/Art'
 import { Loba } from '../components/Loba'
 import { Stats } from '../components/Stats'
+import { UiSwitch } from '../components/UiSwitch'
 import { dayKey } from '../game/state'
 import { dailyQuests } from '../game/rules'
 import { actions, game } from '../game/store'
@@ -55,9 +56,11 @@ function TabsLayout() {
         </Link>
         <p className="brand-tag">{t('appTagline')}</p>
         <NavLinks />
+        <UiSwitch className="sidebar-ui" />
       </nav>
       <header className="topbar">
         <Stats />
+        <UiSwitch />
       </header>
       <main className="main">
         <Outlet />

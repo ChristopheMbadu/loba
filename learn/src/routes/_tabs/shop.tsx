@@ -2,10 +2,12 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useSelector } from '@tanstack/react-store'
 import { sfx } from '../../audio/sfx'
 import { Art, type ArtName } from '../../components/Art'
+import { Lottie } from '../../components/Lottie'
 import { Rail } from '../../components/Rail'
 import { MAX_FREEZES, MAX_HEARTS, PRICES } from '../../game/state'
 import { canBuy, type ShopItem } from '../../game/rules'
 import { actions, game } from '../../game/store'
+import { useState } from 'react'
 import { useNow } from '../../hooks'
 import { useT } from '../../i18n/useT'
 
@@ -14,6 +16,7 @@ export const Route = createFileRoute('/_tabs/shop')({ component: ShopPage })
 function ShopPage() {
   const { t } = useT()
   const now = useNow(15_000)
+  const [shine, setShine] = useState(0)
   const s = useSelector(game, (s) => s)
   const boostMin = Math.ceil((s.doubleXpUntil - now) / 60000)
   const heartMin = s.heartsRefillAt ? Math.max(1, Math.ceil((s.heartsRefillAt - now) / 60000)) : 0
@@ -27,9 +30,12 @@ function ShopPage() {
   return (
     <div className="page">
       <div>
-        <header className="page-head">
-          <h1>{t('shopTitle')}</h1>
-          <p>{t('shopIntro')}</p>
+        <header className="page-head quest-hero">
+          <div>
+            <h1>{t('shopTitle')}</h1>
+            <p>{t('shopIntro')}</p>
+          </div>
+          <span className="shop-gem" onPointerEnter={() => setShine((n) => n + 1)}><Lottie name="gem" replay={shine} /></span>
         </header>
         <div className="stack">
           {items.map((item) => (
@@ -47,6 +53,7 @@ function ShopPage() {
                 onClick={() => {
                   actions.buy(item.id)
                   sfx('coin')
+                  setShine((n) => n + 1)
                 }}
               >
                 {item.full ? t('owned') : <span className="price"><Art name="gem" /> {PRICES[item.id]}</span>}
