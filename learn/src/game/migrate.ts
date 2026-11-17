@@ -15,7 +15,7 @@ export function sanitize(raw: unknown, ui: UiLang): GameState {
   const words: Record<string, WordStat> = {}
   for (const [k, v] of Object.entries(obj(o.words)).slice(0, 5000)) {
     const w = obj(v)
-    if (/^(ln|sw):/.test(k)) words[k] = { level: num(w.level, 0, 0, 5), misses: num(w.misses, 0), due: num(w.due, 0, 0, 1e15) }
+    if (/^[a-z]{2,3}:/.test(k)) words[k] = { level: num(w.level, 0, 0, 5), misses: num(w.misses, 0), due: num(w.due, 0, 0, 1e15) }
   }
   const progress: Record<string, number> = {}
   for (const [k, v] of Object.entries(obj(o.progress)).slice(0, 500)) progress[k.slice(0, 80)] = num(v, 0, 0, 4)
@@ -27,7 +27,8 @@ export function sanitize(raw: unknown, ui: UiLang): GameState {
     ...base,
     onboarded: o.onboarded === true,
     ui: o.ui === 'en' ? 'en' : o.ui === 'fr' ? 'fr' : ui,
-    lang: o.lang === 'sw' ? 'sw' : 'ln',
+    // Any code is kept; the app falls back to an available language if this one is gone.
+    lang: typeof o.lang === 'string' && /^[a-z]{2,3}$/.test(o.lang) ? o.lang : 'ln',
     goal: (GOALS as readonly number[]).includes(Number(o.goal)) ? Number(o.goal) : base.goal,
     sound: o.sound !== false,
     voice: o.voice !== false,

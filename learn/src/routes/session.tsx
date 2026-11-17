@@ -1,7 +1,8 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 import { LessonPlayer } from '../components/LessonPlayer'
-import { curriculumQuery } from '../content/curriculum'
+import { catalogQuery } from '../content/curriculum'
+import { requireLearner } from '../account/guard'
 import { buildPractice } from '../game/exercises'
 import { shuffle } from '../game/random'
 import { reviewWords, unlockedWords } from '../game/rules'
@@ -11,10 +12,10 @@ type Mode = 'review' | 'listen'
 
 export const Route = createFileRoute('/session')({
   validateSearch: (search: Record<string, unknown>): { mode: Mode } => ({ mode: search.mode === 'listen' ? 'listen' : 'review' }),
+  beforeLoad: ({ context }) => requireLearner(context.queryClient),
   loader: async ({ context }) => {
     const s = game.get()
-    if (!s.onboarded) throw redirect({ to: '/welcome' })
-    const units = (await context.queryClient.ensureQueryData(curriculumQuery))[s.lang]
+    const units = (await context.queryClient.ensureQueryData(catalogQuery)).curriculum[s.lang] ?? []
     return { pool: unlockedWords(s, units) }
   },
   component: SessionRoute,

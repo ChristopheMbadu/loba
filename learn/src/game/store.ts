@@ -67,4 +67,12 @@ export const actions = {
   buy: (item: rules.ShopItem) => update((s) => rules.buy(s, item, now())),
   openChest: (u: Unit) => update((s) => rules.openChest(s, u)),
   reset: () => update((s) => ({ ...freshState(s.ui), onboarded: false })),
+  /** Loads progress saved to the learner's account. Invalid data is ignored. */
+  replace: (raw: unknown) => {
+    const next = sanitize(raw, game.get().ui)
+    if (!next.onboarded && !next.lessonsDone && !next.xp) return false
+    game.setState(() => next)
+    document.documentElement.lang = next.ui
+    return true
+  },
 }

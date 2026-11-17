@@ -1,12 +1,12 @@
 import type { QueryClient } from '@tanstack/react-query'
 import { createRootRouteWithContext, Link, Outlet } from '@tanstack/react-router'
-import { curriculumQuery } from '../content/curriculum'
+import { catalogQuery } from '../content/curriculum'
 import { Loba } from '../components/Loba'
 import { useT } from '../i18n/useT'
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  // The curriculum is needed everywhere; load it once before any screen renders.
-  loader: ({ context }) => context.queryClient.ensureQueryData(curriculumQuery),
+  // Languages and lessons are needed everywhere; load them once before any screen renders.
+  loader: ({ context }) => context.queryClient.ensureQueryData(catalogQuery),
   component: Outlet,
   pendingComponent: Pending,
   notFoundComponent: NotFound,

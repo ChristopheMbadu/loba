@@ -1,17 +1,31 @@
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { useSelector } from '@tanstack/react-store'
 import { useEffect, useState } from 'react'
-import { curriculumQuery } from './content/curriculum'
+import { catalogQuery } from './content/curriculum'
+import type { Language, LangCode } from './content/types'
 import { game } from './game/store'
 
+export function useCatalog() {
+  return useSuspenseQuery(catalogQuery).data
+}
+
 export function useCurriculum() {
-  return useSuspenseQuery(curriculumQuery).data
+  return useCatalog().curriculum
+}
+
+/** Languages learners can pick: visible in Studio and with at least one unit. */
+export function useLanguages(): Language[] {
+  return useCatalog().languages
+}
+
+export function useLanguage(code: LangCode): Language | undefined {
+  return useLanguages().find((l) => l.code === code)
 }
 
 /** Units for the language currently being learned. */
 export function useUnits() {
   const lang = useSelector(game, (s) => s.lang)
-  return useCurriculum()[lang]
+  return useCurriculum()[lang] ?? []
 }
 
 /** Re-renders every `ms` — for heart timers and boosts. */

@@ -35,5 +35,28 @@ test('PostgreSQL bootstrap, transactions, snapshots, conflicts and deletion', {s
     assert.equal((await store.session('pending-test-session')).email,'new@example.com');
     assert.equal((await store.pendingAccounts()).length,0);
     await assert.rejects(store.approveAccount(pending.id,'test@example.com'),{status:404});
+    // Languages: seeded once, hidden ones keep their lessons out of the public feed.
+    assert.deepEqual((await store.languages()).map(l=>l.code),['ln','sw']);
+    const kg=await store.saveLanguage({language:{code:'kg',name_fr:'Kikongo',name_en:'Kikongo',greeting:'',cheer:'',region_fr:'',region_en:'',color:'#ff8a1f',position:3,published:false},email:'test@example.com'});
+    assert.equal(kg.published,false);
+    await assert.rejects(store.saveLanguage({language:{...kg},email:'test@example.com'}),{status:409});
+    const unit=await store.mutate({id:'00000000-0000-4000-8000-000000000001',content:{language:'kg',position:1,title:'Mbote',titleEn:'',icon:'👋',tip:'',words:[{term:'Mbote',fr:'Bonjour',en:''}],sentences:[]},action:'created',email:'test@example.com'});
+    await store.mutate({id:unit.id,version:unit.version,action:'published',email:'test@example.com'});
+    assert.ok(!(await store.published()).some(r=>r.id===unit.id),'Hidden languages stay out of the public feed');
+    await store.saveLanguage({language:{...kg,published:true},code:'kg',email:'test@example.com'});
+    assert.ok((await store.published()).some(r=>r.id===unit.id));
+    assert.deepEqual((await store.publishedLanguages()).map(l=>l.code),['ln','sw','kg']);
+    await assert.rejects(store.deleteLanguage({code:'kg',email:'test@example.com'}),{status:409});
+    await store.initialize({});assert.equal((await store.languages()).length,3,'Reboot keeps languages as edited');
+    // Learner accounts and saved progress.
+    const learner=await store.createLearner({email:'nadia@example.com',name:'Nadia',password:'kinshasa2026',state:{v:1,xp:10}});
+    await assert.rejects(store.createLearner({email:'nadia@example.com',name:'N',password:'kinshasa2026'}),{status:409});
+    await store.createLearnerSession('learner-session',learner.id);
+    assert.equal((await store.learnerSession('learner-session')).name,'Nadia');
+    assert.equal(await store.session('learner-session'),undefined,'Learner sessions never open Studio');
+    await store.saveProgress(learner.id,{v:1,xp:50});assert.equal((await store.progress(learner.id)).state.xp,50);
+    assert.equal(await store.learnerCount(),1);
+    await store.deleteLearner(learner.id);
+    assert.equal(await store.learnerSession('learner-session'),undefined);assert.equal(await store.progress(learner.id),null);
   }finally{await pool.end()}
 });

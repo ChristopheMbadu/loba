@@ -1,4 +1,7 @@
+import { useQuery } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
+import { catalogQuery } from '../content/curriculum'
+import type { LangCode } from '../content/types'
 import { useSelector } from '@tanstack/react-store'
 import { dayKey, MAX_HEARTS } from '../game/state'
 import { visibleStreak } from '../game/rules'
@@ -6,8 +9,10 @@ import { game } from '../game/store'
 import { useT } from '../i18n/useT'
 import { Art } from './Art'
 
-export function LangBadge({ lang }: { lang: 'ln' | 'sw' }) {
-  return <span className={`lang-badge ${lang}`}>{lang.toUpperCase()}</span>
+/** A language's code on its own colour, as set in Loba Studio. */
+export function LangBadge({ lang }: { lang: LangCode }) {
+  const color = useQuery(catalogQuery).data?.languages.find((l) => l.code === lang)?.color
+  return <span className="lang-badge" style={color ? ({ '--badge': color } as React.CSSProperties) : undefined}>{lang.toUpperCase()}</span>
 }
 
 export function Stats() {

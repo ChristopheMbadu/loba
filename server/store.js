@@ -2,6 +2,12 @@ import { randomUUID } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { hashPassword, fail } from './security.js';
 
+const SEED_LANGUAGES = [
+  {code:'ln',name_fr:'Lingala',name_en:'Lingala',greeting:'Mbote',cheer:'Malamu mingi !',region_fr:'Kinshasa, Brazzaville, l’Équateur',region_en:'Kinshasa, Brazzaville, Équateur',color:'#1c9bef',position:1},
+  {code:'sw',name_fr:'Swahili',name_en:'Swahili',greeting:'Jambo',cheer:'Vizuri sana !',region_fr:'Lubumbashi, Goma, Bukavu, Kisangani',region_en:'Lubumbashi, Goma, Bukavu, Kisangani',color:'#2bb673',position:2},
+];
+const LANGUAGE_COLUMNS = 'code,name_fr,name_en,greeting,cheer,region_fr,region_en,color,position,published,updated_at';
+
 export class Store {
   constructor(pool) { this.pool = pool; }
   async initialize({ email, password }) {
@@ -21,11 +27,18 @@ export class Store {
         for (const {id, ...content} of lessons) await db.query('INSERT INTO studio_lessons(id,content,published,published_version,published_at) VALUES($1,$2,$2,1,now()) ON CONFLICT(id) DO NOTHING', [id, JSON.stringify(content)]);
         await db.query("INSERT INTO studio_migrations(name) VALUES('initial-curriculum')");
       }
+      const seeded = await db.query("SELECT name FROM studio_migrations WHERE name='languages-v1'");
+      if (!seeded.rows.length) {
+        for (const l of SEED_LANGUAGES) await db.query(`INSERT INTO studio_languages(code,name_fr,name_en,greeting,cheer,region_fr,region_en,color,position,published)
+          VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,TRUE) ON CONFLICT(code) DO NOTHING`, [l.code,l.name_fr,l.name_en,l.greeting,l.cheer,l.region_fr,l.region_en,l.color,l.position]);
+        await db.query("INSERT INTO studio_migrations(name) VALUES('languages-v1')");
+      }
       // Recordings that no draft or published lesson references after a week were abandoned uploads.
       await db.query(`DELETE FROM studio_audio a WHERE a.created_at < now()-interval '7 days' AND NOT EXISTS
         (SELECT 1 FROM studio_lessons l WHERE l.content::text LIKE '%'||a.id::text||'%' OR l.published::text LIKE '%'||a.id::text||'%')`);
       await db.query('DELETE FROM studio_sessions WHERE expires_at < now()');
       await db.query('DELETE FROM studio_login_attempts WHERE resets_at < now()');
+      await db.query('DELETE FROM learner_sessions WHERE expires_at < now()');
       await db.query('COMMIT');
     } catch (error) { await db.query('ROLLBACK'); throw error; }
     finally { db.release(); }
@@ -58,7 +71,73 @@ export class Store {
   async session(tokenHash) { return (await this.pool.query('SELECT a.id,a.email FROM studio_sessions s JOIN studio_admins a ON a.id=s.admin_id WHERE s.token_hash=$1 AND s.expires_at>now() AND a.approved=TRUE', [tokenHash])).rows[0]; }
   async logout(tokenHash) { await this.pool.query('DELETE FROM studio_sessions WHERE token_hash=$1', [tokenHash]); }
   async lessons() { return (await this.pool.query("SELECT * FROM studio_lessons ORDER BY content->>'language', (content->>'position')::int, id")).rows; }
-  async published() { return (await this.pool.query("SELECT id,published AS content,published_version AS version,published_at FROM studio_lessons WHERE published IS NOT NULL ORDER BY published->>'language', (published->>'position')::int, id")).rows; }
+  // Learners only receive lessons whose language is visible.
+  async published() { return (await this.pool.query("SELECT id,published AS content,published_version AS version,published_at FROM studio_lessons WHERE published IS NOT NULL AND published->>'language' IN (SELECT code FROM studio_languages WHERE published) ORDER BY published->>'language', (published->>'position')::int, id")).rows; }
+  async languages() { return (await this.pool.query(`SELECT ${LANGUAGE_COLUMNS} FROM studio_languages ORDER BY position, code`)).rows; }
+  async publishedLanguages() { return (await this.pool.query(`SELECT code,name_fr,name_en,greeting,cheer,region_fr,region_en,color,position FROM studio_languages WHERE published ORDER BY position, code`)).rows; }
+  async languageCodes() { return (await this.pool.query('SELECT code FROM studio_languages')).rows.map(r => r.code); }
+  async saveLanguage({ language, code, email }) {
+    const db = await this.pool.connect();
+    try {
+      await db.query('BEGIN');
+      let row;
+      if (!code) {
+        row = (await db.query(`INSERT INTO studio_languages(code,name_fr,name_en,greeting,cheer,region_fr,region_en,color,position,published)
+          VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) ON CONFLICT(code) DO NOTHING RETURNING ${LANGUAGE_COLUMNS}`,
+          [language.code,language.name_fr,language.name_en,language.greeting,language.cheer,language.region_fr,language.region_en,language.color,language.position,language.published])).rows[0];
+        if (!row) throw fail(409, `A language with the code “${language.code}” already exists.`);
+      } else {
+        row = (await db.query(`UPDATE studio_languages SET name_fr=$2,name_en=$3,greeting=$4,cheer=$5,region_fr=$6,region_en=$7,color=$8,position=$9,published=$10,updated_at=now()
+          WHERE code=$1 RETURNING ${LANGUAGE_COLUMNS}`, [code,language.name_fr,language.name_en,language.greeting,language.cheer,language.region_fr,language.region_en,language.color,language.position,language.published])).rows[0];
+        if (!row) throw fail(404, 'Language not found.');
+      }
+      await db.query('INSERT INTO studio_activity(admin_email,action,lesson_title) VALUES($1,$2,$3)', [email, code ? 'language updated' : 'language added', row.name_en]);
+      await db.query('COMMIT');
+      return row;
+    } catch (error) { await db.query('ROLLBACK'); throw error; }
+    finally { db.release(); }
+  }
+  async deleteLanguage({ code, email }) {
+    const db = await this.pool.connect();
+    try {
+      await db.query('BEGIN');
+      const used = await db.query("SELECT 1 FROM studio_lessons WHERE content->>'language'=$1 OR published->>'language'=$1 LIMIT 1", [code]);
+      if (used.rows.length) throw fail(409, 'Delete or move this language’s lessons before deleting it.');
+      const { rows } = await db.query('DELETE FROM studio_languages WHERE code=$1 RETURNING name_en', [code]);
+      if (!rows.length) throw fail(404, 'Language not found.');
+      await db.query('INSERT INTO studio_activity(admin_email,action,lesson_title) VALUES($1,$2,$3)', [email, 'language deleted', rows[0].name_en]);
+      await db.query('COMMIT');
+    } catch (error) { await db.query('ROLLBACK'); throw error; }
+    finally { db.release(); }
+  }
+
+  // Learner accounts
+  async createLearner({ email, name, password, state }) {
+    const db = await this.pool.connect();
+    try {
+      await db.query('BEGIN');
+      const id = randomUUID();
+      const { rows } = await db.query('INSERT INTO learners(id,email,name,password_hash) VALUES($1,$2,$3,$4) ON CONFLICT(email) DO NOTHING RETURNING id', [id, email, name, await hashPassword(password)]);
+      if (!rows.length) throw fail(409, 'An account already exists for this email. Sign in instead.');
+      if (state) await db.query('INSERT INTO learner_progress(learner_id,state) VALUES($1,$2)', [id, JSON.stringify(state)]);
+      await db.query('COMMIT');
+      return { id, email, name };
+    } catch (error) { await db.query('ROLLBACK'); throw error; }
+    finally { db.release(); }
+  }
+  async learner(email) { return (await this.pool.query('SELECT * FROM learners WHERE email=$1', [email])).rows[0]; }
+  async learnerById(id) { return (await this.pool.query('SELECT * FROM learners WHERE id=$1', [id])).rows[0]; }
+  async createLearnerSession(tokenHash, learnerId) { await this.pool.query("INSERT INTO learner_sessions(token_hash,learner_id,expires_at) VALUES($1,$2,now()+interval '60 days')", [tokenHash, learnerId]); }
+  async learnerSession(tokenHash) { return (await this.pool.query('SELECT l.id,l.email,l.name FROM learner_sessions s JOIN learners l ON l.id=s.learner_id WHERE s.token_hash=$1 AND s.expires_at>now()', [tokenHash])).rows[0]; }
+  async learnerLogout(tokenHash) { await this.pool.query('DELETE FROM learner_sessions WHERE token_hash=$1', [tokenHash]); }
+  async progress(learnerId) { return (await this.pool.query('SELECT state,updated_at FROM learner_progress WHERE learner_id=$1', [learnerId])).rows[0] || null; }
+  async saveProgress(learnerId, state) {
+    return (await this.pool.query(`INSERT INTO learner_progress(learner_id,state,updated_at) VALUES($1,$2,now())
+      ON CONFLICT(learner_id) DO UPDATE SET state=EXCLUDED.state,updated_at=now() RETURNING updated_at`, [learnerId, JSON.stringify(state)])).rows[0];
+  }
+  async renameLearner(learnerId, name) { await this.pool.query('UPDATE learners SET name=$2 WHERE id=$1', [learnerId, name]); }
+  async deleteLearner(learnerId) { await this.pool.query('DELETE FROM learners WHERE id=$1', [learnerId]); }
+  async learnerCount() { return Number((await this.pool.query('SELECT count(*)::int AS n FROM learners')).rows[0].n); }
   async saveAudio({ id, mime, data, email }) { await this.pool.query('INSERT INTO studio_audio(id,mime,data,admin_email) VALUES($1,$2,$3,$4)', [id, mime, data, email]); }
   async audio(id) { return (await this.pool.query('SELECT mime,data FROM studio_audio WHERE id=$1', [id])).rows[0]; }
   async activity() { return (await this.pool.query('SELECT * FROM studio_activity ORDER BY id DESC LIMIT 15')).rows; }

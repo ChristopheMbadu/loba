@@ -36,8 +36,11 @@ export function sniffAudio(data) {
   if (ascii(0, 3) === 'ID3' || (data[0] === 0xff && (data[1] & 0xe0) === 0xe0)) return 'audio/mpeg';
   return null;
 }
-export function validateLesson(input) {
-  if (!input || typeof input !== 'object' || !['ln', 'sw'].includes(input.language)) throw fail(400, 'Select Lingala or Swahili.');
+export const LANGUAGE_CODE = /^[a-z]{2,3}$/;
+export const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+/** `languages` is the list of language codes configured in Studio. */
+export function validateLesson(input, languages = ['ln', 'sw']) {
+  if (!input || typeof input !== 'object' || !languages.includes(input.language)) throw fail(400, 'Select one of the languages configured in Studio.');
   if (!Number.isInteger(input.position) || input.position < 1 || input.position > 999) throw fail(400, 'Position must be between 1 and 999.');
   if (!Array.isArray(input.words) || input.words.length > 100) throw fail(400, 'Use at most 100 vocabulary entries.');
   if (!Array.isArray(input.sentences) || input.sentences.length > 100) throw fail(400, 'Use at most 100 sentences.');
@@ -51,4 +54,29 @@ export function validateLesson(input) {
       return { fr: string(s.fr, 'French prompt', 600), en: string(s.en ?? '', 'English prompt', 600, false), answer: string(s.answer, 'Answer', 600), distractors: s.distractors.map(d => string(d, 'Distractor', 100)) };
     })
   };
+}
+export function validateLanguage(input, { create }) {
+  if (!input || typeof input !== 'object') throw fail(400, 'Invalid language request.');
+  const code = typeof input.code === 'string' ? input.code.trim().toLowerCase() : '';
+  if (create && !LANGUAGE_CODE.test(code)) throw fail(400, 'The language code must be 2 or 3 lowercase letters (ISO 639), for example kg or lua.');
+  const color = typeof input.color === 'string' && /^#[0-9a-f]{6}$/i.test(input.color) ? input.color.toLowerCase() : '#1c9bef';
+  if (input.position !== undefined && (!Number.isInteger(input.position) || input.position < 1 || input.position > 999)) throw fail(400, 'Order must be between 1 and 999.');
+  return {
+    ...(create ? { code } : {}),
+    name_fr: string(input.name_fr, 'French name', 60), name_en: string(input.name_en, 'English name', 60),
+    greeting: string(input.greeting ?? '', 'Greeting', 40, false), cheer: string(input.cheer ?? '', 'Encouragement', 60, false),
+    region_fr: string(input.region_fr ?? '', 'French region', 120, false), region_en: string(input.region_en ?? '', 'English region', 120, false),
+    color, position: input.position ?? 100, published: input.published === true,
+  };
+}
+export const LEARNER_PASSWORD_MIN = 8;
+export function validateLearner(input, { signup }) {
+  if (!input || typeof input !== 'object') throw fail(400, 'Enter your email and password.');
+  const email = typeof input.email === 'string' ? input.email.trim().toLowerCase() : '';
+  if (!email || email.length > 254 || !EMAIL.test(email)) throw fail(400, 'Enter a valid email address.');
+  if (typeof input.password !== 'string' || input.password.length > 256 || (signup && input.password.length < LEARNER_PASSWORD_MIN)) throw fail(400, `Use a password of at least ${LEARNER_PASSWORD_MIN} characters.`);
+  if (!signup) return { email, password: input.password };
+  const name = typeof input.name === 'string' ? input.name.replace(/[\u0000-\u001f<>]/g, '').trim() : '';
+  if (!name || name.length > 40) throw fail(400, 'Enter your name (40 characters at most).');
+  return { email, password: input.password, name };
 }

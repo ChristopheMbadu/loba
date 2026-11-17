@@ -2,12 +2,12 @@ import { useNavigate } from '@tanstack/react-router'
 import { useSelector } from '@tanstack/react-store'
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react'
 import { sfx } from '../audio/sfx'
-import type { LangCode } from '../content/types'
 import { trainedWord, type Exercise } from '../game/exercises'
 import { PRICES } from '../game/state'
 import type { Reward } from '../game/rules'
 import { isFinished, progressOf, sessionReducer, startSession } from '../game/session'
 import { actions, game } from '../game/store'
+import { useLanguage } from '../hooks'
 import { useT } from '../i18n/useT'
 import { grade, isAnswerable, type Answer } from './exercises/answer'
 import { Build } from './exercises/Build'
@@ -20,7 +20,8 @@ import { Loba } from './Loba'
 import { LessonComplete } from './LessonComplete'
 import { Modal } from './Modal'
 
-const PRAISE: Record<LangCode, string[]> = {
+/** Extra encouragement for the first languages; every language also has its own from Studio. */
+const PRAISE: Record<string, string[]> = {
   ln: ['Malamu mingi !', 'Ozali makasi !', 'Bravo !'],
   sw: ['Vizuri sana!', 'Hongera!', 'Safi sana!'],
 }
@@ -36,6 +37,7 @@ export function LessonPlayer({ exercises, mode, unitId, lessonIndex }: Props) {
   const { t, meaning } = useT()
   const navigate = useNavigate()
   const lang = useSelector(game, (s) => s.lang)
+  const cheer = useLanguage(lang)?.cheer
   const hearts = useSelector(game, (s) => s.hearts)
   const gems = useSelector(game, (s) => s.gems)
   const [session, dispatch] = useReducer(sessionReducer, exercises, (q) => startSession(q))
@@ -70,10 +72,10 @@ export function LessonPlayer({ exercises, mode, unitId, lessonIndex }: Props) {
       if (usesHearts) actions.loseHeart()
     } else {
       sfx('correct')
-      const pool = PRAISE[lang]
-      setPraise(Math.random() < 0.5 ? pool[Math.floor(Math.random() * pool.length)]! : t('correct'))
+      const pool = [...(PRAISE[lang] ?? []), ...(cheer ? [cheer] : [])]
+      setPraise(pool.length && Math.random() < 0.5 ? pool[Math.floor(Math.random() * pool.length)]! : t('correct'))
     }
-  }, [ex, status, answer, lang, usesHearts, t])
+  }, [ex, status, answer, lang, cheer, usesHearts, t])
 
   const next = useCallback(() => {
     if (status === 'answering') return

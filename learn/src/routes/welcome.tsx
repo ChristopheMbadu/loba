@@ -1,15 +1,23 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
+import { requireAccount } from '../account/guard'
 import { Art } from '../components/Art'
 import { Loba } from '../components/Loba'
 import { LangBadge } from '../components/Stats'
 import type { LangCode } from '../content/types'
-import { actions } from '../game/store'
-import { useCurriculum } from '../hooks'
+import { actions, game } from '../game/store'
+import { useCurriculum, useLanguages } from '../hooks'
 import { useT } from '../i18n/useT'
 import type { StringKey } from '../i18n/strings'
 
-export const Route = createFileRoute('/welcome')({ component: Welcome })
+/** After the account is created: pick a language and a daily goal, then the first lesson. */
+export const Route = createFileRoute('/welcome')({
+  beforeLoad: async ({ context }) => {
+    await requireAccount(context.queryClient)
+    if (game.get().onboarded) throw redirect({ to: '/' })
+  },
+  component: Welcome,
+})
 
 const GOAL_OPTIONS: [xp: number, label: StringKey, minutes: number][] = [
   [10, 'goalCasual', 5],
@@ -18,30 +26,33 @@ const GOAL_OPTIONS: [xp: number, label: StringKey, minutes: number][] = [
   [60, 'goalIntense', 20],
 ]
 
+type Step = 'lang' | 'goal'
+
 function Welcome() {
-  const { t, ui, langName } = useT()
+  const { t, ui, langName, region } = useT()
   const navigate = useNavigate()
   const curriculum = useCurriculum()
-  const [step, setStep] = useState<'hello' | 'lang' | 'goal'>('hello')
-  const [lang, setLang] = useState<LangCode | null>(null)
+  const languages = useLanguages()
+  const [step, setStep] = useState<Step>('lang')
+  const [lang, setLang] = useState<LangCode | null>(languages.length === 1 ? languages[0]!.code : null)
   const [goal, setGoal] = useState(20)
 
   const finish = () => {
     if (!lang) return
     actions.finishOnboarding(lang, goal)
-    navigate({ to: '/lesson/$unitId', params: { unitId: curriculum[lang][0]!.id }, search: { n: 0 } })
+    navigate({ to: '/lesson/$unitId', params: { unitId: curriculum[lang]![0]!.id }, search: { n: 0 } })
   }
 
   return (
     <div className="onb">
       <div className="onb-head">
-        {step === 'hello' ? <span /> : (
-          <button className="icon-btn" onClick={() => setStep(step === 'goal' ? 'lang' : 'hello')} aria-label="←">
+        {step === 'lang' ? <span /> : (
+          <button className="icon-btn" onClick={() => setStep('lang')} aria-label="←">
             <span style={{ fontSize: 26, fontWeight: 900 }}>←</span>
           </button>
         )}
-        <div className="meter onb-progress" style={{ '--fill': 'var(--green)', visibility: step === 'hello' ? 'hidden' : 'visible' } as React.CSSProperties}>
-          <span style={{ width: step === 'lang' ? '40%' : '80%' }} />
+        <div className="meter onb-progress" style={{ '--fill': 'var(--green)' } as React.CSSProperties}>
+          <span style={{ width: step === 'lang' ? '45%' : '85%' }} />
         </div>
         <div className="segmented" role="group" aria-label={t('interfaceLang')}>
           {(['fr', 'en'] as const).map((code) => (
@@ -53,25 +64,18 @@ function Welcome() {
       </div>
 
       <div className="onb-body">
-        {step === 'hello' && (
-          <div className="onb-hero">
-            <div className="bubble-top">{t('welcomeTitle')}</div>
-            <Loba mood="wave" />
-            <p>{t('welcomeText')}</p>
-          </div>
-        )}
-
         {step === 'lang' && (
           <>
-            <div className="speech"><Loba mood="happy" /><p className="bubble">{t('chooseLang')}</p></div>
+            <div className="speech"><Loba mood="wave" /><p className="bubble">{t('chooseLang')}</p></div>
             <div className="stack">
-              {(['ln', 'sw'] as const).map((code) => (
-                <button key={code} className="option-card" aria-pressed={lang === code} onClick={() => setLang(code)}>
-                  <LangBadge lang={code} />
+              {languages.map((l) => (
+                <button key={l.code} className="option-card" aria-pressed={lang === l.code} onClick={() => setLang(l.code)}>
+                  <LangBadge lang={l.code} />
                   <span className="body">
-                    <h3 style={{ textTransform: 'capitalize' }}>{langName(code)}</h3>
-                    <span>{t(code === 'ln' ? 'lnRegion' : 'swRegion')}</span>
+                    <h3 style={{ textTransform: 'capitalize' }}>{langName(l.code)}</h3>
+                    {region(l.code) && <span>{region(l.code)}</span>}
                   </span>
+                  {l.greeting && <span className="right" lang={l.code}>{l.greeting}</span>}
                 </button>
               ))}
             </div>
@@ -99,13 +103,8 @@ function Welcome() {
 
       <div className="lesson-foot">
         <div className="foot-inner" style={{ justifyContent: 'flex-end' }}>
-          {step === 'hello' && <button className="btn" onClick={() => setStep('lang')}>{t('getStarted')}</button>}
           {step === 'lang' && <button className="btn" disabled={!lang} onClick={() => setStep('goal')}>{t('continue')}</button>}
-          {step === 'goal' && (
-            <button className="btn green" onClick={finish}>
-              {t('firstLesson')}
-            </button>
-          )}
+          {step === 'goal' && <button className="btn green" onClick={finish}>{t('firstLesson')}</button>}
         </div>
       </div>
     </div>

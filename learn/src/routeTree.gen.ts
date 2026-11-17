@@ -10,6 +10,8 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TabsRouteImport } from './routes/_tabs'
+import { Route as AccountRouteImport } from './routes/account'
+import { Route as HomeRouteImport } from './routes/home'
 import { Route as SessionRouteImport } from './routes/session'
 import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as TabsIndexRouteImport } from './routes/_tabs/index'
@@ -21,6 +23,16 @@ import { Route as LessonUnitIdRouteImport } from './routes/lesson.$unitId'
 
 const TabsRoute = TabsRouteImport.update({
   id: '/_tabs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountRoute = AccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HomeRoute = HomeRouteImport.update({
+  id: '/home',
+  path: '/home',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SessionRoute = SessionRouteImport.update({
@@ -66,6 +78,8 @@ const LessonUnitIdRoute = LessonUnitIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof TabsIndexRoute
+  '/account': typeof AccountRoute
+  '/home': typeof HomeRoute
   '/session': typeof SessionRoute
   '/welcome': typeof WelcomeRoute
   '/practice': typeof TabsPracticeRoute
@@ -75,6 +89,8 @@ export interface FileRoutesByFullPath {
   '/lesson/$unitId': typeof LessonUnitIdRoute
 }
 export interface FileRoutesByTo {
+  '/account': typeof AccountRoute
+  '/home': typeof HomeRoute
   '/session': typeof SessionRoute
   '/welcome': typeof WelcomeRoute
   '/practice': typeof TabsPracticeRoute
@@ -87,6 +103,8 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_tabs': typeof TabsRouteWithChildren
+  '/account': typeof AccountRoute
+  '/home': typeof HomeRoute
   '/session': typeof SessionRoute
   '/welcome': typeof WelcomeRoute
   '/_tabs/practice': typeof TabsPracticeRoute
@@ -100,6 +118,8 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/account'
+    | '/home'
     | '/session'
     | '/welcome'
     | '/practice'
@@ -109,6 +129,8 @@ export interface FileRouteTypes {
     | '/lesson/$unitId'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/account'
+    | '/home'
     | '/session'
     | '/welcome'
     | '/practice'
@@ -120,6 +142,8 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/_tabs'
+    | '/account'
+    | '/home'
     | '/session'
     | '/welcome'
     | '/_tabs/practice'
@@ -132,6 +156,8 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   TabsRoute: typeof TabsRouteWithChildren
+  AccountRoute: typeof AccountRoute
+  HomeRoute: typeof HomeRoute
   SessionRoute: typeof SessionRoute
   WelcomeRoute: typeof WelcomeRoute
   LessonUnitIdRoute: typeof LessonUnitIdRoute
@@ -144,6 +170,20 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof TabsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/home': {
+      id: '/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof HomeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/session': {
@@ -225,6 +265,8 @@ const TabsRouteWithChildren = TabsRoute._addFileChildren(TabsRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   TabsRoute: TabsRouteWithChildren,
+  AccountRoute: AccountRoute,
+  HomeRoute: HomeRoute,
   SessionRoute: SessionRoute,
   WelcomeRoute: WelcomeRoute,
   LessonUnitIdRoute: LessonUnitIdRoute,

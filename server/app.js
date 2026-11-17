@@ -1,10 +1,10 @@
 import { randomBytes, randomUUID } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
-import { hashToken, verifyPassword, validateLesson, sniffAudio, AUDIO_MAX_BYTES, fail } from './security.js';
+import { hashToken, verifyPassword, validateLesson, validateLanguage, validateLearner, sniffAudio, AUDIO_MAX_BYTES, LANGUAGE_CODE, fail } from './security.js';
 
-async function body(req) {
+async function body(req, max = 200_000) {
   let size = 0; const chunks = [];
-  for await (const chunk of req) { size += Buffer.byteLength(chunk); if (size > 200_000) throw fail(413, 'Request too large.'); chunks.push(Buffer.from(chunk)); }
+  for await (const chunk of req) { size += Buffer.byteLength(chunk); if (size > max) throw fail(413, 'Request too large.'); chunks.push(Buffer.from(chunk)); }
   try { return JSON.parse(Buffer.concat(chunks).toString()); } catch { throw fail(400, 'Invalid JSON request.'); }
 }
 const LEARN_CSP = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; media-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'";
@@ -53,9 +53,27 @@ function sendAudio(req, res, {mime, data}) {
   res.end(req.method === 'HEAD' ? undefined : data);
 }
 
+const PROGRESS_MAX_BYTES = 600_000;
+const readCookie = (req, name) => String(req.headers.cookie || '').split(';').map(v => v.trim()).find(v => v.startsWith(name + '='))?.slice(name.length + 1) || '';
+const publicLearner = l => ({ name: l.name, email: l.email });
+/** Progress is the learner app's own save format; the server only checks it is a plain object. */
+function progressState(value) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) throw fail(400, 'Invalid progress.');
+  return value;
+}
+
 export function createApp(store, {origin, production = false, learnDir = new URL('../learn/dist/', import.meta.url)}) {
   const cookieName = production ? '__Host-loba_session' : 'loba_session';
   const cookie = (token, age) => `${cookieName}=${token}; Path=/; HttpOnly; SameSite=Strict; Max-Age=${age}${production ? '; Secure' : ''}`;
+  // Learners have their own session cookie; it never grants access to Studio.
+  const learnerCookieName = production ? '__Host-loba_learner' : 'loba_learner';
+  const learnerCookie = (token, age) => `${learnerCookieName}=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${age}${production ? '; Secure' : ''}`;
+  const clientAddress = req => production ? (String(req.headers['x-forwarded-for'] || '').split(',').at(-1).trim() || req.socket.remoteAddress) : req.socket.remoteAddress;
+  const startLearnerSession = async (res, learnerId) => {
+    const token = randomBytes(32).toString('hex');
+    await store.createLearnerSession(hashToken(token), learnerId);
+    res.setHeader('Set-Cookie', learnerCookie(token, 60 * 24 * 3600));
+  };
   return async (req, res) => {
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('Referrer-Policy', 'same-origin');
@@ -68,7 +86,7 @@ export function createApp(store, {origin, production = false, learnDir = new URL
       const method = req.method;
       if (method === 'GET' && path === '/health') { await store.healthy(); return json(200, {status:'ok'}); }
       // Native clients need no cookies to read published content. Drafts are never returned here.
-      if (method === 'GET' && path === '/api/v1/lessons') return json(200, {schemaVersion:1, lessons:await store.published()});
+      if (method === 'GET' && path === '/api/v1/lessons') return json(200, {schemaVersion:1, languages:await store.publishedLanguages(), lessons:await store.published()});
       // Teacher recordings are public once referenced by a lesson; ids are unguessable.
       const recording = path.match(/^\/api\/v1\/audio\/([0-9a-f-]{36})$/);
       if (recording && ['GET','HEAD'].includes(method)) {
@@ -81,12 +99,63 @@ export function createApp(store, {origin, production = false, learnDir = new URL
           if (req.headers.origin !== origin) throw fail(403, 'Request origin is not allowed.');
           if (path !== '/api/admin/audio' && !(req.headers['content-type'] || '').startsWith('application/json')) throw fail(415, 'Use application/json.');
         }
+        if (path.startsWith('/api/learn/')) {
+          if (path === '/api/learn/signup' && method === 'POST') {
+            const input = await body(req, PROGRESS_MAX_BYTES);
+            const {email, password, name} = validateLearner(input, {signup:true});
+            const allowed = await store.loginAllowed(hashToken(`learner-signup:${clientAddress(req)}`));
+            if (!allowed) { res.setHeader('Retry-After','900'); throw fail(429, 'Too many accounts created from this connection. Try again in 15 minutes.'); }
+            const state = input.state === undefined ? undefined : progressState(input.state);
+            const learner = await store.createLearner({email, name, password, state});
+            await startLearnerSession(res, learner.id);
+            return json(201, {learner:publicLearner(learner), progress:await store.progress(learner.id)});
+          }
+          if (path === '/api/learn/login' && method === 'POST') {
+            const {email, password} = validateLearner(await body(req), {signup:false});
+            const allowed = await store.loginAllowed(hashToken(`learner-email:${email}`));
+            const ipAllowed = await store.loginAllowed(hashToken(`learner-address:${clientAddress(req)}`));
+            if (!allowed || !ipAllowed) { res.setHeader('Retry-After','900'); throw fail(429, 'Too many sign-in attempts. Try again in 15 minutes.'); }
+            const learner = await store.learner(email);
+            const valid = await verifyPassword(password, learner?.password_hash);
+            if (!learner || !valid) throw fail(401, 'Email or password is incorrect.');
+            await startLearnerSession(res, learner.id);
+            return json(200, {learner:publicLearner(learner), progress:await store.progress(learner.id)});
+          }
+          const token = readCookie(req, learnerCookieName);
+          const learner = token ? await store.learnerSession(hashToken(token)) : null;
+          if (path === '/api/learn/me' && method === 'GET') return json(200, learner ? {learner:publicLearner(learner), progress:await store.progress(learner.id)} : {learner:null});
+          if (!learner) throw fail(401, 'Sign in to continue.');
+          if (path === '/api/learn/progress' && method === 'PUT') {
+            const input = await body(req, PROGRESS_MAX_BYTES);
+            return json(200, await store.saveProgress(learner.id, progressState(input?.state)));
+          }
+          if (path === '/api/learn/profile' && method === 'PUT') {
+            const input = await body(req);
+            const name = typeof input?.name === 'string' ? input.name.replace(/[\u0000-\u001f<>]/g, '').trim() : '';
+            if (!name || name.length > 40) throw fail(400, 'Enter your name (40 characters at most).');
+            await store.renameLearner(learner.id, name);
+            return json(200, {learner:{...publicLearner(learner), name}});
+          }
+          if (path === '/api/learn/logout' && method === 'POST') {
+            await store.learnerLogout(hashToken(token));
+            res.setHeader('Set-Cookie', learnerCookie('', 0));
+            return json(200, {ok:true});
+          }
+          if (path === '/api/learn/account' && method === 'DELETE') {
+            const input = await body(req);
+            const full = await store.learnerById(learner.id);
+            if (typeof input?.password !== 'string' || !(await verifyPassword(input.password, full?.password_hash))) throw fail(401, 'This password is incorrect.');
+            await store.deleteLearner(learner.id);
+            res.setHeader('Set-Cookie', learnerCookie('', 0));
+            return json(200, {ok:true});
+          }
+          throw fail(404, 'Endpoint not found.');
+        }
         if (path === '/api/auth/signup' && method === 'POST') {
           const input=await body(req);
           if (!input || typeof input.email !== 'string' || input.email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.email.trim()) || typeof input.password !== 'string' || input.password.length < 14 || input.password.length > 256) throw fail(400,'Enter a valid email and a password of 14–256 characters.');
           const email=input.email.trim().toLowerCase();
-          const address=production ? (String(req.headers['x-forwarded-for'] || '').split(',').at(-1).trim() || req.socket.remoteAddress) : req.socket.remoteAddress;
-          const allowed=await store.loginAllowed(hashToken(`signup-address:${address}`));
+          const allowed=await store.loginAllowed(hashToken(`signup-address:${clientAddress(req)}`));
           const emailAllowed=await store.loginAllowed(hashToken(`signup-email:${email}`));
           if(!allowed || !emailAllowed) { res.setHeader('Retry-After','900'); throw fail(429,'Too many sign-up attempts. Try again in 15 minutes.'); }
           await store.register(email,input.password);
@@ -97,9 +166,8 @@ export function createApp(store, {origin, production = false, learnDir = new URL
           if (!input || typeof input.email !== 'string' || input.email.length > 254 || typeof input.password !== 'string' || input.password.length > 256) throw fail(400, 'Enter your email and password.');
           const email = input.email.toLowerCase().trim();
           // Railway's last forwarded address is the trusted ingress address; never trust the first.
-          const address = production ? (String(req.headers['x-forwarded-for'] || '').split(',').at(-1).trim() || req.socket.remoteAddress) : req.socket.remoteAddress;
           const allowed = await store.loginAllowed(hashToken(`email:${email}`));
-          const ipAllowed = await store.loginAllowed(hashToken(`address:${address}`));
+          const ipAllowed = await store.loginAllowed(hashToken(`address:${clientAddress(req)}`));
           if (!allowed || !ipAllowed) { res.setHeader('Retry-After','900'); throw fail(429, 'Too many sign-in attempts. Try again in 15 minutes.'); }
           const admin = await store.admin(email);
           const valid = await verifyPassword(input.password, admin?.password_hash);
@@ -110,7 +178,7 @@ export function createApp(store, {origin, production = false, learnDir = new URL
           res.setHeader('Set-Cookie',cookie(token,43200));
           return json(200,{user:{email:admin.email}});
         }
-        const token = String(req.headers.cookie || '').split(';').map(v=>v.trim()).find(v=>v.startsWith(cookieName+'='))?.slice(cookieName.length+1) || '';
+        const token = readCookie(req, cookieName);
         const tokenHash = hashToken(token);
         const user = token ? await store.session(tokenHash) : null;
         if (!user) throw fail(401, 'Sign in to continue.');
@@ -127,28 +195,36 @@ export function createApp(store, {origin, production = false, learnDir = new URL
           await store.saveAudio({id, mime, data, email: user.email});
           return json(201, {id});
         }
-        if (path === '/api/admin/lessons' && method === 'GET') return json(200,{lessons:await store.lessons(),activity:await store.activity()});
+        if (path === '/api/admin/lessons' && method === 'GET') return json(200,{lessons:await store.lessons(),languages:await store.languages(),activity:await store.activity(),learners:await store.learnerCount()});
         if (path === '/api/admin/lessons' && method === 'POST') {
           const input = await body(req);
-          return json(201,{lesson:await store.mutate({id:randomUUID(),content:validateLesson(input),action:'created',email:user.email})});
+          return json(201,{lesson:await store.mutate({id:randomUUID(),content:validateLesson(input, await store.languageCodes()),action:'created',email:user.email})});
         }
+        if (path === '/api/admin/languages' && method === 'POST') {
+          return json(201,{language:await store.saveLanguage({language:validateLanguage(await body(req),{create:true}),email:user.email})});
+        }
+        const languagePath = path.match(/^\/api\/admin\/languages\/([a-z]{2,3})$/);
+        if (languagePath && LANGUAGE_CODE.test(languagePath[1]) && method === 'PUT') {
+          return json(200,{language:await store.saveLanguage({language:validateLanguage(await body(req),{create:false}),code:languagePath[1],email:user.email})});
+        }
+        if (languagePath && method === 'DELETE') { await store.deleteLanguage({code:languagePath[1],email:user.email}); return json(200,{ok:true}); }
         const match = path.match(/^\/api\/admin\/lessons\/([a-zA-Z0-9-]+)(?:\/(publish|unpublish))?$/);
         if (match && (method==='PUT' && !match[2] || method==='DELETE' && !match[2] || method==='POST' && match[2])) {
           const input = await body(req);
           const action = method==='PUT'?'saved':method==='DELETE'?'deleted':match[2]==='publish'?'published':'unpublished';
           if (!input || typeof input !== 'object') throw fail(400, 'Invalid lesson request.');
-          const content = action==='saved'?validateLesson(input):undefined;
+          const content = action==='saved'?validateLesson(input, await store.languageCodes()):undefined;
           return json(200,{lesson:await store.mutate({id:match[1],content,version:input.version,action,email:user.email})});
         }
         throw fail(404, 'Endpoint not found.');
       }
       if (method !== 'GET' && method !== 'HEAD') throw fail(405, 'Method not allowed.');
       if (path === '/learn' || path.startsWith('/learn/')) return await serveLearn(res, path, method, learnDir);
-      const files = {'/admin/tabler.css':'../node_modules/@tabler/core/dist/css/tabler.min.css','/':'../admin/index.html','/admin':'../admin/index.html','/admin/':'../admin/index.html','/admin/app.js':'../admin/app.js','/admin/style.css':'../admin/style.css','/privacy.html':'../privacy.html','/manifest.webmanifest':'../manifest.webmanifest','/icons/icon-192.png':'../icons/icon-192.png','/icons/icon-512.png':'../icons/icon-512.png','/icons/apple-touch-icon.png':'../icons/apple-touch-icon.png'};
+      const files = {'/':'../admin/index.html','/admin':'../admin/index.html','/admin/':'../admin/index.html','/admin/app.js':'../admin/app.js','/admin/style.css':'../admin/style.css','/privacy.html':'../privacy.html','/manifest.webmanifest':'../manifest.webmanifest','/icons/icon-192.png':'../icons/icon-192.png','/icons/icon-512.png':'../icons/icon-512.png','/icons/apple-touch-icon.png':'../icons/apple-touch-icon.png'};
       const file = path === '/signup' || path === '/signup/' ? '../admin/index.html' : files[path]; if (!file) throw fail(404,'Page not found.');
       res.setHeader('Content-Security-Policy',"default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; media-src 'self' blob:; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'");
       const ext = file.split('.').at(-1);
-      const mime = {json:'application/json',html:'text/html',js:'text/javascript',css:'text/css',png:'image/png',webmanifest:'application/manifest+json'}[ext];
+      const mime = {json:'application/json',html:'text/html',js:'text/javascript',css:'text/css',png:'image/png',svg:'image/svg+xml',webmanifest:'application/manifest+json'}[ext];
       const data = await readFile(new URL(file,import.meta.url));
       res.writeHead(200,{'Content-Type':mime + (ext==='png'?'':'; charset=utf-8')}); res.end(method==='HEAD'?undefined:data);
     } catch(error) {

@@ -10,6 +10,7 @@ import { Confetti } from './Confetti'
 import { Icon } from './Icon'
 import { Loba } from './Loba'
 import { Week } from './Week'
+import { RewardSticker } from './RewardSticker'
 
 const fmtTime = (ms: number) => {
   const s = Math.round(ms / 1000)
@@ -59,7 +60,11 @@ export function LessonComplete({ reward, session, mode, onContinue }: { reward: 
         <div className="complete-body" key="summary">
           <Confetti />
           <div className="rays" />
-          <Loba mood="cheer" />
+          <div className="celebration-art">
+            <RewardSticker kind="sparkle" size={80} className="celebration-sparkle" />
+            <Loba mood="cheer" />
+            <RewardSticker kind="heart" size={64} className="celebration-heart" />
+          </div>
           <h1>{mode === 'lesson' ? t('lessonComplete') : t('practiceComplete')}</h1>
           <div className="tiles">
             <div className="result-tile" style={{ '--c': 'var(--sun)' } as CSSProperties}>
@@ -82,7 +87,7 @@ export function LessonComplete({ reward, session, mode, onContinue }: { reward: 
       ) : (
         <div className="complete-body streak-step" key="streak">
           <div className="streak-hero">
-            <Art name="flame" />
+            <RewardSticker kind="flame" size={170} />
             <div className="num">{streak}</div>
           </div>
           <h1>{t(streak === 1 ? 'streakDay' : 'streakDays', { n: streak })}</h1>

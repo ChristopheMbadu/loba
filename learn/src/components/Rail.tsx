@@ -7,6 +7,7 @@ import { useT } from '../i18n/useT'
 import { Art, type ArtName } from './Art'
 import { Stats } from './Stats'
 import { Week } from './Week'
+import { RewardSticker } from './RewardSticker'
 
 export const QUEST_ART: Record<QuestId, ArtName> = { xp: 'bolt', lessons: 'book', combo: 'flame', perfect: 'target' }
 export const QUEST_LABEL = { xp: 'questXp', lessons: 'questLessons', combo: 'questCombo', perfect: 'questPerfect' } as const
@@ -17,7 +18,7 @@ export function StreakCard() {
   return (
     <section className="card">
       <div className={`streak-card ${streak ? '' : 'off'}`}>
-        <Art name={streak ? 'flame' : 'flameOff'} size={56} />
+        {streak ? <RewardSticker kind="flame" size={64} /> : <Art name="flameOff" size={56} />}
         <div>
           <div className="num">{streak}</div>
           <p>{t(streak === 1 ? 'streakDayLabel' : 'streakDaysLabel')}</p>
@@ -35,7 +36,7 @@ export function DailyGoalCard() {
   return (
     <section className="card">
       <div className="goal">
-        <Art name={pct >= 100 ? 'trophy' : 'bolt'} />
+        {pct >= 100 ? <RewardSticker kind="sparkle" size={52} /> : <Art name="bolt" />}
         <div className="goal-body">
           <h3>{pct >= 100 ? t('goalDone') : t('dailyGoal')}</h3>
           <div className="meter-row">

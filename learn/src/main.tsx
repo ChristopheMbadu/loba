@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { createRouter, RouterProvider } from '@tanstack/react-router'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { startSync } from './account/sync'
 import { actions } from './game/store'
 import { routeTree } from './routeTree.gen'
 
@@ -28,6 +29,8 @@ declare module '@tanstack/react-router' {
 actions.tick()
 document.addEventListener('visibilitychange', () => document.visibilityState === 'visible' && actions.tick())
 setInterval(actions.tick, 60_000)
+// Signed-in learners' progress is saved to their account as they play.
+startSync(queryClient)
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

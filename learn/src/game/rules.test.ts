@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { bundledCurriculum } from '../content/curriculum'
+import { bundledCatalog, toCatalog, toLanguage, toUnit, languageOrFirst, BUNDLED_LANGUAGES } from '../content/curriculum'
+import type { Unit } from '../content/types'
 import { LESSONS_PER_UNIT } from '../content/types'
 import { buildLesson, buildPractice } from './exercises'
 import { gradeTiles, gradeTyped, normalize, toTiles } from './grading'
@@ -9,7 +10,7 @@ import * as rules from './rules'
 import { accuracyOf, isFinished, sessionReducer, startSession } from './session'
 import { freshState, HEART_REGEN_MS, MAX_HEARTS, PRICES } from './state'
 
-const curriculum = bundledCurriculum()
+const curriculum = bundledCatalog().curriculum as Record<'ln' | 'sw', Unit[]>
 const s0 = () => ({ ...freshState('fr'), onboarded: true })
 
 describe('curriculum', () => {
@@ -222,5 +223,29 @@ describe('saved state', () => {
     const s = sanitize({ v: 1, hearts: 99, gems: -4, avatar: '<script>', name: '<b>x</b>', progress: { a: 'NaN' }, words: { 'evil': {} } }, 'en')
     expect(s).toMatchObject({ hearts: MAX_HEARTS, gems: 0, avatar: '🦜', name: 'bx/b' })
     expect(s.words).toEqual({})
+  })
+})
+
+describe('languages from Studio', () => {
+  const words = ['Mbote', 'Matondo', 'Ee', 'Te'].map((term) => ({ term, fr: term }))
+  it('accepts any ISO 639 code and keeps Studio order, hiding languages without units', () => {
+    const kg = toLanguage({ code: 'kg', name_fr: 'Kikongo', name_en: 'Kikongo', color: '#ff8a1f', greeting: 'Mbote' })!
+    expect(kg).toMatchObject({ code: 'kg', name: { fr: 'Kikongo', en: 'Kikongo' }, color: '#ff8a1f' })
+    expect(toLanguage({ code: 'KIKONGO', name_en: 'x' })).toBeNull()
+    const lua = toLanguage({ code: 'lua', name_en: 'Tshiluba' })!
+    const unit = toUnit('kg-1', { language: 'kg', position: 1, title: 'Mbote', words })!
+    const catalog = toCatalog([kg, lua], [unit])
+    expect(catalog.languages.map((l) => l.code)).toEqual(['kg'])
+    expect(catalog.curriculum.kg).toHaveLength(1)
+    expect(languageOrFirst(catalog, 'ln')).toBe('kg')
+    expect(languageOrFirst(catalog, 'kg')).toBe('kg')
+  })
+  it('ships Lingala and Swahili for offline use', () => {
+    expect(bundledCatalog().languages.map((l) => l.code)).toEqual(BUNDLED_LANGUAGES.map((l) => l.code))
+  })
+  it('keeps progress for new languages when loading a save', () => {
+    const s = sanitize({ ...s0(), lang: 'lua', words: { 'lua:Moyo': { level: 2, misses: 0, due: 0 }, 'bad key': {} } }, 'fr')
+    expect(s.lang).toBe('lua')
+    expect(Object.keys(s.words)).toEqual(['lua:Moyo'])
   })
 })

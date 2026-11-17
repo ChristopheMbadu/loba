@@ -1,6 +1,6 @@
 # Loba Studio
 
-Loba Studio is a private editorial dashboard for the Lingala and Swahili curriculum. It adds email/password sign-in, lesson creation and editing, vocabulary and sentence editors, previews, draft/publish controls, search, language filters, and an editorial activity log.
+Loba Studio is a private editorial dashboard for Loba's Congolese-language curriculum. It adds email/password sign-in, language management, lesson creation and editing, vocabulary and sentence editors with recordings, previews, draft/publish controls, search, language filters, and an editorial activity log.
 
 The server uses Node.js 22+ and PostgreSQL. The interface is plain HTML, CSS and JavaScript with no build step. Railway can build it using the root Dockerfile.
 
@@ -9,8 +9,9 @@ The server uses Node.js 22+ and PostgreSQL. The interface is plain HTML, CSS and
 - `/` and `/admin`: private lesson-management dashboard.
 - `/api/admin/*`: authenticated editorial API.
 - `/api/v1/lessons`: public, versioned JSON API exposing **only published snapshots** for a future SwiftUI app.
-- `/learn`: the learner app (`learn/`, see [LEARNER.md](LEARNER.md)). It reads published lessons from `/api/v1/lessons`, so publishing in Studio updates what learners see. Progress is stored on the learner's device.
-- The import contains all 24 vocabulary/sentence units (12 per language). Dialogue scenarios, stories, gamification, learner accounts and progress are not migrated into Studio yet.
+- `/learn`: the learner app (`learn/`, see [LEARNER.md](LEARNER.md)). It reads visible languages and published lessons from `/api/v1/lessons`, so publishing in Studio updates what learners see.
+- `/api/learn/*`: learner accounts (name, email, password) and their saved progress. See **Learner accounts** below.
+- The import contains all 24 vocabulary/sentence units (12 each for Lingala and Swahili). Dialogue scenarios and stories are not migrated into Studio yet.
 
 There is no public admin registration. On first startup, the server creates one editor from `ADMIN_EMAIL` and `ADMIN_PASSWORD`. Passwords use salted scrypt hashes. Sessions are random, stored as hashes in PostgreSQL, and expire after 12 hours. Production cookies are secure, HTTP-only and same-site. Mutations require the exact configured origin. Login attempts are limited in the database.
 
@@ -93,6 +94,16 @@ Concurrent edits use revision checks: an out-of-date editor receives a conflict 
 
 Teaching notes are plain text. English meanings are editable; missing translations remain blank rather than being invented. The preview shows vocabulary and sentence answers, not the full legacy learner game.
 
+## Languages
+
+**Languages** lists every language Loba teaches. Lingala (`ln`) and Swahili (`sw`) are created on first startup; **Add language** creates more (for example Kikongo `kg` or Tshiluba `lua`). Each language has:
+
+- an ISO 639 **code** (2 or 3 lowercase letters; it can't change later, because lessons and learner progress refer to it),
+- its name in French and English, an optional **greeting** (shown on the landing page) and **encouragement** (said after a right answer), where it's spoken, a colour and an order,
+- **Visible to learners**, off by default.
+
+A new language stays private while the team writes its units. Learners see it only once it is visible **and** has at least one published lesson with four or more words. Hiding a language removes its lessons from the public API without unpublishing them. A language can be deleted only when no lessons use it.
+
 ## Word recordings
 
 In the lesson editor, each vocabulary entry has **Record** (microphone, up to 15 seconds) and **Upload audio** (MP3, M4A, WAV, OGG or WebM, up to 1.5 MB). Recordings are stored in PostgreSQL (`studio_audio`), attached to the word as an `audio` id, and follow the same draft/publish flow as the rest of the lesson. Learners stream them from the public `GET /api/v1/audio/:id`. The file type is detected from its content, not the upload's declared type. Uploads never attached to a lesson are deleted at startup after 7 days.
@@ -106,6 +117,7 @@ Browser-made recordings are WebM (Chrome, Firefox) or MP4 (Safari); older Safari
 ```json
 {
   "schemaVersion": 1,
+  "languages": [{"code": "ln", "name_fr": "Lingala", "name_en": "Lingala", "greeting": "Mbote", "cheer": "Malamu mingi !", "region_fr": "…", "region_en": "…", "color": "#1c9bef", "position": 1}],
   "lessons": [{
     "id": "ln-mbote",
     "version": 1,
@@ -124,7 +136,23 @@ Browser-made recordings are WebM (Chrome, Firefox) or MP4 (Safari); older Safari
 }
 ```
 
-Lesson IDs stay stable when titles or positions change. Draft edits do not alter the public version. The future learner app should persist progress by lesson ID and treat missing lessons as unpublished. Learner authentication and progress endpoints are not part of this first admin release.
+`languages` lists only visible languages, and `lessons` only those whose language is visible. Lesson IDs stay stable when titles or positions change. Draft edits do not alter the public version. Clients should persist progress by lesson ID and treat missing lessons as unpublished.
+
+## Learner accounts
+
+Learners sign up with a first name, an email and a password of at least 8 characters. Accounts are separate from Studio editors: a learner session (`__Host-loba_learner` in production, 60 days, HTTP-only, SameSite=Lax) never grants Studio access. Passwords use the same salted scrypt hashing as editors.
+
+| Endpoint | Purpose |
+| --- | --- |
+| `POST /api/learn/signup` | `{name, email, password, state?}` creates the account and signs in. `state` uploads the device's progress. Limited to 10 per 15 minutes per address. |
+| `POST /api/learn/login` | `{email, password}`. Rate-limited per email and per address. Returns the saved progress. |
+| `GET /api/learn/me` | The signed-in learner and saved progress, or `{learner: null}`. |
+| `PUT /api/learn/progress` | `{state}` saves progress (a JSON object up to 600 KB). |
+| `PUT /api/learn/profile` | `{name}` renames the learner. |
+| `POST /api/learn/logout` | Ends the session. |
+| `DELETE /api/learn/account` | `{password}` deletes the account and its progress. |
+
+All writes need the configured origin and JSON, like the editor API. The **Learners** figure on the Studio overview counts accounts. There is no password reset or email verification yet; both need an email provider.
 
 ## Checks
 
@@ -139,6 +167,6 @@ GitHub Actions run [43279382143](https://github.com/webynn/loba/actions/runs/432
 
 ## Public registration and dashboard UI
 
-The dashboard uses the MIT-licensed Tabler UI kit, pinned to @tabler/core 1.7.5 and served locally at /admin/tabler.css. Source and license: https://github.com/tabler/tabler . Package license notices remain in the installed dependency.
+The dashboard is plain HTML, CSS and JavaScript with its own small design system (`admin/style.css`) and an inline SVG icon set; it loads nothing from third parties. On phones, navigation moves to a bottom bar and the lesson editor opens full screen.
 
 Anyone may register at /signup with an email and a 14–256 character password. Public registrations are stored with approved=false and receive no session. Approved administrators use Accounts to grant workspace access; approval grants lesson management and account-approval permissions. Email ownership is not verified, so administrators must independently recognize the person before approving. Existing administrators keep access. The /learn application still uses its original authentication and is separate from Studio registration.

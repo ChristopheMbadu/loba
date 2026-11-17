@@ -1,17 +1,22 @@
-import { createFileRoute, Link, Outlet, redirect } from '@tanstack/react-router'
+import { createFileRoute, Link, Outlet } from '@tanstack/react-router'
+import { requireLearner } from '../account/guard'
+import { catalogQuery, languageOrFirst } from '../content/curriculum'
 import { useSelector } from '@tanstack/react-store'
 import { Art, type ArtName } from '../components/Art'
 import { Loba } from '../components/Loba'
 import { Stats } from '../components/Stats'
 import { dayKey } from '../game/state'
 import { dailyQuests } from '../game/rules'
-import { game } from '../game/store'
+import { actions, game } from '../game/store'
 import { useT } from '../i18n/useT'
 import type { StringKey } from '../i18n/strings'
 
 export const Route = createFileRoute('/_tabs')({
-  beforeLoad: () => {
-    if (!game.get().onboarded) throw redirect({ to: '/welcome' })
+  beforeLoad: async ({ context }) => {
+    await requireLearner(context.queryClient)
+    // If the learner's language was hidden in Studio, continue with one that's available.
+    const code = languageOrFirst(await context.queryClient.ensureQueryData(catalogQuery), game.get().lang)
+    if (code !== game.get().lang) actions.setLang(code)
   },
   component: TabsLayout,
 })

@@ -1,4 +1,8 @@
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { AccountError, deleteAccount, logout, meQuery, rename, type Me } from '../../account/api'
+import { forgetDevice } from '../../account/sync'
+import { useLanguages } from '../../hooks'
 import { useSelector } from '@tanstack/react-store'
 import { useState } from 'react'
 import { Art, type ArtName } from '../../components/Art'
@@ -30,6 +34,32 @@ function ProfilePage() {
   const [name, setName] = useState(s.name)
   const [avatar, setAvatar] = useState(s.avatar)
   const [confirmReset, setConfirmReset] = useState(false)
+  const qc = useQueryClient()
+  const me = useQuery(meQuery).data
+  const languages = useLanguages()
+  const [confirmSignOut, setConfirmSignOut] = useState(false)
+  const [confirmDelete, setConfirmDelete] = useState(false)
+  const [password, setPassword] = useState('')
+  const [accountError, setAccountError] = useState('')
+
+  const leave = () => {
+    forgetDevice()
+    qc.setQueryData<Me>(meQuery.queryKey, { learner: null, progress: null, offline: false })
+    navigate({ to: '/home' })
+  }
+  const signOut = async () => {
+    try { await logout() } catch { /* the cookie expires on its own */ }
+    leave()
+  }
+  const removeAccount = async () => {
+    setAccountError('')
+    try {
+      await deleteAccount(password)
+      leave()
+    } catch (err) {
+      setAccountError(err instanceof AccountError && err.status ? err.message : t('accountOffline'))
+    }
+  }
 
   const stats = [
     ['flame', visibleStreak(s, dayKey()), t('streak')],
@@ -66,9 +96,9 @@ function ProfilePage() {
         <div className="settings">
           <div className="setting">
             <span>{t('learning')}</span>
-            <div className="segmented" role="group" aria-label={t('learning')}>
-              {(['ln', 'sw'] as const).map((c) => (
-                <button key={c} aria-pressed={s.lang === c} onClick={() => actions.setLang(c)} style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+            <div className="lang-picker" role="group" aria-label={t('learning')}>
+              {languages.map(({ code: c }) => (
+                <button key={c} aria-pressed={s.lang === c} onClick={() => actions.setLang(c)}>
                   <LangBadge lang={c} /> <span style={{ textTransform: 'capitalize' }}>{langName(c)}</span>
                 </button>
               ))}
@@ -94,10 +124,23 @@ function ProfilePage() {
           <Toggle on={s.voice} label={t('voice')} onToggle={() => actions.toggle('voice')} />
         </div>
 
+        {me?.learner && (
+          <>
+            <h2 style={{ margin: '32px 0 6px' }}>{t('account')}</h2>
+            <div className="settings">
+              <div className="setting account-row">
+                <span><b>{me.learner.name}</b><small>{me.learner.email}</small></span>
+                <button className="btn small outline" onClick={() => setConfirmSignOut(true)}>{t('signOut')}</button>
+              </div>
+            </div>
+          </>
+        )}
+
         <p className="muted" style={{ fontWeight: 650, margin: '24px 0 4px' }}>
-          {t('savedOnDevice')} · <a href="/privacy.html">{t('privacy')}</a>
+          {me?.learner ? t('savedToAccount') : t('savedOnDevice')} · <a href="/privacy.html">{t('privacy')}</a>
         </p>
         <button className="danger-link" onClick={() => setConfirmReset(true)}>{t('resetProgress')}</button>
+        {me?.learner && <button className="danger-link" style={{ display: 'block' }} onClick={() => { setPassword(''); setAccountError(''); setConfirmDelete(true) }}>{t('deleteAccount')}</button>}
       </div>
       <Rail />
 
@@ -113,8 +156,38 @@ function ProfilePage() {
               <button key={a} aria-pressed={avatar === a} onClick={() => setAvatar(a)}>{a}</button>
             ))}
           </div>
-          <button className="btn block" onClick={() => { actions.setProfile(name, avatar); setEditing(false) }}>{t('continue')}</button>
+          <button className="btn block" onClick={() => {
+            actions.setProfile(name, avatar)
+            setEditing(false)
+            if (me?.learner && name.trim() && name.trim() !== me.learner.name) {
+              rename(name.trim()).then(({ learner }) => qc.setQueryData<Me>(meQuery.queryKey, (m) => m && { ...m, learner })).catch(() => {})
+            }
+          }}>{t('continue')}</button>
         </div>
+      </Modal>
+
+      <Modal open={confirmSignOut} onClose={() => setConfirmSignOut(false)} labelledBy="signout-title">
+        <div className="modal-art"><Loba mood="wave" /></div>
+        <h2 id="signout-title">{t('signOut')}</h2>
+        <p>{t('signOutText')}</p>
+        <div className="modal-actions">
+          <button className="btn" onClick={() => setConfirmSignOut(false)}>{t('noThanks')}</button>
+          <button className="btn outline" onClick={signOut}>{t('signOut')}</button>
+        </div>
+      </Modal>
+
+      <Modal open={confirmDelete} onClose={() => setConfirmDelete(false)} labelledBy="delete-title">
+        <div className="modal-art"><Loba mood="sad" /></div>
+        <h2 id="delete-title">{t('deleteAccount')}</h2>
+        <p>{t('deleteAccountText')}</p>
+        <form className="auth" onSubmit={(e) => { e.preventDefault(); void removeAccount() }}>
+          <input className="text-input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder={t('fieldPassword')} aria-label={t('fieldPassword')} autoComplete="current-password" required />
+          {accountError && <p className="auth-error" role="alert">{accountError}</p>}
+          <div className="modal-actions">
+            <button type="button" className="btn" onClick={() => setConfirmDelete(false)}>{t('noThanks')}</button>
+            <button type="submit" className="btn red" disabled={!password}>{t('deleteAccount')}</button>
+          </div>
+        </form>
       </Modal>
 
       <Modal open={confirmReset} onClose={() => setConfirmReset(false)} labelledBy="reset-title">

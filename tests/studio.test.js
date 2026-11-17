@@ -19,6 +19,16 @@ function fakeStore() {
   const lessons=new Map();const sessions=new Map();const activity=[];
   return {
     lessonsMap:lessons,sessions,allowed:true,
+    languageRows:[{code:'ln',name_fr:'Lingala',name_en:'Lingala',color:'#1c9bef',position:1,published:true},{code:'sw',name_fr:'Swahili',name_en:'Swahili',color:'#2bb673',position:2,published:true}],
+    async languages(){return this.languageRows},async publishedLanguages(){return this.languageRows.filter(l=>l.published)},async languageCodes(){return this.languageRows.map(l=>l.code)},async learnerCount(){return this.learnersMap.size},
+    async saveLanguage({language,code}){if(!code){if(this.languageRows.some(l=>l.code===language.code))throw fail(409,'exists');this.languageRows.push(language);return language}const row=this.languageRows.find(l=>l.code===code);if(!row)throw fail(404,'Language not found.');Object.assign(row,language);return row},
+    async deleteLanguage({code}){if([...lessons.values()].some(l=>l.content.language===code))throw fail(409,'in use');this.languageRows=this.languageRows.filter(l=>l.code!==code)},
+    learnersMap:new Map(),learnerSessions:new Map(),progressMap:new Map(),
+    async createLearner({email,name,password,state}){if([...this.learnersMap.values()].some(l=>l.email===email))throw fail(409,'An account already exists for this email. Sign in instead.');const id=`learner-${this.learnersMap.size+1}`;this.learnersMap.set(id,{id,email,name,password_hash:await hashPassword(password)});if(state)this.progressMap.set(id,{state,updated_at:'now'});return{id,email,name}},
+    async learner(email){return [...this.learnersMap.values()].find(l=>l.email===email)},async learnerById(id){return this.learnersMap.get(id)},
+    async createLearnerSession(hash,id){this.learnerSessions.set(hash,id)},async learnerSession(hash){const id=this.learnerSessions.get(hash);const l=id&&this.learnersMap.get(id);return l&&{id:l.id,email:l.email,name:l.name}},
+    async learnerLogout(hash){this.learnerSessions.delete(hash)},async progress(id){return this.progressMap.get(id)||null},async saveProgress(id,state){this.progressMap.set(id,{state,updated_at:'later'});return{updated_at:'later'}},
+    async renameLearner(id,name){this.learnersMap.get(id).name=name},async deleteLearner(id){this.learnersMap.delete(id);this.progressMap.delete(id)},
     async healthy(){},async loginAllowed(){return this.allowed},async admin(){return this.user},
     async createSession(hash,id){sessions.set(hash,{id,email:this.user.email})},async session(hash){return sessions.get(hash)},async logout(hash){sessions.delete(hash)},
     audioMap:new Map(),async saveAudio({id,mime,data}){this.audioMap.set(id,{mime,data})},async audio(id){return this.audioMap.get(id)},
@@ -188,4 +198,51 @@ test('teachers upload recordings that learners can stream; other content is refu
   assert.throws(()=>validateLesson({...lesson,words:[{term:'Mbote',fr:'Bonjour',audio:'../../etc/passwd'}]}),{status:400});
   assert.equal(sniffAudio(Buffer.from('ID3\x04\x00\x00\x00\x00\x00\x00\x00\x00')),'audio/mpeg');
   assert.equal(sniffAudio(Buffer.from('\x00\x00\x00\x20ftypM4A \x00\x00')),'audio/mp4');
+});
+
+test('languages are managed in Studio and lessons must use one of them',async()=>{
+  const {store,app,headers}=authenticated();
+  assert.equal((await invoke(app,{url:'/api/admin/languages',method:'POST',headers:{origin,'content-type':'application/json'},data:{code:'kg',name_fr:'Kikongo',name_en:'Kikongo'}})).status,401);
+  assert.equal((await invoke(app,{url:'/api/admin/lessons',method:'POST',headers,data:{...lesson,language:'kg'}})).status,400);
+  for(const code of ['k','kgxx','K1',' '])assert.equal((await invoke(app,{url:'/api/admin/languages',method:'POST',headers,data:{code,name_fr:'X',name_en:'X'}})).status,400,code);
+  const created=await invoke(app,{url:'/api/admin/languages',method:'POST',headers,data:{code:'KG',name_fr:'Kikongo',name_en:'Kikongo',color:'not-a-colour',published:'yes'}});
+  assert.equal(created.status,201);assert.equal(created.data.language.code,'kg');assert.equal(created.data.language.color,'#1c9bef');assert.equal(created.data.language.published,false);
+  assert.equal((await invoke(app,{url:'/api/admin/lessons',method:'POST',headers,data:{...lesson,language:'kg'}})).status,201);
+  const updated=await invoke(app,{url:'/api/admin/languages/kg',method:'PUT',headers,data:{name_fr:'Kikongo',name_en:'Kikongo',greeting:'Mbote',published:true}});
+  assert.equal(updated.status,200);assert.equal(updated.data.language.published,true);
+  assert.equal((await invoke(app,{url:'/api/admin/languages/kg',method:'DELETE',headers,data:{}})).status,409);
+  const feed=await invoke(app,{url:'/api/v1/lessons'});
+  assert.deepEqual(feed.data.languages.map(l=>l.code),['ln','sw','kg']);
+  const admin=await invoke(app,{url:'/api/admin/lessons',headers});assert.equal(admin.data.languages.length,3);assert.equal(admin.data.learners,0);
+});
+
+test('learners sign up with name, email and password and keep progress on their account',async()=>{
+  const {store,app}=authenticated();
+  const h={origin,'content-type':'application/json'};
+  const signup=data=>invoke(app,{url:'/api/learn/signup',method:'POST',headers:h,data});
+  assert.equal((await signup({name:'Nadia',email:'nadia@example.com',password:'short'})).status,400);
+  assert.equal((await signup({name:'',email:'nadia@example.com',password:'kinshasa2026'})).status,400);
+  assert.equal((await signup({name:'Nadia',email:'nope',password:'kinshasa2026'})).status,400);
+  assert.equal((await signup({name:'Nadia',email:'nadia@example.com',password:'kinshasa2026',state:[1,2]})).status,400);
+  assert.equal((await invoke(app,{url:'/api/learn/signup',method:'POST',headers:{...h,origin:'https://attacker.example'},data:{name:'N',email:'n@example.com',password:'kinshasa2026'}})).status,403);
+  const created=await signup({name:' Nadia ',email:' Nadia@Example.com ',password:'kinshasa2026',state:{v:1,xp:40}});
+  assert.equal(created.status,201);assert.deepEqual(created.data.learner,{name:'Nadia',email:'nadia@example.com'});assert.deepEqual(created.data.progress.state,{v:1,xp:40});
+  const cookie=created.headers['set-cookie'];assert.match(cookie,/^__Host-loba_learner=[0-9a-f]{64}; Path=\/; HttpOnly; SameSite=Lax; Max-Age=\d+; Secure$/);
+  const learnerCookie=cookie.split(';')[0];
+  assert.equal((await signup({name:'Nadia',email:'nadia@example.com',password:'kinshasa2026'})).status,409);
+  // A learner session never opens Studio.
+  assert.equal((await invoke(app,{url:'/api/admin/lessons',headers:{cookie:learnerCookie.replace('__Host-loba_learner','__Host-loba_session')}})).status,401);
+  assert.equal((await invoke(app,{url:'/api/admin/lessons',headers:{cookie:learnerCookie}})).status,401);
+  const me=await invoke(app,{url:'/api/learn/me',headers:{cookie:learnerCookie}});assert.equal(me.data.learner.name,'Nadia');
+  assert.equal((await invoke(app,{url:'/api/learn/progress',method:'PUT',headers:{...h,cookie:learnerCookie},data:{state:{v:1,xp:99}}})).status,200);
+  assert.deepEqual((await store.progress('learner-1')).state,{v:1,xp:99});
+  assert.equal((await invoke(app,{url:'/api/learn/progress',method:'PUT',headers:h,data:{state:{}}})).status,401);
+  assert.equal((await invoke(app,{url:'/api/learn/me'})).data.learner,null);
+  assert.equal((await invoke(app,{url:'/api/learn/login',method:'POST',headers:h,data:{email:'nadia@example.com',password:'wrong-password'}})).status,401);
+  const login=await invoke(app,{url:'/api/learn/login',method:'POST',headers:h,data:{email:'NADIA@example.com',password:'kinshasa2026'}});
+  assert.equal(login.status,200);assert.deepEqual(login.data.progress.state,{v:1,xp:99});
+  store.allowed=false;assert.equal((await invoke(app,{url:'/api/learn/login',method:'POST',headers:h,data:{email:'nadia@example.com',password:'kinshasa2026'}})).status,429);store.allowed=true;
+  assert.equal((await invoke(app,{url:'/api/learn/account',method:'DELETE',headers:{...h,cookie:learnerCookie},data:{password:'wrong-password'}})).status,401);
+  const removed=await invoke(app,{url:'/api/learn/account',method:'DELETE',headers:{...h,cookie:learnerCookie},data:{password:'kinshasa2026'}});
+  assert.equal(removed.status,200);assert.match(removed.headers['set-cookie'],/Max-Age=0/);assert.equal(store.learnersMap.size,0);assert.equal(store.progressMap.size,0);
 });
