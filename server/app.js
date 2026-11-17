@@ -110,7 +110,11 @@ export function createApp(store, {origin, production = false, learnDir = new URL
       }
       if (path.startsWith('/api/')) {
         if (!['GET','HEAD'].includes(method)) {
-          if (req.headers.origin !== origin) throw fail(403, 'Request origin is not allowed.');
+          // The iOS app sends its requests from the phone, not from a web page, so they carry no Origin header.
+          // Browsers always send one on writes, so a request without it cannot be another site acting for a
+          // signed-in learner. Only the learner API accepts this; Studio writes still need the exact origin.
+          const nativeClient = req.headers.origin === undefined && path.startsWith('/api/learn/');
+          if (!nativeClient && req.headers.origin !== origin) throw fail(403, 'Request origin is not allowed.');
           if (path !== '/api/admin/audio' && !(req.headers['content-type'] || '').startsWith('application/json')) throw fail(415, 'Use application/json.');
         }
         if (path.startsWith('/api/learn/')) {

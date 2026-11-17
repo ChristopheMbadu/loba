@@ -1,3 +1,4 @@
+import { api } from '../platform'
 import type { Word } from '../content/types'
 import { game } from '../game/store'
 
@@ -13,7 +14,7 @@ export function playWord(w: Word, slow = false) {
   if (!w.audio || !game.get().voice) return
   try {
     current?.pause()
-    current = new Audio(`/api/v1/audio/${w.audio}`)
+    current = new Audio(api(`/api/v1/audio/${w.audio}`))
     current.preservesPitch = true
     current.playbackRate = slow ? 0.7 : 1
     void current.play().catch(() => {})

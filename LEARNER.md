@@ -94,3 +94,28 @@ SVG drawn in `src/components/Loba.tsx` and `src/components/Art.tsx`, animated wi
 No emoji or third-party illustrations are used in the UI.
 
 - **Fredoka** and **Nunito**, SIL Open Font License, self-hosted via @fontsource-variable.
+
+## iOS app
+
+The iPhone app is this same learner app inside a native shell ([Capacitor](https://capacitorjs.com)). The Xcode
+project lives in `learn/ios/`; the web code is bundled into the app, so lessons, the story book and all
+animations work without loading the website.
+
+```
+cd learn
+npm run ios        # builds the app's copy of the web code, syncs it into Xcode, opens Xcode
+```
+
+Then pick a simulator or a phone in Xcode and press Run. `npm run build:ios` does the same without opening Xcode.
+
+- `vite build --mode ios` writes `dist-ios/` (served from `/` instead of `/learn/`).
+- The app talks to the server named by `VITE_API_ORIGIN` at build time; the default is the Railway address in
+  `vite.config.ts`. For a local server: `VITE_API_ORIGIN=http://localhost:3000 npm run build:ios`.
+- `src/platform.ts` holds `native` and `api()`. Every request to the server goes through `api()`.
+- Requests are sent by the phone (`CapacitorHttp`), not the web view, so the learner session cookie is kept
+  by iOS. They carry no `Origin` header; the server accepts that on `/api/learn/*` only.
+- Native extras: Taptic feedback (`buzz()` in `audio/sfx.ts`), an evening reminder
+  (`src/native/reminder.ts`, toggle in Profile, offered after the first finished lesson), splash screen and
+  safe-area padding (end of `styles/motion.css`).
+- Icon and splash are in `learn/ios/App/App/Assets.xcassets`.
+- Bundle id: `io.github.christophembadu.loba` (`capacitor.config.ts` and the Xcode target).

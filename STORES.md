@@ -27,7 +27,9 @@ L'application demande le micro seulement quand on appuie sur 🎤. Dans la fiche
 **Coût : 99 $ par an. Il faut un Mac (ou un service de build cloud).**
 
 1. Compte : https://developer.apple.com/programs
-2. PWABuilder → **iOS** génère un projet Xcode ; ou bien utiliser **Capacitor** (`npx cap add ios`).
+2. Le projet Xcode existe déjà : `learn/ios/` (Capacitor). `cd learn && npm run ios` l'ouvre dans Xcode. Voir la section « iOS app » de [LEARNER.md](LEARNER.md).
+   - Dans Xcode : cible **App → Signing & Capabilities**, choisir l'équipe du compte développeur, puis **Product → Archive** pour envoyer sur TestFlight.
+   - Le serveur doit être déployé avec la version qui accepte l'application (voir LEARNER.md), sinon la connexion échoue dans l'app.
 3. ⚠️ Apple refuse souvent les apps qui ne sont « qu'un site web » (règle 4.2). Pour maximiser les chances : rappels quotidiens par notifications, fonctionnement hors ligne, et une vraie expérience d'app. À tenter **après** Google Play.
 
 ## 3. Sans store, dès aujourd'hui

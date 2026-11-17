@@ -1,3 +1,4 @@
+import { privacyLink } from '../platform'
 import { useQueryClient } from '@tanstack/react-query'
 import { useState, type FormEvent } from 'react'
 import { actions, game } from '../game/store'
@@ -89,7 +90,7 @@ export function AuthForm({ mode, onModeChange, onDone }: {
         {mode === 'signup' ? t('haveAccount') : t('newHere')}
       </button>
       {mode === 'signup' && (
-        <p className="auth-terms">{t('accountTerms')} <a href="/privacy.html">{t('privacyPolicy')}</a>.</p>
+        <p className="auth-terms">{t('accountTerms')} <a {...privacyLink}>{t('privacyPolicy')}</a>.</p>
       )}
     </form>
   )

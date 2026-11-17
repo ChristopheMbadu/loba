@@ -1,4 +1,5 @@
 import { queryOptions } from '@tanstack/react-query'
+import { api } from '../platform'
 
 export interface Learner {
   name: string
@@ -24,7 +25,7 @@ export class AccountError extends Error {
 }
 
 async function call<T>(path: string, init: RequestInit = {}): Promise<T> {
-  const res = await fetch(path, {
+  const res = await fetch(api(path), {
     credentials: 'same-origin',
     ...init,
     headers: { 'Content-Type': 'application/json', Accept: 'application/json', ...init.headers },

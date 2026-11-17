@@ -20,7 +20,7 @@
 .tale[data-phase='dusk'] { background: #ffcfa3; }
 .tale[data-phase='night'] { background: #1b1f4b; color: #fff; }
 
-.tale-bar { display: flex; align-items: center; gap: 12px; width: min(1180px, 100% - 32px); margin: 0 auto; padding: 12px 0; }
+.tale-bar { display: flex; align-items: center; gap: 12px; width: min(1180px, 100% - 32px); margin: 0 auto; padding: max(12px, env(safe-area-inset-top)) 0 12px; }
 .tale-close { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 14px; color: inherit; background: rgb(255 255 255 / 55%); }
 .tale-close svg, .tale-sound svg { width: 24px; height: 24px; }
 .tale-shelf { flex: 1; font-family: var(--display); font-weight: 600; font-size: 19px; }

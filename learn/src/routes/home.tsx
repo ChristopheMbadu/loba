@@ -1,3 +1,4 @@
+import { privacyLink } from '../platform'
 import { useQuery } from '@tanstack/react-query'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useSelector } from '@tanstack/react-store'
@@ -228,7 +229,7 @@ function Home() {
           </div>
           <nav className="lp-foot-links" aria-label="Loba">
             {languages.map((l) => <button key={l.code} onClick={() => playWith(l.code)}>{langName(l.code)}</button>)}
-            <a href="/privacy.html">{t('privacy')}</a>
+            <a {...privacyLink}>{t('privacy')}</a>
           </nav>
           <UiSwitch />
         </div>

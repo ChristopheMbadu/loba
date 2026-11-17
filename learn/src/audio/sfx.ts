@@ -1,4 +1,6 @@
+import { Haptics, ImpactStyle, NotificationType } from '@capacitor/haptics'
 import { game } from '../game/store'
+import { native } from '../platform'
 
 export type Cue =
   | 'tap' | 'tile' | 'pop' | 'whoosh'
@@ -186,6 +188,12 @@ export function sfx(cue: Cue, n = 1) {
 export function buzz(pattern: number | number[]) {
   if (!game.get().sound) return
   try {
+    if (native) {
+      // iPhones have no web vibration; use the Taptic Engine: a tick for a tap, a double knock for a pattern.
+      if (typeof pattern === 'number') void Haptics.impact({ style: pattern > 20 ? ImpactStyle.Medium : ImpactStyle.Light })
+      else void Haptics.notification({ type: pattern[0]! >= 30 ? NotificationType.Warning : NotificationType.Success })
+      return
+    }
     navigator.vibrate?.(pattern)
   } catch {
     /* not supported */

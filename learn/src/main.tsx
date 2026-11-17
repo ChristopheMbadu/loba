@@ -8,13 +8,15 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { startSync } from './account/sync'
 import { actions } from './game/store'
+import { startShell } from './native/shell'
 import { routeTree } from './routeTree.gen'
 
 const queryClient = new QueryClient()
 
 const router = createRouter({
   routeTree,
-  basepath: '/learn',
+  // '/learn' on the website, '/' inside the iOS app.
+  basepath: import.meta.env.BASE_URL.replace(/\/$/, '') || '/',
   context: { queryClient },
   defaultPreload: 'intent',
   scrollRestoration: true,
@@ -41,3 +43,4 @@ createRoot(document.getElementById('root')!).render(
     </QueryClientProvider>
   </StrictMode>,
 )
+startShell()

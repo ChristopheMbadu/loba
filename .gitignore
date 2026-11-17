@@ -5,3 +5,6 @@ node_modules/
 .DS_Store
 coverage/
 *.log
+
+# iOS app
+dist-ios/

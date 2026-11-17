@@ -1,3 +1,4 @@
+import { api } from '../platform'
 import { queryOptions } from '@tanstack/react-query'
 import bundled from '../../../data/lessons.json'
 import type { Catalog, Curriculum, Language, LangCode, Sentence, Unit, Word } from './types'
@@ -87,7 +88,7 @@ export const bundledCatalog = (): Catalog =>
  */
 async function fetchCatalog(): Promise<Catalog> {
   try {
-    const res = await fetch('/api/v1/lessons', { headers: { Accept: 'application/json' } })
+    const res = await fetch(api('/api/v1/lessons'), { headers: { Accept: 'application/json' } })
     if (!res.ok) throw new Error(String(res.status))
     const body = (await res.json()) as { languages?: unknown[]; lessons?: { id: string; content: unknown }[] }
     const units = (body.lessons ?? []).map((l) => toUnit(l.id, l.content)).filter((u): u is Unit => !!u)

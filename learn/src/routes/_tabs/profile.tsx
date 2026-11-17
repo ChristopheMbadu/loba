@@ -14,6 +14,8 @@ import { AVATARS, dayKey, GOALS } from '../../game/state'
 import { visibleStreak, wordsLearned } from '../../game/rules'
 import { actions, game } from '../../game/store'
 import { useT } from '../../i18n/useT'
+import { reminderOn, setReminder } from '../../native/reminder'
+import { native, privacyLink } from '../../platform'
 
 export const Route = createFileRoute('/_tabs/profile')({ component: ProfilePage })
 
@@ -31,6 +33,7 @@ function ProfilePage() {
   const navigate = useNavigate()
   const s = useSelector(game, (s) => s)
   const [editing, setEditing] = useState(false)
+  const [reminder, setReminderState] = useState(reminderOn)
   const [name, setName] = useState(s.name)
   const [avatar, setAvatar] = useState(s.avatar)
   const [confirmReset, setConfirmReset] = useState(false)
@@ -122,6 +125,7 @@ function ProfilePage() {
           </div>
           <Toggle on={s.sound} label={t('sound')} onToggle={() => actions.toggle('sound')} />
           <Toggle on={s.voice} label={t('voice')} onToggle={() => actions.toggle('voice')} />
+          {native && <Toggle on={reminder} label={t('reminder')} onToggle={() => void setReminder(!reminder).then(setReminderState)} />}
         </div>
 
         {me?.learner && (
@@ -137,7 +141,7 @@ function ProfilePage() {
         )}
 
         <p className="muted" style={{ fontWeight: 650, margin: '24px 0 4px' }}>
-          {me?.learner ? t('savedToAccount') : t('savedOnDevice')} · <a href="/privacy.html">{t('privacy')}</a>
+          {me?.learner ? t('savedToAccount') : t('savedOnDevice')} · <a {...privacyLink}>{t('privacy')}</a>
         </p>
         <button className="danger-link" onClick={() => setConfirmReset(true)}>{t('resetProgress')}</button>
         {me?.learner && <button className="danger-link" style={{ display: 'block' }} onClick={() => { setPassword(''); setAccountError(''); setConfirmDelete(true) }}>{t('deleteAccount')}</button>}

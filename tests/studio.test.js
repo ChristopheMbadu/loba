@@ -217,6 +217,15 @@ test('languages are managed in Studio and lessons must use one of them',async()=
   const admin=await invoke(app,{url:'/api/admin/lessons',headers});assert.equal(admin.data.languages.length,3);assert.equal(admin.data.learners,0);
 });
 
+test('the iOS app, which sends no Origin, may use the learner API but never Studio',async()=>{
+  const {app}=authenticated();
+  const h={'content-type':'application/json'};
+  const created=await invoke(app,{url:'/api/learn/signup',method:'POST',headers:h,data:{name:'Ada',email:'ada@example.com',password:'kinshasa2026'}});
+  assert.equal(created.status,201);
+  assert.equal((await invoke(app,{url:'/api/auth/login',method:'POST',headers:h,data:{email:'a@example.com',password:'x'}})).status,403);
+  assert.equal((await invoke(app,{url:'/api/admin/lessons',method:'POST',headers:h,data:{}})).status,403);
+});
+
 test('learners sign up with name, email and password and keep progress on their account',async()=>{
   const {store,app}=authenticated();
   const h={origin,'content-type':'application/json'};

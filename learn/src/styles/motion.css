@@ -221,3 +221,13 @@ button.tile-card:hover:not(:disabled), a.tile-card:hover { transform: translateY
 .sidebar-ui { margin-top: auto; margin-bottom: 22px; align-self: flex-start; margin-left: 12px; }
 .topbar .ui-switch button { padding: 5px 9px; font-size: 13px; }
 @media (max-width: 380px) { .topbar .stat { padding: 8px 6px; } .topbar .stats { gap: 0; } }
+
+/* ── Phones with a notch, and the iOS app ───────────────────────────────── */
+.lp-head { padding-top: env(safe-area-inset-top); }
+.onb-head { padding-top: max(20px, env(safe-area-inset-top)); }
+.center-screen { padding-top: max(24px, env(safe-area-inset-top)); }
+.lp-foot { padding-bottom: max(28px, env(safe-area-inset-bottom)); }
+/* Inside the app nothing should behave like a web page: no text selection, no grey tap flash, no rubber-band. */
+html[data-native] { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; overscroll-behavior: none; }
+html[data-native] body { overscroll-behavior: none; }
+html[data-native] :is(input, textarea) { -webkit-user-select: text; user-select: text; }

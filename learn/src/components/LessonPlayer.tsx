@@ -1,3 +1,4 @@
+import { reminderAfterLesson } from '../native/reminder'
 import { useNavigate } from '@tanstack/react-router'
 import { useSelector } from '@tanstack/react-store'
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react'
@@ -59,6 +60,7 @@ export function LessonPlayer({ exercises, mode, unitId, lessonIndex }: Props) {
     if (!done || finishing.current) return
     finishing.current = true
     sfx('complete')
+    reminderAfterLesson()
     setReward(actions.completeSession({ kind: mode, unitId, lessonIndex, mistakes: session.mistakes, bestCombo: session.bestCombo }))
   }, [done, mode, unitId, lessonIndex, session.mistakes, session.bestCombo])
 

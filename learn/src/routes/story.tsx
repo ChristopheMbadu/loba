@@ -9,6 +9,7 @@ import { actions, game } from '../game/store'
 import { useLanguages } from '../hooks'
 import { useT } from '../i18n/useT'
 import { useStartLink } from '../landing/useStart'
+import { api } from '../platform'
 import { Scene } from '../story/Scene'
 import { CROCODILE_AND_HEN as tale, tokens, type WordKey } from '../story/tale'
 import '../styles/story.css'
@@ -111,7 +112,7 @@ function StoryBook() {
   const listen = () => {
     if (!current?.audio) return
     voice.current?.pause()
-    voice.current = new Audio(`/api/v1/audio/${current.audio}`)
+    voice.current = new Audio(api(`/api/v1/audio/${current.audio}`))
     void voice.current.play().catch(() => {})
   }
 
@@ -131,7 +132,7 @@ function StoryBook() {
       }}
     >
       <header className="tale-bar">
-        <Link to="/home" className="tale-close" aria-label={s.close}><Icon name="close" /></Link>
+        <Link to="/" className="tale-close" aria-label={s.close}><Icon name="close" /></Link>
         <span className="tale-shelf">{s.shelf}</span>
         <div className="tale-tools">
           {codes.length > 1 && (

@@ -1,0 +1,163 @@
+diff --git a/server/app.js b/server/app.js
+index 80f34d1..1131c6c 100644
+--- a/server/app.js
++++ b/server/app.js
+@@ -86,6 +86,11 @@ export function createApp(store, {origin, production = false, google = null, lea
+   const learnerCookie = (token, age) => `${learnerCookieName}=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${age}${production ? '; Secure' : ''}`;
+   const googleCookieName = production ? '__Host-loba_google' : 'loba_google';
+   const googleCookie = (token, age) => `${googleCookieName}=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${age}${production ? '; Secure' : ''}`;
++  // The iOS app starts Google sign-in with ?app=1&challenge=…; this cookie remembers that through the round trip.
++  const appCookieName = production ? '__Host-loba_google_app' : 'loba_google_app';
++  const appCookie = (challenge, age) => `${appCookieName}=${challenge}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${age}${production ? '; Secure' : ''}`;
++  const APP_CHALLENGE = /^[A-Za-z0-9_-]{43}$/;
++  const APP_CALLBACK = 'loba://auth';
+   const clientAddress = req => production ? (String(req.headers['x-forwarded-for'] || '').split(',').at(-1).trim() || req.socket.remoteAddress) : req.socket.remoteAddress;
+   const startLearnerSession = async (res, learnerId, viaGoogle = false) => {
+     const token = randomBytes(32).toString('hex');
+@@ -118,13 +123,16 @@ export function createApp(store, {origin, production = false, google = null, lea
+           if (path !== '/api/admin/audio' && !(req.headers['content-type'] || '').startsWith('application/json')) throw fail(415, 'Use application/json.');
+         }
+         if (path.startsWith('/api/learn/')) {
+-          if (path === '/api/learn/auth-options' && method === 'GET') return json(200, {google:!!google, googleOrigin:google?.origin || null});
++          if (path === '/api/learn/auth-options' && method === 'GET') return json(200, {google:!!google, googleOrigin:google?.origin || null, app:!!google});
+           if (path === '/api/learn/google/start' && method === 'GET') {
+             if (!google) throw fail(404, 'Google sign-in is not configured.');
+-            const link = new URL(req.url, origin).searchParams.get('link') === '1';
++            const query = new URL(req.url, origin).searchParams;
++            const link = query.get('link') === '1';
++            const challenge = query.get('app') === '1' ? query.get('challenge') || '' : null;
++            if (challenge !== null && (link || !APP_CHALLENGE.test(challenge))) throw fail(400, 'Invalid app sign-in request.');
+             // Always use the registered host, including a host-only state cookie.
+             if (req.headers.host !== new URL(google.origin).host) {
+-              res.writeHead(302, {Location:google.origin + '/api/learn/google/start'}); return res.end();
++              res.writeHead(302, {Location:google.origin + '/api/learn/google/start' + (challenge ? `?app=1&challenge=${challenge}` : '')}); return res.end();
+             }
+             if (!(await store.loginAllowed(hashToken(`google:${clientAddress(req)}`)))) throw fail(429, 'Too many sign-in attempts. Try again in 15 minutes.');
+             let sessionHash = null;
+@@ -135,13 +143,15 @@ export function createApp(store, {origin, production = false, google = null, lea
+             const state = randomBytes(32).toString('base64url'), binding = randomBytes(32).toString('base64url');
+             const verifier = randomBytes(32).toString('base64url'), nonce = randomBytes(32).toString('base64url');
+             await store.saveGoogleAttempt({stateHash:hashToken(state), bindingHash:hashToken(binding), verifier, nonce, sessionHash});
+-            res.setHeader('Set-Cookie', googleCookie(binding, 600));
++            res.setHeader('Set-Cookie', challenge ? [googleCookie(binding, 600), appCookie(challenge, 600)] : googleCookie(binding, 600));
+             res.writeHead(302, {Location:google.authorizationUrl({state, nonce, challenge:createHash('sha256').update(verifier).digest('base64url')})}); return res.end();
+           }
+           if (path === '/api/learn/google/callback' && method === 'GET') {
+             if (!google) throw fail(404, 'Google sign-in is not configured.');
+             res.setHeader('Referrer-Policy', 'no-referrer');
+-            res.setHeader('Set-Cookie', googleCookie('', 0));
++            const appChallenge = readCookie(req, appCookieName);
++            const forApp = APP_CHALLENGE.test(appChallenge);
++            res.setHeader('Set-Cookie', forApp ? [googleCookie('', 0), appCookie('', 0)] : googleCookie('', 0));
+             try {
+               const params = new URL(req.url, origin).searchParams;
+               const state = params.get('state'), binding = readCookie(req, googleCookieName);
+@@ -161,13 +171,31 @@ export function createApp(store, {origin, production = false, google = null, lea
+               }
+               const identity = await google.exchange(code, attempt.verifier, attempt.nonce);
+               const account = await store.googleLearner(identity, linkId);
++              if (forApp) {
++                // The browser sheet gets no session. The app redeems this code, proving it started the sign-in.
++                const handoff = randomBytes(32).toString('base64url');
++                await store.saveAppHandoff(hashToken(handoff), account.id, appChallenge);
++                res.writeHead(302, {Location:`${APP_CALLBACK}?code=${handoff}`}); return res.end();
++              }
+               await startLearnerSession(res, account.id, true);
+               res.writeHead(302, {Location:google.origin + '/learn/auth-complete'}); return res.end();
+             } catch (error) {
+               const reason = ['google_cancelled','google_existing','google_link'].includes(error.message) ? error.message : 'google_failed';
++              if (forApp) { res.writeHead(302, {Location:`${APP_CALLBACK}?error=${reason}`}); return res.end(); }
+               res.writeHead(302, {Location:google.origin + '/learn/account?mode=login&authError=' + reason}); return res.end();
+             }
+           }
++          if (path === '/api/learn/google/redeem' && method === 'POST') {
++            const input = await body(req);
++            const code = typeof input?.code === 'string' ? input.code : '', verifier = typeof input?.verifier === 'string' ? input.verifier : '';
++            if (!(await store.loginAllowed(hashToken(`google-redeem:${clientAddress(req)}`)))) throw fail(429, 'Too many sign-in attempts. Try again in 15 minutes.');
++            const handoff = code.length <= 128 && verifier.length <= 128 ? await store.consumeAppHandoff(hashToken(code)) : null;
++            if (!handoff || createHash('sha256').update(verifier).digest('base64url') !== handoff.challenge) throw fail(401, 'Google sign-in failed or expired. Please try again.');
++            const account = await store.learnerById(handoff.learner_id);
++            if (!account) throw fail(401, 'Google sign-in failed or expired. Please try again.');
++            await startLearnerSession(res, account.id, true);
++            return json(200, {learner:publicLearner(account), progress:await store.progress(account.id)});
++          }
+           if (path === '/api/learn/signup' && method === 'POST') {
+             const input = await body(req, PROGRESS_MAX_BYTES);
+             const {email, password, name} = validateLearner(input, {signup:true});
+diff --git a/server/schema.sql b/server/schema.sql
+index d6210fd..0bac365 100644
+--- a/server/schema.sql
++++ b/server/schema.sql
+@@ -93,3 +93,11 @@ CREATE TABLE IF NOT EXISTS learner_oauth_attempts (
+   expires_at TIMESTAMPTZ NOT NULL DEFAULT now() + interval '10 minutes'
+ );
+ CREATE INDEX IF NOT EXISTS learner_oauth_expiry ON learner_oauth_attempts(expires_at);
++
++-- The iOS app signs in with Google in the system browser, then swaps a one-time code for its own session.
++CREATE TABLE IF NOT EXISTS learner_app_handoffs (
++  code_hash TEXT PRIMARY KEY,
++  learner_id UUID NOT NULL REFERENCES learners(id) ON DELETE CASCADE,
++  challenge TEXT NOT NULL,
++  expires_at TIMESTAMPTZ NOT NULL DEFAULT now() + interval '2 minutes'
++);
+diff --git a/server/store.js b/server/store.js
+index aba3818..a5e7916 100644
+--- a/server/store.js
++++ b/server/store.js
+@@ -133,6 +133,14 @@ export class Store {
+   async consumeGoogleAttempt(stateHash, bindingHash) {
+     return (await this.pool.query('DELETE FROM learner_oauth_attempts WHERE state_hash=$1 AND binding_hash=$2 AND expires_at>now() RETURNING *', [stateHash,bindingHash])).rows[0];
+   }
++  async saveAppHandoff(codeHash, learnerId, challenge) {
++    await this.pool.query('DELETE FROM learner_app_handoffs WHERE expires_at < now()');
++    await this.pool.query('INSERT INTO learner_app_handoffs(code_hash,learner_id,challenge) VALUES($1,$2,$3)', [codeHash, learnerId, challenge]);
++  }
++  /** Single use: the row is gone whether or not the caller then proves the challenge. */
++  async consumeAppHandoff(codeHash) {
++    return (await this.pool.query('DELETE FROM learner_app_handoffs WHERE code_hash=$1 AND expires_at>now() RETURNING learner_id,challenge', [codeHash])).rows[0];
++  }
+   async googleLearner({sub, email, name}, linkId = null) {
+     const db = await this.pool.connect();
+     try {
+diff --git a/tests/google.test.js b/tests/google.test.js
+index 9ef2801..be43886 100644
+--- a/tests/google.test.js
++++ b/tests/google.test.js
+@@ -82,3 +82,37 @@ test('Google-only deletion requires explicit confirmation and a recent Google se
+   f.sessions.get(hashToken('recent')).google_auth_at=new Date();
+   assert.equal((await invoke(f.app,url,cookie,'DELETE',{confirm:true})).status,200);assert.equal(deleted,true);
+ });
++
++test('the iOS app signs in with Google by redeeming a one-time code it alone can prove',async()=>{
++  const {createHash}=await import('node:crypto');
++  const f=fixture();const handoffs=new Map();
++  Object.assign(f.store,{
++    saveAppHandoff:async(hash,id,challenge)=>handoffs.set(hash,{learner_id:id,challenge}),
++    consumeAppHandoff:async hash=>{const h=handoffs.get(hash);handoffs.delete(hash);return h},
++    learnerById:async id=>({id,name:'Nadia',email:'nadia@example.com',google_sub:'google-id',password_hash:null}),
++    progress:async()=>null,
++  });
++  const verifier='v'.repeat(43), challenge=createHash('sha256').update(verifier).digest('base64url');
++  assert.equal((await invoke(f.app,'/api/learn/google/start?app=1&challenge=short')).status,400);
++  assert.equal((await invoke(f.app,'/api/learn/auth-options')).body.app,true);
++  const start=await invoke(f.app,'/api/learn/google/start?app=1&challenge='+challenge);
++  assert.equal(start.status,302);assert.equal(start.headers['set-cookie'].length,2);
++  const cookies=start.headers['set-cookie'].map(c=>c.split(';')[0]).join('; ');
++  const done=await invoke(f.app,'/api/learn/google/callback?code=code&state='+f.authorization.state,cookies);
++  // The browser sheet is sent back to the app with a code, and is given no session of its own.
++  assert.match(done.headers.location,/^loba:\/\/auth\?code=[A-Za-z0-9_-]{43}$/);
++  assert.ok(done.headers['set-cookie'].every(c=>!c.includes('loba_learner')));assert.equal(f.sessions.size,0);
++  const code=done.headers.location.split('code=')[1];
++  // Without the verifier the code is useless, and it is spent by the attempt.
++  assert.equal((await invoke(f.app,'/api/learn/google/redeem','','POST',{code,verifier:'wrong'})).status,401);
++  assert.equal((await invoke(f.app,'/api/learn/google/redeem','','POST',{code,verifier})).status,401);
++  const again=await invoke(f.app,'/api/learn/google/start?app=1&challenge='+challenge);
++  const next=await invoke(f.app,'/api/learn/google/callback?code=code&state='+f.authorization.state,again.headers['set-cookie'].map(c=>c.split(';')[0]).join('; '));
++  const ok=await invoke(f.app,'/api/learn/google/redeem','','POST',{code:next.headers.location.split('code=')[1],verifier});
++  assert.equal(ok.status,200);assert.equal(ok.body.learner.email,'nadia@example.com');assert.equal(ok.body.learner.googleLinked,true);
++  assert.match(ok.headers['set-cookie'][1],/^__Host-loba_learner=/);assert.equal(f.sessions.size,1);
++  // A refused sign-in also returns to the app, with the reason.
++  const denied=await invoke(f.app,'/api/learn/google/start?app=1&challenge='+challenge);
++  const refused=await invoke(f.app,'/api/learn/google/callback?error=access_denied&state='+f.authorization.state,denied.headers['set-cookie'].map(c=>c.split(';')[0]).join('; '));
++  assert.equal(refused.headers.location,'loba://auth?error=google_cancelled');
++});
