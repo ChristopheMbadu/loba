@@ -234,7 +234,7 @@ struct AuthView: View {
                     Button {
                         Task { await run { try await google.signIn() } }
                     } label: { Label(L("Continuer avec Google", "Continue with Google"), systemImage: "g.circle.fill") }
-                        .buttonStyle(.chunky(.outline))
+                        .buttonStyle(.chunky(.outline)).disabled(busy)
                 }
 
                 if mode == .signup { field(L("Prénom", "First name"), text: $name, content: .givenName) }
@@ -269,6 +269,8 @@ struct AuthView: View {
         .scrollDismissesKeyboard(.interactively)
         .background(Color.white)
         .presentationDragIndicator(.visible)
+        .interactiveDismissDisabled(busy)
+        .onDisappear { google.cancel() }
     }
 
     private func field(_ label: String, text: Binding<String>, content: UITextContentType, keyboard: UIKeyboardType = .default) -> some View {
@@ -291,6 +293,7 @@ struct AuthView: View {
     }
 
     private func run(_ work: () async throws -> Void) async {
+        guard !busy else { return }
         busy = true
         error = ""
         do {
@@ -317,36 +320,71 @@ extension View {
 }
 
 /// Google sign-in happens in the system browser sheet; the server then hands a one-time code back to the app.
-@Observable
+@MainActor
 final class GoogleSignIn: NSObject, ASWebAuthenticationPresentationContextProviding {
-    private var generator = SystemRandomNumberGenerator()
+    private var session: ASWebAuthenticationSession?
+    private var completion: CheckedContinuation<URL, Error>?
+    private var attemptID: String?
 
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
         UIApplication.shared.connectedScenes.compactMap { ($0 as? UIWindowScene)?.keyWindow }.first ?? ASPresentationAnchor()
     }
 
-    @MainActor
+    private func finish(_ id: String, _ result: Result<URL, Error>) {
+        guard attemptID == id else { return }
+        attemptID = nil
+        let pending = completion
+        completion = nil
+        session = nil
+        pending?.resume(with: result)
+    }
+
+    func cancel() {
+        guard let id = attemptID else { return }
+        let active = session
+        finish(id, .failure(CancellationError()))
+        active?.cancel()
+    }
+
     func signIn() async throws {
-        // Only this app knows the verifier, so a code intercepted on its way back is useless to anyone else.
-        let verifier = (0..<43).map { _ in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".randomElement(using: &generator)! }.map(String.init).joined()
-        let challenge = Data(SHA256.hash(data: Data(verifier.utf8))).base64EncodedString()
-            .replacingOccurrences(of: "+", with: "-").replacingOccurrences(of: "/", with: "_").replacingOccurrences(of: "=", with: "")
-        let callback: URL = try await withCheckedThrowingContinuation { done in
-            let session = ASWebAuthenticationSession(url: API.url("/api/learn/google/start?app=1&challenge=\(challenge)"), callbackURLScheme: "loba") { url, error in
-                if let url { done.resume(returning: url) } else { done.resume(throwing: (error as? ASWebAuthenticationSessionError)?.code == .canceledLogin ? CancellationError() : (error ?? CancellationError())) }
+        guard session == nil else { return }
+        let request = GoogleAuthRequest()
+        let callback: URL = try await withTaskCancellationHandler {
+            try Task.checkCancellation()
+            return try await withCheckedThrowingContinuation { done in
+                completion = done
+                attemptID = request.state
+                let active = ASWebAuthenticationSession(url: request.startURL(origin: API.origin), callbackURLScheme: "loba") { [weak self] url, error in
+                    Task { @MainActor in
+                        if let url { self?.finish(request.state, .success(url)) }
+                        else if (error as? ASWebAuthenticationSessionError)?.code == .canceledLogin {
+                            self?.finish(request.state, .failure(CancellationError()))
+                        } else {
+                            self?.finish(request.state, .failure(error ?? GoogleAuthRequest.Failure.invalidCallback))
+                        }
+                    }
+                }
+                // Retain the browser session until it completes, including cancellation and failed starts.
+                session = active
+                active.presentationContextProvider = self
+                active.prefersEphemeralWebBrowserSession = false
+                if !active.start() { finish(request.state, .failure(GoogleAuthRequest.Failure.invalidCallback)) }
             }
-            session.presentationContextProvider = self
-            session.prefersEphemeralWebBrowserSession = false
-            session.start()
+        } onCancel: {
+            Task { @MainActor in
+                if self.attemptID == request.state { self.cancel() }
+            }
         }
-        let items = URLComponents(url: callback, resolvingAgainstBaseURL: false)?.queryItems ?? []
-        if let reason = items.first(where: { $0.name == "error" })?.value {
+        try Task.checkCancellation()
+        let code: String
+        do { code = try request.code(from: callback) }
+        catch GoogleAuthRequest.Failure.provider(let reason) {
+            if reason == "google_cancelled" { throw CancellationError() }
             throw APIError(status: 400, message: reason == "google_existing"
                 ? L("Un compte existe déjà avec cette adresse. Connecte-toi avec ton mot de passe, puis relie Google depuis le site.", "An account already exists with this email. Sign in with your password, then link Google from the website.")
-                : L("La connexion Google a échoué ou a été annulée.", "Google sign-in failed or was cancelled."))
+                : L("La connexion Google a échoué. Réessaie.", "Google sign-in failed. Please try again."))
         }
-        guard let code = items.first(where: { $0.name == "code" })?.value else { throw APIError(status: 0, message: "offline") }
-        AppStore.shared.signedInWith(try await API.redeemGoogle(code: code, verifier: verifier))
+        AppStore.shared.signedInWith(try await API.redeemGoogle(code: code, verifier: request.verifier))
     }
 }
 

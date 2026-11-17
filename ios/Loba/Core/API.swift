@@ -107,7 +107,7 @@ enum API {
     /// Whether this server offers Google sign-in to the app (it must hand the session back to the app, not to a browser).
     static func googleForApp() async -> Bool {
         guard let body = try? await call("/api/learn/auth-options") else { return false }
-        return body["google"] as? Bool == true && body["app"] as? Bool == true
+        return body["google"] as? Bool == true && body["app"] as? Bool == true && body["appProtocol"] as? Int == 2
     }
 
     /// Swaps the one-time code the server sent back after Google sign-in for a session.

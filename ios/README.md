@@ -24,10 +24,33 @@ iOS 17 and later. No third-party packages.
 
 ## Google sign-in
 
-The button appears only when the server says it supports the app (`app: true` in `/api/learn/auth-options`).
-That needs `server-google-for-app.patch` applied to the server and deployed: sign-in happens in the system
-browser sheet, the server sends a one-time code back to `loba://auth`, and the app swaps it for its session.
-No change is needed in the Google Cloud console.
+The button appears when `/api/learn/auth-options` reports `google: true`, `app: true`,
+and `appProtocol: 2`. Email login and guest mode still work without Google.
+
+The deployed server lives in **webynn/loba**, while this iOS project lives in
+**ChristopheMbadu/loba**. Deploy the matching backend changes there before testing Google.
+`server-google-for-app.patch` targets webynn/loba at d6e50b0; it does not apply to this
+repository's older server. The existing Google web OAuth client and HTTPS callback
+remain unchanged; no client secret is embedded in the app.
+
+The app opens ASWebAuthenticationSession with a fresh proof challenge and random state.
+The server stores both on the OAuth attempt. On success it returns a two-minute,
+single-use code to `loba://auth`. The app verifies the callback destination and state,
+then redeems the code with its private verifier for its own session cookie and progress.
+Cancellation is silent; duplicate taps are blocked; failure to open the browser releases
+the busy state. Existing password accounts must link Google through the website first.
+
+Validation commands (from the repository root):
+
+```sh
+swiftc -module-cache-path /tmp/loba-swift-cache ios/Loba/Core/GoogleAuthRequest.swift ios/Tests/GoogleAuthRequestTests.swift -o /tmp/loba-google-tests
+/tmp/loba-google-tests
+xcodebuild -project ios/Loba.xcodeproj -scheme Loba -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath /tmp/loba-build CODE_SIGNING_ALLOWED=NO build
+```
+
+Also verify real Google sign-in, cancellation, returning-account progress, sign-out,
+and restarting the app on a device after the backend deployment. Automated callback
+checks do not replace a live provider/device test.
 
 ## Before the App Store
 
