@@ -347,7 +347,7 @@ final class GoogleSignIn: NSObject, ASWebAuthenticationPresentationContextProvid
     }
 
     func signIn() async throws {
-        guard session == nil else { return }
+        guard session == nil else { throw CancellationError() }
         let request = GoogleAuthRequest()
         let callback: URL = try await withTaskCancellationHandler {
             try Task.checkCancellation()

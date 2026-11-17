@@ -24,7 +24,7 @@ import Foundation
             "loba://auth?code=\(code)", "loba://auth?state=\(request.state)"
         ] {
             do { _ = try request.code(from: URL(string: value)!); preconditionFailure("Accepted invalid callback") }
-            catch GoogleAuthRequest.Failure.invalidCallback {} 
+            catch GoogleAuthRequest.Failure.invalidCallback {}
         }
         do {
             _ = try request.code(from: URL(string: "loba://auth?error=google_cancelled&state=\(request.state)")!)
