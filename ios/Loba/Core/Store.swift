@@ -110,6 +110,7 @@ final class AppStore {
     func eraseProgress() {
         let ui = state.ui
         update { $0 = GameState(); $0.ui = ui }
+        PuzzleScores.clear()
     }
 
     // MARK: account

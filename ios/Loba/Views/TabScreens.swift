@@ -36,6 +36,7 @@ struct PracticeView: View {
     @Environment(AppStore.self) private var store
     @State private var mode: LessonBuilder.PracticeMode?
     @State private var story = false
+    @State private var puzzle = false
 
     var body: some View {
         let s = store.state, pool = Rules.unlockedWords(s, store.units)
@@ -55,6 +56,11 @@ struct PracticeView: View {
                              text: listen ? L("Reconnais les mots à l’oreille.", "Recognise words by ear.") : L("Pas encore assez d’enregistrements pour ces leçons.", "Not enough recordings for these lessons yet."))
                 }
                 .buttonStyle(.plain).disabled(!listen).opacity(listen ? 1 : 0.55)
+                Button { puzzle = true } label: {
+                    TileCard(art: "word", tint: .skyTint, title: L("Mots mêlés", "Word hunt"),
+                             text: L("Trouve les mots cachés : chacun révèle son sens et une phrase.", "Find the hidden words: each reveals its meaning and a sentence."))
+                }
+                .buttonStyle(.plain)
                 Button { story = true } label: {
                     TileCard(art: "book", tint: .sunTint, title: L("Masapo · Contes du Congo", "Masapo · Tales of Congo"),
                              text: L("Un conte illustré, avec des mots de ta langue.", "An illustrated folktale with words from your language."))
@@ -65,6 +71,7 @@ struct PracticeView: View {
         }
         .fullScreenCover(item: $mode) { LessonView(mode: .practice($0)) }
         .fullScreenCover(isPresented: $story) { StoryView() }
+        .fullScreenCover(isPresented: $puzzle) { PuzzleHub() }
     }
 }
 

@@ -55,10 +55,11 @@ struct DebugLaunch: ViewModifier {
                 guard ProcessInfo.processInfo.arguments.contains("-demo") else { return }
                 store.continueAsGuest()
                 if !store.state.onboarded { store.finishOnboarding(lang: "ln", goal: 20) }
-                if ["story", "lesson", "build", "review"].contains(Self.screen ?? "") { cover = Self.screen }
+                if ["story", "lesson", "build", "review", "puzzle", "puzzles"].contains(Self.screen ?? "") { cover = Self.screen }
             }
             .fullScreenCover(item: $cover) { name in
                 if name == "story" { StoryView() }
+                else if name == "puzzle" || name == "puzzles" { PuzzleHub(autostart: name == "puzzle") }
                 else if name == "review" { LessonView(mode: .practice(.review)) }
                 else if let unit = store.units.first { LessonView(mode: .lesson(unit, name == "build" ? 3 : 0)) }
             }
