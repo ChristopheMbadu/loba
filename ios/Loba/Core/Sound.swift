@@ -101,6 +101,7 @@ final class BackgroundMusic {
     private var browsing = false
     private var front = true
     private var speaking = false
+    private var librarySessions = 0
     private var interrupted = false
     private var lastFetch = Date.distantPast
     private var observers: [NSObjectProtocol] = []
@@ -124,8 +125,9 @@ final class BackgroundMusic {
     }
     func browse(_ value: Bool) { browsing = value; if value { Task { await refresh() } }; sync() }
     func foreground(_ value: Bool) { front = value; if value { Task { await refresh() } }; sync() }
+    func library(_ value: Bool) { librarySessions = max(0,librarySessions + (value ? 1 : -1)); sync() }
     func voice(_ value: Bool) { speaking = value; sync() }
-    private var wanted: Bool { enabled && browsing && front && !speaking && !interrupted && !AVAudioSession.sharedInstance().secondaryAudioShouldBeSilencedHint }
+    private var wanted: Bool { enabled && browsing && front && librarySessions == 0 && !speaking && !interrupted && !AVAudioSession.sharedInstance().secondaryAudioShouldBeSilencedHint }
     private func refresh() async {
         guard Date().timeIntervalSince(lastFetch) > 60 else { return }
         lastFetch = Date()

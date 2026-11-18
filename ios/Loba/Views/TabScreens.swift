@@ -40,6 +40,7 @@ struct PracticeView: View {
     @State private var guessing = false
     @State private var phrasebook = false
     @State private var map = false
+    @State private var songs = false
 
     var body: some View {
         let s = store.state, pool = Rules.unlockedWords(s, store.units)
@@ -49,6 +50,18 @@ struct PracticeView: View {
         ScrollView {
             VStack(spacing: 14) {
                 PageHead(title: L("Pratique", "Practice"), text: L("La pratique ne coûte jamais de cœurs. Les mots ratés reviennent plus souvent.", "Practice never costs hearts. Words you miss come back more often."))
+                Button { songs = true } label: {
+                    HStack(spacing:16) {
+                        Art(name:"headphones",size:48).frame(width:72,height:72).background(.white,in:RoundedRectangle(cornerRadius:22))
+                        VStack(alignment:.leading,spacing:4) {
+                            Text(L("Le jardin des chansons", "The Song Garden")).font(.display(23)).foregroundStyle(Color.ink)
+                            Text(L("Écoute, danse et retrouve les chansons de chez nous.", "Listen, dance and discover the songs we grew up with.")).font(.text(15)).foregroundStyle(Color.ink2)
+                        }
+                        Spacer(minLength:0)
+                        Image(systemName:"play.circle.fill").font(.system(size:28)).foregroundStyle(Color.plum)
+                    }.padding(18).background(Color.sunTint,in:RoundedRectangle(cornerRadius:24))
+                        .overlay(RoundedRectangle(cornerRadius:24).stroke(Color.sun.opacity(0.5),lineWidth:2))
+                }.buttonStyle(.plain)
                 Button { mode = .review } label: {
                     TileCard(art: "cards", tint: .leafTint, title: L("Révision intelligente", "Smart review"),
                              text: seen ? L("\(due) mots à revoir aujourd’hui", "\(due) words to review today") : L("Termine une leçon pour débloquer la révision.", "Finish a lesson to unlock review."))
@@ -94,6 +107,7 @@ struct PracticeView: View {
             .padding(20)
         }
         .fullScreenCover(item: $mode) { LessonView(mode: .practice($0)) }
+        .fullScreenCover(isPresented: $songs) { SongGarden() }
         .fullScreenCover(isPresented: $story) { StoryView() }
         .fullScreenCover(isPresented: $puzzle) { PuzzleHub() }
         .fullScreenCover(isPresented: $guessing) { GuessWordGame(words: pool.filter(\.guessWord), ui: s.ui, notebook: Notebook.key(store)) }

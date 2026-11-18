@@ -79,3 +79,11 @@ or runtime network request is used. Reduce Motion stops playback. The 3.6-second
 
 This branch preserves Claude's local launch/session changes captured before the
 branding work. Preserve any newer local edits when integrating it.
+
+## Song Garden (2026-11-18)
+
+Practice now opens a full-screen Song Garden backed by the Studio `/api/v1/music` catalog. It includes native record-sleeve artwork, the animated Loba stage, a persistent Now Playing bar, favorites saved on this device, play/pause/seek/previous/next, repeat-one and Surprise Me. An enabled song in Studio is available in the library; no per-song app release is needed. New tracks use a deterministic color without requiring bundled artwork. Lyrics and offline downloads are not implemented.
+
+Explicit listening suppresses the ambient playlist and does not depend on the background-music toggle. It stops on closing the library and pauses on backgrounding, audio interruptions or disconnected headphones. Motion is reduced when system animations are disabled. Catalog failures and empty/favorites-only states have dedicated UI.
+
+Validation: iOS app sources passed Swift type-checking. Android app Kotlin/Compose sources compiled directly with the installed Kotlin 2.2.10 and Compose compiler, Android SDK and cached dependencies. Full Gradle APK packaging was blocked by the environment’s local socket restriction. Native visual/device playback checks and installation remain pending; compilation is not proof of runtime behavior.
