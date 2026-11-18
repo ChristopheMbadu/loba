@@ -69,14 +69,13 @@ Debug builds accept launch arguments for screenshots:
 `-demo` (skip sign-in and onboarding), `-screen story|lesson|build|review|practice|quests|shop|profile`,
 `-page N` (story page), `-autoplay yes|wrong|hold` (plays a lesson by itself).
 
-## Heritage branding
+## App branding
 
 The app icon uses the supplied Loba mascot, adapted to a 1024×1024 opaque square.
-`HeritageSplash.swift` uses the same warm launch background, Kuba-inspired borders,
-bilingual text, and the existing pirogue Lottie asset. The animation renderer is
-bundled locally (with its MIT license); no CDN or sign-in cookies are used.
-Reduce Motion stops the animation. The splash does not extend startup timing.
+The splash uses the user's `Owl Laughing.lottie`, extracted without visual changes
+into `owl-laughing.json`, on a plain white background with the Loba name.
+Playback uses the native Lottie Swift package (pinned to 4.6.1); no web view
+or runtime network request is used. Reduce Motion stops playback. Startup timing is unchanged.
 
-This branch preserves the local launch/session changes present in Claude's working
-copy at the time of the branding work. Review those alongside the branding commit
-when integrating into `ios-word-puzzle`; do not replace unrelated local edits.
+This branch preserves Claude's local launch/session changes captured before the
+branding work. Preserve any newer local edits when integrating it.

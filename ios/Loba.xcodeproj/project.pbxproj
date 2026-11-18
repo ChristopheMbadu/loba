@@ -6,6 +6,15 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+        B20000000000000000000001 = {isa = PBXBuildFile; productRef = B20000000000000000000002; };
+/* End PBXBuildFile section */
+/* Begin XCRemoteSwiftPackageReference section */
+        B20000000000000000000003 = {isa = XCRemoteSwiftPackageReference; repositoryURL = "https://github.com/airbnb/lottie-spm.git"; requirement = {kind = exactVersion; version = 4.6.1; }; };
+/* End XCRemoteSwiftPackageReference section */
+/* Begin XCSwiftPackageProductDependency section */
+        B20000000000000000000002 = {isa = XCSwiftPackageProductDependency; package = B20000000000000000000003; productName = Lottie; };
+/* End XCSwiftPackageProductDependency section */
 /* Begin PBXFileReference section */
 		A10000000000000000000001 /* Loba.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Loba.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +32,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+                B20000000000000000000001,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -64,6 +74,7 @@
 				A10000000000000000000002 /* Loba */,
 			);
 			name = Loba;
+			packageProductDependencies = (B20000000000000000000002,);
 			productName = Loba;
 			productReference = A10000000000000000000001 /* Loba.app */;
 			productType = "com.apple.product-type.application";
@@ -93,6 +104,7 @@
 			);
 			mainGroup = A10000000000000000000004;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (B20000000000000000000003,);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A10000000000000000000005 /* Products */;
 			projectDirPath = "";
