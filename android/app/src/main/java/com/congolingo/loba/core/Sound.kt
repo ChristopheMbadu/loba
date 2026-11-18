@@ -14,6 +14,7 @@ import androidx.compose.runtime.setValue
 import com.congolingo.loba.R
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
+import kotlinx.coroutines.launch
 
 /** Loba's sounds: the same likembe, ngoma and shaker cues as the website, recorded from its synthesizer. */
 object Sfx {
@@ -74,56 +75,93 @@ object Sfx {
  */
 object Music {
     private const val key = "loba-music"
-
     var on by mutableStateOf(true)
         private set
     private var loaded = false
     private var player: MediaPlayer? = null
-    /** How many game screens are showing, and whether the app is in front. */
+    private var ready = false
     private var games = 0
     private var front = true
-
+    private var speaking = false
+    private var interrupted = false
+    private var tracks = listOf<String>()
+    private val remaining = mutableListOf<String>()
+    private var current = ""
+    private var fetched = 0L
+    private val scope = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.SupervisorJob() + kotlinx.coroutines.Dispatchers.Main)
+    private val audioManager by lazy { appContext.getSystemService(Context.AUDIO_SERVICE) as android.media.AudioManager }
+    private val focus by lazy {
+        android.media.AudioFocusRequest.Builder(android.media.AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK)
+            .setAudioAttributes(AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_GAME).setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build())
+            .setOnAudioFocusChangeListener { change ->
+                interrupted = change != android.media.AudioManager.AUDIOFOCUS_GAIN
+                if (interrupted) player?.takeIf { ready && it.isPlaying }?.pause() else sync()
+            }.build()
+    }
     private fun load() {
         if (loaded) return
         loaded = true
         on = Prefs.store.getBoolean(key, true)
     }
-
-    private fun sync() {
-        load()
-        val wanted = on && games > 0 && front
-        try {
-            if (wanted) {
-                val p = player ?: MediaPlayer.create(appContext, R.raw.game_loop)?.apply {
-                    isLooping = true
-                    // Behind the game's own sounds, not over them.
-                    setVolume(0.32f, 0.32f)
-                }.also { player = it }
-                if (p != null && !p.isPlaying) p.start()
-            } else if (games == 0) {
-                player?.release()
-                player = null
-            } else {
-                player?.takeIf { it.isPlaying }?.pause()
-            }
-        } catch (_: Exception) {
-            player = null
+    private fun wanted() = on && games > 0 && front && !speaking && !interrupted
+    private fun refresh() {
+        if (System.currentTimeMillis() - fetched < 60_000) return
+        fetched = System.currentTimeMillis()
+        scope.launch {
+            val data = Api.fetch(Api.url("/api/v1/music")) ?: return@launch
+            try {
+                val rows = org.json.JSONObject(String(data, Charsets.UTF_8)).getJSONArray("tracks")
+                tracks = (0 until rows.length()).mapNotNull { index ->
+                    rows.getJSONObject(index).optString("id").takeIf { it.matches(Regex("[0-9a-f-]{36}")) }
+                }
+                remaining.clear()
+                if (current !in tracks) release()
+                sync()
+            } catch (_: Exception) { /* Learning still works without music. */ }
         }
     }
-
-    /** Whether it is on, read before any game opens (for the settings switch). */
-    val enabled: Boolean get() { load(); return on }
-
-    fun toggle() {
-        load()
-        on = !on
-        Prefs.store.edit().putBoolean(key, on).apply()
-        sync()
+    private fun release() {
+        try { player?.release() } catch (_: Exception) {}
+        player = null; ready = false
     }
-
-    fun enter() { games += 1; sync() }
-    fun leave() { games = maxOf(0, games - 1); sync() }
-    fun foreground(now: Boolean) { front = now; sync() }
+    private fun next() {
+        if (!wanted() || tracks.isEmpty()) return
+        if (remaining.isEmpty()) {
+            remaining.addAll(tracks.shuffled())
+            if (remaining.size > 1 && remaining.first() == current) remaining.add(remaining.removeAt(0))
+        }
+        release()
+        current = remaining.removeAt(0)
+        try {
+            val p = MediaPlayer()
+            player = p
+            p.setAudioAttributes(AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_GAME).setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build())
+            p.setVolume(0.16f, 0.16f)
+            p.setDataSource(Api.url("/api/v1/music/$current"))
+            p.setOnPreparedListener { if (player === it) { ready = true; sync() } }
+            p.setOnCompletionListener { if (player === it) next() }
+            p.setOnErrorListener { mp, _, _ -> if (player === mp) release(); true }
+            p.prepareAsync()
+        } catch (_: Exception) { release() }
+    }
+    private fun sync() {
+        load()
+        try {
+            if (wanted()) {
+                if (player == null) next()
+                else if (ready && player?.isPlaying == false && audioManager.requestAudioFocus(focus) == android.media.AudioManager.AUDIOFOCUS_REQUEST_GRANTED) player?.start()
+            } else {
+                if (ready) player?.takeIf { it.isPlaying }?.pause()
+                audioManager.abandonAudioFocusRequest(focus)
+            }
+        } catch (_: Exception) { release() }
+    }
+    val enabled: Boolean get() { load(); return on }
+    fun toggle() { load(); on = !on; interrupted = false; Prefs.store.edit().putBoolean(key,on).apply(); if(on)refresh(); sync() }
+    fun enter() { games += 1; refresh(); sync() }
+    fun leave() { games = maxOf(0,games-1); sync() }
+    fun foreground(now: Boolean) { front = now; if(now)refresh(); sync() }
+    fun voice(now: Boolean) { speaking = now; sync() }
 }
 
 /** A teacher's recording of a word. */
@@ -134,23 +172,26 @@ object Voice {
         val id = word.audio
         if (!AppStore.state.voice || id == null) return
         stop()
+        Music.voice(true)
         try {
             player = MediaPlayer().apply {
                 setAudioAttributes(AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA).setContentType(AudioAttributes.CONTENT_TYPE_SPEECH).build())
                 setDataSource(Api.audioURL(id))
                 setOnPreparedListener { it.start() }
-                setOnCompletionListener { it.release(); if (player === it) player = null }
-                setOnErrorListener { mp, _, _ -> mp.release(); if (player === mp) player = null; true }
+                setOnCompletionListener { it.release(); if (player === it) { player = null; Music.voice(false) } }
+                setOnErrorListener { mp, _, _ -> mp.release(); if (player === mp) { player = null; Music.voice(false) }; true }
                 prepareAsync()
             }
         } catch (_: Exception) {
             player = null
+            Music.voice(false)
         }
     }
 
     fun stop() {
         try { player?.release() } catch (_: Exception) {}
         player = null
+        Music.voice(false)
     }
 }
 

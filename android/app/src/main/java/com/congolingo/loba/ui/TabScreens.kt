@@ -297,7 +297,7 @@ fun ProfileView() {
                 PickerMenu(s.goal, Game.goals.map { it to "$it XP" }) { AppStore.setGoal(it) }
             }
             ToggleRow(L("Effets sonores", "Sound effects"), s.sound) { AppStore.toggleSound() }
-            ToggleRow(L("Musique des jeux", "Game music"), Music.enabled) { Music.toggle() }
+            ToggleRow(L("Musique de fond", "Background music"), Music.enabled) { Music.toggle() }
             ToggleRow(L("Enregistrements audio", "Audio recordings"), s.voice) { AppStore.toggleVoice() }
             ToggleRow(L("Rappel du soir (19 h)", "Evening reminder (7 pm)"), reminder) { scope.launch { reminder = Reminder.set(!reminder) } }
         }
