@@ -15,6 +15,7 @@ struct GuessWordGame: View {
     @State private var rotation = 90.0
     @State private var seconds = 60
     @State private var count = 3
+    @State private var feedback: Bool?
     @State private var scored = 0
     @State private var useButtons = false
 
@@ -29,7 +30,12 @@ struct GuessWordGame: View {
                 .rotationEffect(.degrees(turn ? rotation : 0))
                 .position(x: geo.size.width / 2, y: geo.size.height / 2)
         }
-        .background(Color.skyTint.ignoresSafeArea())
+        .background(backdrop.ignoresSafeArea())
+    }
+
+    private var backdrop: Color {
+        if let feedback { return feedback ? Color(hex: "087844") : Color(hex: "BA3044") }
+        return horizontal ? Color(hex: "143957") : Color.skyTint
     }
 
     private var content: some View {
@@ -38,11 +44,16 @@ struct GuessWordGame: View {
                 Button { dismiss() } label: { Image(systemName: "xmark").padding(12) }
                     .accessibilityLabel(L("Fermer", "Close"))
                 Spacer()
-                if phase == .playing { Text("⏱ \(seconds)s   ·   ✓ \(scored)").monospacedDigit() }
+                if phase == .playing { HStack(spacing: 16) {
+                    Label("\(seconds)s", systemImage: "timer").foregroundStyle(seconds <= 5 ? Color.sun : .white)
+                    Label("\(scored)", systemImage: "star.fill").foregroundStyle(Color.sun)
+                }.monospacedDigit() }
             }
             Spacer()
             switch phase {
             case .intro:
+                LobaView(mood: .wave, size: 88)
+                KubaBand(height: 8).frame(maxWidth: 170).clipShape(Capsule())
                 Text(L("Devine le mot", "Guess the word")).font(.display(32))
                 Text(L("Tiens le téléphone contre ton front, écran vers ton partenaire. Ton partenaire décrit le mot sans le dire. Devine-le dans la langue que tu apprends.", "Hold the phone to your forehead with the screen facing your partner. They describe the word without saying it. Guess it aloud in the language you’re learning."))
                 Text(L("Incline l’écran vers le sol si tu trouves, vers le ciel pour passer. Tu peux aussi toucher les boutons.", "Tilt the screen toward the floor for correct or toward the ceiling to pass. You can also tap the buttons."))
@@ -59,15 +70,30 @@ struct GuessWordGame: View {
                 Text(String(count)).font(.display(64)).monospacedDigit()
             case .playing:
                 let word = deck[index]
-                Text(word.term).font(.display(50)).minimumScaleFactor(0.45).lineLimit(3)
-                Text(word.meaning(ui)).font(.text(21, .bold)).foregroundStyle(Color.ink2)
-                Spacer()
-                if useButtons { HStack {
-                    Button(L("Passer", "Pass")) { answer(false) }.buttonStyle(.chunky(.outline))
-                    Button(L("Trouvé !", "Got it!")) { answer(true) }.buttonStyle(.chunky(.green))
-                }
+                if let feedback {
+                    Image(systemName: feedback ? "checkmark.circle.fill" : "xmark.circle.fill")
+                        .font(.system(size: 54, weight: .bold))
+                    Text(feedback ? L("Trouvé !", "Got it!") : L("Raté !", "Missed!"))
+                        .font(.display(46))
+                    Text(word.term).font(.text(20, .heavy))
+                } else {
+                    VStack(spacing: 8) {
+                        KubaBand(height: 6).frame(width: 84).clipShape(Capsule())
+                        Text(word.term).font(.display(58)).minimumScaleFactor(0.45).lineLimit(2)
+                        Text(word.meaning(ui)).font(.text(20, .bold)).foregroundStyle(Color.ink2)
+                    }
+                    .padding(12).frame(maxWidth: .infinity)
+                    .foregroundStyle(Color.ink)
+                    .background(RoundedRectangle(cornerRadius: 24).fill(.white))
+                    if useButtons {
+                        HStack {
+                            Button(L("Passer", "Pass")) { answer(false) }.buttonStyle(.chunky(.outline))
+                            Button(L("Trouvé !", "Got it!")) { answer(true) }.buttonStyle(.chunky(.green))
+                        }
+                    }
                 }
             case .recap:
+                Image(systemName: "trophy.fill").font(.largeTitle).foregroundStyle(Color.sunShade)
                 Text(L("Manche terminée", "Round complete")).font(.display(30))
                 Text(L("Mots trouvés", "Words guessed") + " · \(scored) / \(scored + missed.count)")
                 if !missed.isEmpty {
@@ -86,8 +112,19 @@ struct GuessWordGame: View {
             }
             Spacer()
         }
-        .font(.text(18)).foregroundStyle(Color.ink).multilineTextAlignment(.center)
-        .padding(20).frame(maxWidth: .infinity).background(Color.skyTint.ignoresSafeArea())
+        .font(.text(18)).foregroundStyle(horizontal ? Color.white : Color.ink).multilineTextAlignment(.center)
+        .padding(20).frame(maxWidth: .infinity).background(backdrop.ignoresSafeArea())
+        .task(id: scenePhase == .active ? feedback : nil) {
+            guard feedback != nil, scenePhase == .active else { return }
+            do { try await Task.sleep(for: .milliseconds(900)) } catch { return }
+            feedback = nil
+            if seconds == 0 || index + 1 == deck.count {
+                Sfx.play(.complete)
+                phase = .recap
+            } else {
+                index += 1
+            }
+        }
         .task(id: scenePhase == .active && (phase == .positioning || horizontal)) {
             guard scenePhase == .active, phase == .positioning || horizontal else { return }
             let motion = CMMotionManager()
@@ -124,7 +161,10 @@ struct GuessWordGame: View {
                 do { try await Task.sleep(for: .seconds(1)) } catch { return }
                 guard phase == .playing else { return }
                 seconds -= 1
-                if seconds == 0 { Sfx.play(.complete); phase = .recap }
+                if seconds == 0 {
+                    if feedback == nil { Sfx.play(.complete); phase = .recap }
+                    return
+                }
                 else if seconds <= 5 { Sfx.play(.tick) }
             }
         }
@@ -144,7 +184,8 @@ struct GuessWordGame: View {
     }
 
     private func answer(_ correct: Bool) {
-        guard phase == .playing else { return }
+        guard phase == .playing, feedback == nil, seconds > 0 else { return }
+        feedback = correct
         if correct {
             scored += 1
             Sfx.play(.correct)
@@ -154,6 +195,6 @@ struct GuessWordGame: View {
             Sfx.play(.tick)
             Haptic.thud()
         }
-        if index + 1 == deck.count { phase = .recap } else { index += 1 }
+
     }
 }
