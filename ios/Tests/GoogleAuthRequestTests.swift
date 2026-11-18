@@ -17,6 +17,19 @@ import Foundation
         let rootCallback = valid.replacingOccurrences(of: "//auth?", with: "//auth/?")
         let rootParsed = try request.code(from: URL(string: rootCallback)!)
         precondition(rootParsed == code)
+        for value in [valid + "#", rootCallback + "#", valid.replacingOccurrences(of: "loba://auth", with: "LOBA://AUTH")] {
+            let result = try request.code(from: URL(string: value)!)
+            precondition(result == code)
+        }
+        for (value, expected) in [
+            (valid + "#fragment", GoogleAuthRequest.CallbackIssue.fragment),
+            (valid.replacingOccurrences(of: "//auth?", with: "//wrong?"), .host),
+            (valid.replacingOccurrences(of: "//auth?", with: "//auth/unexpected?"), .path),
+            (valid + "&error=google_failed", .payload)
+        ] {
+            do { _ = try request.code(from: URL(string: value)!); preconditionFailure("Accepted invalid callback") }
+            catch GoogleAuthRequest.Failure.invalidCallback(let issue) { precondition(issue == expected) }
+        }
         for value in [
             valid.replacingOccurrences(of: "loba:", with: "https:"),
             valid.replacingOccurrences(of: "//auth?", with: "//wrong?"),

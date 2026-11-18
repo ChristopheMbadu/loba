@@ -391,8 +391,8 @@ final class GoogleSignIn: NSObject, ASWebAuthenticationPresentationContextProvid
         try Task.checkCancellation()
         let code: String
         do { code = try request.code(from: callback) }
-        catch GoogleAuthRequest.Failure.invalidCallback {
-            throw APIError(status: 400, message: L("Le lien de retour de connexion est invalide. Réessaie. [GOOGLE-CALLBACK]", "The sign-in return link is invalid. Try again. [GOOGLE-CALLBACK]"))
+        catch GoogleAuthRequest.Failure.invalidCallback(let issue) {
+            throw APIError(status: 400, message: L("Le lien de retour de connexion est invalide. Réessaie. [GOOGLE-CALLBACK-\(issue.rawValue)]", "The sign-in return link is invalid. Try again. [GOOGLE-CALLBACK-\(issue.rawValue)]"))
         } catch GoogleAuthRequest.Failure.invalidState {
             throw APIError(status: 400, message: L("Cette tentative de connexion a expiré ou ne correspond pas. Réessaie. [GOOGLE-STATE]", "This sign-in attempt expired or did not match. Try again. [GOOGLE-STATE]"))
         } catch GoogleAuthRequest.Failure.invalidCode {
