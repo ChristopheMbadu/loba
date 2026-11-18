@@ -9,7 +9,14 @@ final class AppStore {
 
     private(set) var state: GameState
     private(set) var catalog: Catalog
-    private(set) var learner: Learner?
+    /// Who is signed in. Remembered on the phone, so the app opens straight onto their lessons
+    /// instead of showing the welcome screen while it asks the server.
+    private(set) var learner: Learner? {
+        didSet {
+            guard learner != oldValue else { return }
+            if let learner { defaults.set(learner.json, forKey: "loba-learner") } else { defaults.removeObject(forKey: "loba-learner") }
+        }
+    }
     /// False until the first answer from the account service (or its failure).
     private(set) var ready = false
     /// Learning on this phone only, without an account.
@@ -31,6 +38,7 @@ final class AppStore {
         state = initial
         catalog = CatalogParser.bundled()
         guest = defaults.bool(forKey: "loba-guest")
+        learner = Learner(defaults.dictionary(forKey: "loba-learner"))
         tick()
     }
 
@@ -50,6 +58,9 @@ final class AppStore {
             if let session = try await API.me() {
                 learner = session.learner
                 if unsynced && state.onboarded { await push() } else { adopt(session.progress) }
+            } else {
+                // The server no longer knows this phone (signed out elsewhere, or the session ended).
+                learner = nil
             }
         } catch {
             // Offline: keep going with what is on the phone.

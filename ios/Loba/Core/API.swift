@@ -13,6 +13,8 @@ struct Learner: Equatable {
         googleLinked = o["googleLinked"] as? Bool ?? false
         passwordLogin = o["passwordLogin"] as? Bool ?? true
     }
+
+    var json: [String: Any] { ["name": name, "email": email, "googleLinked": googleLinked, "passwordLogin": passwordLogin] }
 }
 
 struct APIError: LocalizedError {
