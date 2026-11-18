@@ -11,6 +11,12 @@ struct SplashView: View {
                 Color("LaunchBackground").ignoresSafeArea()
                 Image("RaffiaSplash")
                     .resizable()
+                    .mask {
+                        LinearGradient(stops: [
+                            .init(color: .clear, location: 0.14),
+                            .init(color: .white, location: 0.22)
+                        ], startPoint: .top, endPoint: .bottom)
+                    }
                     .ignoresSafeArea()
                     .accessibilityHidden(true)
                 VStack(spacing: 8) {
