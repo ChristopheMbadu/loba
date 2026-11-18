@@ -458,7 +458,7 @@ private fun MapHub(go: (MapScreen) -> Unit) {
         HubCard(tint = Leaf, title = "Atlas", text = L("Touche une province pour tout savoir.", "Tap a province to learn all about it."), action = { go(MapScreen.Atlas) }) {
             Text("🧭", fontSize = 32.sp, color = Ink)
         }
-        HubCard(tint = SunShade, title = L("Histoire et cultures", "History and cultures"), text = L("Des royaumes à la rumba.", "From kingdoms to rumba."), action = { go(MapScreen.Book) }) {
+        HubCard(tint = SunShade, title = L("Histoire et cultures", "History and cultures"), text = L("Un magazine à explorer.", "A magazine to explore."), action = { go(MapScreen.Book) }) {
             Text("📜", fontSize = 32.sp, color = Ink)
         }
         MapCredits()
@@ -991,52 +991,4 @@ private fun MapAtlas() {
 }
 
 @Composable
-private fun MapBook() {
-    val drc = DRC.shared
-    val ui = AppStore.state.ui
-    var tab by remember { mutableIntStateOf(0) }
-    Column(Modifier.fillMaxSize().readable(760.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        // The iOS segmented picker, drawn by hand.
-        Row(
-            Modifier.padding(horizontal = 16.dp).fillMaxWidth().background(Color(0x1F767680), RoundedCornerShape(9.dp)).padding(2.dp),
-        ) {
-            listOf(L("Histoire", "History"), L("Cultures", "Cultures"), L("En chiffres", "In numbers")).forEachIndexed { i, title ->
-                val on = tab == i
-                Box(
-                    Modifier.weight(1f).heightIn(min = 40.dp)
-                        .then(if (on) Modifier.background(Color.White, RoundedCornerShape(7.dp)) else Modifier)
-                        .semantics { role = Role.Tab }
-                        .tappable { tab = i },
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(title, style = textFont(13, if (on) W.HEAVY else W.BOLD), color = Ink, maxLines = 1)
-                }
-            }
-        }
-        val cards = when (tab) { 0 -> drc.history; 1 -> drc.culture; else -> drc.figures }
-        LazyColumn(
-            Modifier.weight(1f).fillMaxWidth(), contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 20.dp),
-            verticalArrangement = Arrangement.spacedBy(14.dp),
-        ) {
-            items(cards) { card ->
-                Column(Modifier.fillMaxWidth().card().padding(14.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    val year = card.year
-                    if (year != null) {
-                        Text(
-                            year, style = displayFont(14), color = hexColor("3b2a00"),
-                            modifier = Modifier.background(Sun, CircleShape).padding(horizontal = 10.dp, vertical = 4.dp),
-                        )
-                    }
-                    Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.Top) {
-                        val emoji = card.emoji
-                        if (emoji != null) Text(emoji, fontSize = 30.sp, color = Ink)
-                        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                            Text(card.title(ui), style = displayFont(19), color = Ink)
-                            Text(card.text(ui), style = if (tab == 2) displayFont(18) else textFont(15), color = if (tab == 2) SkyShade else Ink2)
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
+private fun MapBook() { CongoMagazine() }

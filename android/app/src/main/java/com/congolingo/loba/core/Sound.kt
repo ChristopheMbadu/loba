@@ -37,7 +37,7 @@ object Sfx {
             setOnLoadCompleteListener { p, id, status ->
                 if (status != 0) return@setOnLoadCompleteListener
                 ready += id
-                if (waiting.remove(id)) p.play(id, 1f, 1f, 1, 0, 1f)
+                if (waiting.remove(id) && !Prefs.store.getBoolean("loba-mute-all", false)) p.play(id, 1f, 1f, 1, 0, 1f)
             }
         }
     }
@@ -54,8 +54,10 @@ object Sfx {
         }
     }
 
+    fun stopAll() { waiting.clear(); pool.autoPause() }
+
     fun play(cue: Cue, n: Int = 1) {
-        if (!AppStore.state.sound) return
+        if (!AppStore.state.sound || Prefs.store.getBoolean("loba-mute-all", false)) return
         val name = when (cue) {
             Cue.TILE -> "tile${((n % 6) + 6) % 6}"
             Cue.CORRECT -> "correct${n.coerceIn(1, 5)}"
@@ -63,6 +65,7 @@ object Sfx {
             else -> cue.name.lowercase()
         }
         queue.execute {
+            if (Prefs.store.getBoolean("loba-mute-all", false)) return@execute
             val id = sound(name) ?: return@execute
             if (id in ready) pool.play(id, 1f, 1f, 1, 0, 1f) else waiting += id
         }
@@ -77,6 +80,10 @@ object Music {
     private const val key = "loba-music"
     var on by mutableStateOf(true)
         private set
+    var mutedAll by mutableStateOf(Prefs.store.getBoolean("loba-mute-all", false)); private set
+    var style by mutableStateOf(Prefs.store.getString("loba-music-style", "traditional") ?: "traditional"); private set
+    private val instrumentals = listOf("game-music-1", "game-music-2", "game-music-3")
+    private val playlist get() = if (style == "instrumental") instrumentals else tracks
     private var loaded = false
     private var player: MediaPlayer? = null
     private var ready = false
@@ -87,7 +94,7 @@ object Music {
     private var interrupted = false
     private var tracks = listOf<String>()
     private val remaining = mutableListOf<String>()
-    private var current = ""
+    private var current = Prefs.store.getString("loba-last-background-song", "") ?: ""
     private var fetched = 0L
     private val scope = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.SupervisorJob() + kotlinx.coroutines.Dispatchers.Main)
     private val audioManager by lazy { appContext.getSystemService(Context.AUDIO_SERVICE) as android.media.AudioManager }
@@ -104,7 +111,7 @@ object Music {
         loaded = true
         on = Prefs.store.getBoolean(key, true)
     }
-    private fun wanted() = on && games > 0 && front && !inLibrary && !speaking && !interrupted
+    private fun wanted() = on && !mutedAll && front && !inLibrary && !speaking && !interrupted
     private fun refresh() {
         if (System.currentTimeMillis() - fetched < 60_000) return
         fetched = System.currentTimeMillis()
@@ -115,6 +122,7 @@ object Music {
                 tracks = (0 until rows.length()).mapNotNull { index ->
                     rows.getJSONObject(index).optString("id").takeIf { it.matches(Regex("[0-9a-f-]{36}")) }
                 }
+                if (style != "traditional") return@launch
                 remaining.clear()
                 if (current !in tracks) release()
                 sync()
@@ -126,19 +134,22 @@ object Music {
         player = null; ready = false
     }
     private fun next() {
-        if (!wanted() || tracks.isEmpty()) return
+        if (!wanted() || playlist.isEmpty()) return
         if (remaining.isEmpty()) {
-            remaining.addAll(tracks.shuffled())
+            remaining.addAll(playlist.shuffled())
             if (remaining.size > 1 && remaining.first() == current) remaining.add(remaining.removeAt(0))
         }
         release()
         current = remaining.removeAt(0)
+        Prefs.store.edit().putString("loba-last-background-song",current).apply()
         try {
             val p = MediaPlayer()
             player = p
             p.setAudioAttributes(AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_GAME).setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build())
             p.setVolume(0.16f, 0.16f)
-            p.setDataSource(Api.url("/api/v1/music/$current"))
+            if (style == "instrumental") {
+                appContext.assets.openFd("music/$current.wav").use { p.setDataSource(it.fileDescriptor, it.startOffset, it.length) }
+            } else p.setDataSource(Api.url("/api/v1/music/$current"))
             p.setOnPreparedListener { if (player === it) { ready = true; sync() } }
             p.setOnCompletionListener { if (player === it) next() }
             p.setOnErrorListener { mp, _, _ -> if (player === mp) release(); true }
@@ -158,12 +169,28 @@ object Music {
         } catch (_: Exception) { release() }
     }
     val enabled: Boolean get() { load(); return on }
-    fun toggle() { load(); on = !on; interrupted = false; Prefs.store.edit().putBoolean(key,on).apply(); if(on)refresh(); sync() }
+    fun toggle() { load(); on = !on; interrupted = false; Prefs.store.edit().putBoolean(key,on).apply(); if (!on) SongLibrary.shared.pause(); if(on)refresh(); sync() }
+    fun toggleMute() {
+        mutedAll = !mutedAll; Prefs.store.edit().putBoolean("loba-mute-all", mutedAll).apply()
+        if (mutedAll) { Sfx.stopAll(); Voice.stop(); SongLibrary.shared.pause() }
+        sync()
+    }
+    fun chooseStyle(value: String) {
+        if (value !in listOf("traditional", "instrumental") || value == style) return
+        style = value; Prefs.store.edit().putString("loba-music-style", value).apply()
+        SongLibrary.shared.pause(); inLibrary = false; release(); remaining.clear(); interrupted = false
+        if (value == "traditional") refresh()
+        sync()
+    }
     fun enter() { games += 1; refresh(); sync() }
     fun leave() { games = maxOf(0,games-1); sync() }
-    fun foreground(now: Boolean) { front = now; if(now)refresh(); sync() }
+    fun foreground(now: Boolean) {
+        if (now && !front && !inLibrary) { release(); remaining.clear() }
+        front = now; SongLibrary.shared.foreground(now)
+        if(now)refresh(); sync()
+    }
     fun library(now: Boolean) { inLibrary = now; sync() }
-    fun voice(now: Boolean) { speaking = now; sync() }
+    fun voice(now: Boolean) { speaking = now; SongLibrary.shared.voice(now); sync() }
 }
 
 /** A teacher's recording of a word. */
@@ -172,7 +199,7 @@ object Voice {
 
     fun say(word: Word, automatic: Boolean = false) {
         val id = word.audio
-        if ((automatic && !AppStore.state.voice) || id == null) return
+        if (Music.mutedAll || (automatic && !AppStore.state.voice) || id == null) return
         stop()
         Music.voice(true)
         try {
@@ -204,7 +231,7 @@ object Haptic {
     }
 
     private fun buzz(effect: Int, fallbackMs: Long, pattern: LongArray? = null) {
-        if (!AppStore.state.sound) return
+        if (!AppStore.state.sound || Prefs.store.getBoolean("loba-mute-all", false)) return
         val v = vibrator ?: return
         try {
             if (Build.VERSION.SDK_INT >= 29 && pattern == null) v.vibrate(VibrationEffect.createPredefined(effect))

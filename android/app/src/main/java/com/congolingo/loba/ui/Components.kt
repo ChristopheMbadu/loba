@@ -36,6 +36,8 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.VolumeOff
+import androidx.compose.material.icons.rounded.VolumeUp
 import androidx.compose.material.icons.rounded.MusicNote
 import androidx.compose.material.icons.rounded.MusicOff
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -318,14 +320,16 @@ fun StatsBar(modifier: Modifier = Modifier) {
             .padding(horizontal = 20.dp, vertical = 5.dp),
         horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically,
     ) {
-        Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
-            LangBadge(s.lang, hexColor(AppStore.language?.color ?: "1c9bef"))
-            // The tune on the home screens, on or off. 44dp to touch, drawn smaller.
-            Box(Modifier.size(44.dp, 36.dp), contentAlignment = Alignment.Center) { MusicToggle(size = 36.dp) }
-        }
+        LangBadge(s.lang, hexColor(AppStore.language?.color ?: "1c9bef"))
         Stat(if (streak > 0) "flame" else "flameOff", "$streak", if (streak > 0) SunShade else Muted)
         Stat("gem", "${s.gems}", Sky)
         Stat(if (s.hearts > 0) "heart" else "heartOff", "${s.hearts}", Coral)
+        Box(Modifier.size(44.dp).clip(RoundedCornerShape(14.dp)).background(Surface)
+            .tappable { Music.toggleMute() }, contentAlignment = Alignment.Center) {
+            Icon(if (Music.mutedAll) Icons.Rounded.VolumeOff else Icons.Rounded.VolumeUp,
+                contentDescription = if (Music.mutedAll) L("Activer le son", "Unmute audio") else L("Couper le son", "Mute audio"),
+                tint = if (Music.mutedAll) Muted else Sky, modifier = Modifier.size(21.dp))
+        }
     }
 }
 

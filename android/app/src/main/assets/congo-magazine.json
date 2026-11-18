@@ -1,0 +1,233 @@
+[
+  {
+    "id": "salonga",
+    "section": 0,
+    "art": "forest",
+    "place": {
+      "fr": "Bassin central",
+      "en": "Central basin"
+    },
+    "number": "01",
+    "title": {
+      "fr": "Au cœur du vert",
+      "en": "Into the green"
+    },
+    "intro": {
+      "fr": "À Salonga, les rivières ouvrent le chemin vers une immense forêt. Imagine les bruits cachés sous les feuilles : le Congo se découvre aussi avec les oreilles.",
+      "en": "In Salonga, rivers lead into a vast forest. Imagine the sounds hidden beneath the leaves: Congo is a place to discover with your ears, too."
+    },
+    "detail": {
+      "fr": "Ce parc protège une forêt tropicale du bassin du Congo. Bonobos, éléphants de forêt et paons du Congo font partie de sa faune. Les cours d’eau sont essentiels pour rejoindre ce territoire isolé. Protéger un habitat, c’est préserver tout un monde de relations entre animaux, plantes et eau.",
+      "en": "This park protects tropical rainforest in the Congo Basin. Bonobos, forest elephants and Congo peafowl are among its wildlife. Waterways are essential routes into this remote landscape. Protecting a habitat means looking after a whole network of animals, plants and water."
+    },
+    "question": {
+      "fr": "Quel chemin permet de rejoindre Salonga ?",
+      "en": "What kind of route leads into Salonga?"
+    },
+    "answer": {
+      "fr": "Les voies d’eau ! Ici, les rivières sont des chemins.",
+      "en": "Waterways! Here, rivers are routes."
+    },
+    "source": "UNESCO · Salonga",
+    "url": "https://whc.unesco.org/en/list/280/",
+    "match": null
+  },
+  {
+    "id": "virunga",
+    "section": 0,
+    "art": "mountain",
+    "place": {
+      "fr": "Est de la RDC",
+      "en": "Eastern DRC"
+    },
+    "number": "02",
+    "title": {
+      "fr": "Un pays, mille paysages",
+      "en": "One country, many worlds"
+    },
+    "intro": {
+      "fr": "Des plaines de lave aux hauteurs du Rwenzori : les Virunga racontent une géographie pleine de contrastes.",
+      "en": "From lava plains to the heights of the Rwenzori: Virunga tells a story of extraordinary contrasts."
+    },
+    "detail": {
+      "fr": "Le parc réunit marais, savanes, volcans et montagnes dépassant 5 000 mètres. L’altitude, la pluie et les sols créent des habitats différents. Un gorille de montagne et un animal des marais n’ont pas les mêmes besoins : cette variété de paysages permet à des espèces très diverses de vivre dans une même région.",
+      "en": "The park includes wetlands, savannas, volcanoes and mountains rising above 5,000 metres. Altitude, rainfall and soils create different habitats. Mountain gorillas and wetland animals need different conditions: varied landscapes make room for very different species in one region."
+    },
+    "question": {
+      "fr": "Pourquoi tous les paysages du parc ne se ressemblent-ils pas ?",
+      "en": "Why do the park’s landscapes look so different?"
+    },
+    "answer": {
+      "fr": "L’altitude, la pluie et les sols changent d’un lieu à l’autre.",
+      "en": "Altitude, rainfall and soils change from place to place."
+    },
+    "source": "UNESCO · Virunga",
+    "url": "https://whc.unesco.org/en/list/63/",
+    "match": null
+  },
+  {
+    "id": "river",
+    "section": 0,
+    "art": "river",
+    "place": {
+      "fr": "Bassin du Congo",
+      "en": "Congo Basin"
+    },
+    "number": "03",
+    "title": {
+      "fr": "Le grand voyage de l’eau",
+      "en": "The great journey of water"
+    },
+    "intro": {
+      "fr": "Le fleuve Congo traverse deux fois l’équateur. Suis cette idée : un fleuve peut relier des paysages très éloignés.",
+      "en": "The Congo River crosses the equator twice. Follow this idea: one river can connect landscapes that are far apart."
+    },
+    "detail": {
+      "fr": "L’équateur est une ligne imaginaire qui sépare les hémisphères nord et sud. Le bassin d’un fleuve est l’ensemble des terres dont les eaux le rejoignent. Le bassin du Congo s’étend des deux côtés de cette ligne : les pluies de différentes régions alimentent son immense réseau de rivières.",
+      "en": "The equator is an imaginary line separating the northern and southern hemispheres. A river basin is all the land whose water drains into that river. The Congo Basin stretches across both hemispheres: rain in different regions feeds its enormous network of waterways."
+    },
+    "question": {
+      "fr": "Un bassin est-il seulement le lit du fleuve ?",
+      "en": "Is a basin just the river channel?"
+    },
+    "answer": {
+      "fr": "Non : ce sont aussi les terres dont les eaux rejoignent le fleuve.",
+      "en": "No: it also includes the land whose water drains into the river."
+    },
+    "source": "AGU · Congo Basin hydrology",
+    "url": "https://agupubs.onlinelibrary.wiley.com/doi/10.1029/2017JD027422",
+    "match": null
+  },
+  {
+    "id": "ishango",
+    "section": 1,
+    "art": "history",
+    "place": {
+      "fr": "Ishango · lac Édouard",
+      "en": "Ishango · Lake Edward"
+    },
+    "number": "≈20 000",
+    "title": {
+      "fr": "Un petit os, une grande énigme",
+      "en": "A little bone, a big mystery"
+    },
+    "intro": {
+      "fr": "Un objet tient dans la main. Ses encoches, elles, nous font remonter près de 20 000 ans.",
+      "en": "An object fits in your hand. Its notches take us back almost 20,000 years."
+    },
+    "detail": {
+      "fr": "Découvert en 1950 sur la rive congolaise du lac Édouard, cet os mesure environ 10 cm et porte un fragment de quartz. Ses encoches sont regroupées. Elles ont inspiré des interprétations liées au comptage, mais leur signification exacte reste discutée. Observer une trace et expliquer son usage sont deux étapes différentes du travail des chercheurs.",
+      "en": "Found in 1950 on the Congolese shore of Lake Edward, this bone is about 10 cm long and carries a piece of quartz. Its notches appear in groups. They have inspired interpretations involving counting, but their exact meaning remains debated. Observing a mark and explaining its purpose are two different parts of a researcher’s work."
+    },
+    "question": {
+      "fr": "Les encoches prouvent-elles à elles seules l’usage exact de l’objet ?",
+      "en": "Do the notches alone prove exactly how the object was used?"
+    },
+    "answer": {
+      "fr": "Non. Elles sont visibles, mais leur interprétation reste une question de recherche.",
+      "en": "No. We can see the marks, but interpreting them remains a research question."
+    },
+    "source": "Institute of Natural Sciences",
+    "url": "https://www.naturalsciences.be/en/museum/exhibitions-activities/exhibitions/250-years-of-natural-sciences/the-ishango-bone",
+    "match": "The Ishango bone"
+  },
+  {
+    "id": "kongo",
+    "section": 1,
+    "art": "history",
+    "place": {
+      "fr": "Mbanza Kongo · Angola actuel",
+      "en": "Mbanza Kongo · present-day Angola"
+    },
+    "number": "XIV–XIX",
+    "title": {
+      "fr": "Avant les frontières actuelles",
+      "en": "Before today’s borders"
+    },
+    "intro": {
+      "fr": "Pour comprendre le royaume Kongo, il faut regarder au-delà de la carte des pays d’aujourd’hui.",
+      "en": "To understand the Kingdom of Kongo, look beyond the borders on today’s map."
+    },
+    "detail": {
+      "fr": "Mbanza Kongo était sa capitale politique et spirituelle. Sur un plateau, la ville s’organisait autour de la résidence royale, de la cour coutumière et de lieux sacrés. Ce centre historique se trouve aujourd’hui en Angola. Les royaumes anciens et les États actuels ne recouvrent pas les mêmes territoires : leurs noms peuvent se ressembler sans désigner la même chose.",
+      "en": "Mbanza Kongo was its political and spiritual capital. On a plateau, the town developed around the royal residence, customary court and sacred places. This historic centre is in Angola today. Earlier kingdoms and modern states cover different territories: similar names do not always mean the same place."
+    },
+    "question": {
+      "fr": "La capitale historique du royaume est-elle en RDC aujourd’hui ?",
+      "en": "Is the kingdom’s historic capital in the DRC today?"
+    },
+    "answer": {
+      "fr": "Non, Mbanza Kongo se trouve en Angola.",
+      "en": "No. Mbanza Kongo is in Angola."
+    },
+    "source": "UNESCO · Mbanza Kongo",
+    "url": "https://whc.unesco.org/en/list/1511/",
+    "match": "The Kingdom of Kongo"
+  },
+  {
+    "id": "kuba",
+    "section": 2,
+    "art": "textile",
+    "place": {
+      "fr": "Région du Kasaï",
+      "en": "Kasaï region"
+    },
+    "number": "RAPHIA",
+    "title": {
+      "fr": "Des fibres deviennent de l’art",
+      "en": "From fibre to art"
+    },
+    "intro": {
+      "fr": "Lignes, rythmes, surprises : un tissu kuba invite à regarder encore une fois.",
+      "en": "Lines, rhythm, surprises: a Kuba textile rewards a second look."
+    },
+    "detail": {
+      "fr": "Les fibres du palmier raphia sont tissées, puis les étoffes peuvent être brodées ou décorées d’appliqués. Les motifs géométriques ne sont pas toujours réguliers : les variations font partie de leur richesse. Ces textiles ont servi de vêtements, d’objets de prestige et parfois de monnaie. Ce sont des créations d’artistes, pas simplement des décorations.",
+      "en": "Raffia palm fibres are woven into cloth, which may then be embroidered or decorated with appliqué. Geometric designs are not always regular: variation is part of their richness. These textiles have served as clothing, prestige objects and sometimes currency. They are artists’ creations, not simply decoration."
+    },
+    "question": {
+      "fr": "De quelle plante viennent les fibres ?",
+      "en": "Which plant supplies the fibres?"
+    },
+    "answer": {
+      "fr": "Du palmier raphia.",
+      "en": "The raffia palm."
+    },
+    "source": "The Metropolitan Museum of Art",
+    "url": "https://www.metmuseum.org/art/collection/search/318398",
+    "match": "Kuba cloth and masks"
+  },
+  {
+    "id": "rumba",
+    "section": 2,
+    "art": "music",
+    "place": {
+      "fr": "Kinshasa & Brazzaville",
+      "en": "Kinshasa & Brazzaville"
+    },
+    "number": "2021",
+    "title": {
+      "fr": "Deux rives, un rythme",
+      "en": "Two shores, one rhythm"
+    },
+    "intro": {
+      "fr": "La rumba congolaise fait vivre des histoires, des souvenirs et des liens entre les générations.",
+      "en": "Congolese rumba carries stories, memories and connections between generations."
+    },
+    "detail": {
+      "fr": "Musique et danse, elle accompagne des moments de célébration comme de deuil. Les deux Congo ont porté ensemble son inscription à l’UNESCO en 2021. Un patrimoine vivant n’est pas seulement quelque chose que l’on conserve : on l’apprend, on le pratique et on le transmet. Demande à un proche quel morceau lui rappelle son enfance.",
+      "en": "Both music and dance, it accompanies celebration as well as mourning. The two Congos jointly supported its UNESCO inscription in 2021. Living heritage is more than something to preserve: people learn it, practise it and pass it on. Ask someone close to you which song reminds them of childhood."
+    },
+    "question": {
+      "fr": "Pourquoi parle-t-on de patrimoine « vivant » ?",
+      "en": "Why call it “living” heritage?"
+    },
+    "answer": {
+      "fr": "Parce que les personnes le pratiquent et le transmettent encore.",
+      "en": "Because people continue to practise it and pass it on."
+    },
+    "source": "UNESCO · Congolese rumba",
+    "url": "https://ich.unesco.org/en/RL/congolese-rumba-01711",
+    "match": "Congolese rumba"
+  }
+]

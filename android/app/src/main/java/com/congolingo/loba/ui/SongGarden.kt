@@ -1,5 +1,7 @@
 package com.congolingo.loba.ui
 
+import com.congolingo.loba.core.Music
+
 import android.animation.ValueAnimator
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -7,6 +9,9 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -41,31 +46,36 @@ private val songColors = listOf(Sky, Plum, Coral, Leaf, Color(0xffe2a528), Color
 
 @Composable
 fun SongGarden(onClose: () -> Unit) {
-    val library = remember { SongLibrary() }
+    val library = remember { SongLibrary.shared }
     val scope = rememberCoroutineScope()
     var favoritesOnly by remember { mutableStateOf(false) }
     val owner = LocalLifecycleOwner.current
     LaunchedEffect(library) { library.open() }
-    DisposableEffect(library,owner) {
-        val observer=LifecycleEventObserver { _,event -> if(event==Lifecycle.Event.ON_STOP)library.pause() }
-        owner.lifecycle.addObserver(observer)
-        onDispose { owner.lifecycle.removeObserver(observer);library.close() }
-    }
+    DisposableEffect(library) { onDispose { library.leave() } }
     val visible = library.songs.filter { !favoritesOnly || it.id in library.favorites }
     val accent = songColors[library.selected?.artwork ?: 0]
-    Box(Modifier.fillMaxSize().background(Color(0xfffcf9f2))) {
-        LazyVerticalGrid(columns=GridCells.Adaptive(148.dp),modifier=Modifier.fillMaxSize().readable(760.dp),contentPadding=PaddingValues(start=20.dp,end=20.dp,top=20.dp,bottom=if(library.selected!=null)120.dp else 20.dp),horizontalArrangement=Arrangement.spacedBy(16.dp),verticalArrangement=Arrangement.spacedBy(20.dp)) {
-            item(span={GridItemSpan(maxLineSpan)}) {
-                Row(verticalAlignment=Alignment.Top,horizontalArrangement=Arrangement.spacedBy(12.dp)) {
-                    Column(Modifier.weight(1f),verticalArrangement=Arrangement.spacedBy(5.dp)) {
-                        Text(L("LE COIN MUSIQUE","LOBA’S MUSIC CORNER"),style=textFont(11,W.HEAVY),letterSpacing=2.sp,color=Plum)
-                        Text(L("Le jardin des chansons","The Song Garden"),style=displayFont(30),color=Ink)
-                        Text(L("Écoute. Danse. Chante avec nous !","Listen. Dance. Sing along!"),style=textFont(16),color=Ink2)
-                    }
-                    SongControl(Icons.Rounded.Close,L("Fermer","Close"),onClick=onClose)
-                }
+    // A tablet on its side: the stage stays on the left and the songs scroll beside it.
+    val wide = LocalConfiguration.current.let { it.screenWidthDp >= 840 && it.screenWidthDp > it.screenHeightDp }
+    val header: @Composable () -> Unit = {
+        Row(verticalAlignment=Alignment.Top,horizontalArrangement=Arrangement.spacedBy(12.dp)) {
+            Column(Modifier.weight(1f),verticalArrangement=Arrangement.spacedBy(5.dp)) {
+                Text(L("LE COIN MUSIQUE","LOBA’S MUSIC CORNER"),style=textFont(11,W.HEAVY),letterSpacing=2.sp,color=Plum)
+                Text(L("Le jardin des chansons","The Song Garden"),style=displayFont(30),color=Ink)
+                Text(L("Écoute. Danse. Chante avec nous !","Listen. Dance. Sing along!"),style=textFont(16),color=Ink2)
             }
-            item(span={GridItemSpan(maxLineSpan)}) { SongStage(library,accent) }
+            SongControl(Icons.Rounded.Close,L("Fermer","Close"),onClick=onClose)
+        }
+    }
+    Box(Modifier.fillMaxSize().background(Color(0xfffcf9f2)).systemBarsPadding()) {
+        val grid: @Composable (Modifier) -> Unit = { place ->
+        LazyVerticalGrid(columns=GridCells.Adaptive(148.dp),modifier=place,contentPadding=if(wide)PaddingValues(vertical=20.dp) else PaddingValues(start=20.dp,end=20.dp,top=20.dp,bottom=if(library.selected!=null)120.dp else 20.dp),horizontalArrangement=Arrangement.spacedBy(16.dp),verticalArrangement=Arrangement.spacedBy(20.dp)) {
+            if(!wide) {
+                item(span={GridItemSpan(maxLineSpan)}) { header() }
+                item(span={GridItemSpan(maxLineSpan)}) { SongStage(library,accent) }
+            }
+            if (Music.mutedAll || !Music.enabled) item(span={GridItemSpan(maxLineSpan)}) {
+                Text(L("La musique est coupée dans Profil → Réglages.", "Music is muted in Profile → Settings."), style=textFont(14,W.BOLD), color=Ink2, modifier=Modifier.padding(12.dp))
+            }
             if(library.loading) item(span={GridItemSpan(maxLineSpan)}) {
                 Row(Modifier.fillMaxWidth().padding(16.dp),horizontalArrangement=Arrangement.Center,verticalAlignment=Alignment.CenterVertically) {
                     CircularProgressIndicator(Modifier.size(22.dp),color=Sky);Spacer(Modifier.width(12.dp));Text(L("On prépare la musique…","Warming up the music…"),color=Ink2)
@@ -96,7 +106,15 @@ fun SongGarden(onClose: () -> Unit) {
                 Text("🇨🇩  "+L("Les chansons de chez nous","The songs we grew up with"),style=textFont(13),color=Ink2,modifier=Modifier.fillMaxWidth().padding(vertical=12.dp),textAlign=androidx.compose.ui.text.style.TextAlign.Center)
             }
         }
-        library.selected?.let { song ->
+        }
+        if(wide) Row(Modifier.fillMaxSize().readable(1240.dp).padding(horizontal=24.dp),horizontalArrangement=Arrangement.spacedBy(28.dp)) {
+            Column(Modifier.weight(0.85f).fillMaxHeight().verticalScroll(rememberScrollState()).padding(vertical=20.dp),verticalArrangement=Arrangement.spacedBy(20.dp)) {
+                header()
+                SongStage(library,accent)
+            }
+            grid(Modifier.weight(1.15f).fillMaxHeight())
+        } else grid(Modifier.fillMaxSize().readable(760.dp))
+        if(!wide) library.selected?.let { song ->
             Row(Modifier.align(Alignment.BottomCenter).readable(760.dp).padding(horizontal=16.dp,vertical=8.dp).fillMaxWidth().background(Ink,RoundedCornerShape(24.dp)).padding(14.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(10.dp)) {
                 Icon(Icons.Rounded.MusicNote,null,Modifier.size(30.dp),tint=Sun)
                 Column(Modifier.weight(1f)) {

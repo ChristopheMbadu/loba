@@ -1,0 +1,224 @@
+{
+  "salonga": {
+    "sheet": "magazine-art-0",
+    "tile": 0,
+    "columns": 2,
+    "rows": 2
+  },
+  "virunga": {
+    "sheet": "magazine-art-0",
+    "tile": 1,
+    "columns": 2,
+    "rows": 2
+  },
+  "river": {
+    "sheet": "magazine-art-0",
+    "tile": 2,
+    "columns": 2,
+    "rows": 2
+  },
+  "ishango": {
+    "sheet": "magazine-art-0",
+    "tile": 3,
+    "columns": 2,
+    "rows": 2
+  },
+  "kongo": {
+    "sheet": "magazine-art-1",
+    "tile": 0,
+    "columns": 2,
+    "rows": 2
+  },
+  "kuba": {
+    "sheet": "magazine-art-1",
+    "tile": 1,
+    "columns": 2,
+    "rows": 2
+  },
+  "rumba": {
+    "sheet": "magazine-art-1",
+    "tile": 2,
+    "columns": 2,
+    "rows": 2
+  },
+  "Les royaumes Luba et Lunda": {
+    "sheet": "magazine-art-1",
+    "tile": 3,
+    "columns": 2,
+    "rows": 2
+  },
+  "Le royaume Kuba": {
+    "sheet": "magazine-art-2",
+    "tile": 0,
+    "columns": 2,
+    "rows": 2
+  },
+  "Les explorateurs et le fleuve": {
+    "sheet": "magazine-art-2",
+    "tile": 1,
+    "columns": 2,
+    "rows": 2
+  },
+  "L’État indépendant du Congo": {
+    "sheet": "magazine-art-2",
+    "tile": 2,
+    "columns": 2,
+    "rows": 2
+  },
+  "Le Congo belge": {
+    "sheet": "magazine-art-2",
+    "tile": 3,
+    "columns": 2,
+    "rows": 2
+  },
+  "L’indépendance !": {
+    "sheet": "magazine-art-3",
+    "tile": 0,
+    "columns": 2,
+    "rows": 2
+  },
+  "Le temps du Zaïre": {
+    "sheet": "magazine-art-3",
+    "tile": 1,
+    "columns": 2,
+    "rows": 2
+  },
+  "Le combat du siècle à Kinshasa": {
+    "sheet": "magazine-art-3",
+    "tile": 2,
+    "columns": 2,
+    "rows": 2
+  },
+  "Une nouvelle constitution et 26 provinces": {
+    "sheet": "magazine-art-3",
+    "tile": 3,
+    "columns": 2,
+    "rows": 2
+  },
+  "La rumba, trésor de l’humanité": {
+    "sheet": "magazine-art-4",
+    "tile": 0,
+    "columns": 2,
+    "rows": 2
+  },
+  "Quatre langues nationales": {
+    "sheet": "magazine-art-4",
+    "tile": 1,
+    "columns": 2,
+    "rows": 2
+  },
+  "Les sapeurs": {
+    "sheet": "magazine-art-4",
+    "tile": 2,
+    "columns": 2,
+    "rows": 2
+  },
+  "À table !": {
+    "sheet": "magazine-art-4",
+    "tile": 3,
+    "columns": 2,
+    "rows": 2
+  },
+  "Likembe et ngoma": {
+    "sheet": "magazine-art-5",
+    "tile": 0,
+    "columns": 2,
+    "rows": 2
+  },
+  "Contes et paroles": {
+    "sheet": "magazine-art-5",
+    "tile": 1,
+    "columns": 2,
+    "rows": 2
+  },
+  "Okapi et bonobo": {
+    "sheet": "magazine-art-5",
+    "tile": 2,
+    "columns": 2,
+    "rows": 2
+  },
+  "Le fleuve Congo": {
+    "sheet": "magazine-art-5",
+    "tile": 3,
+    "columns": 2,
+    "rows": 2
+  },
+  "La grande forêt": {
+    "sheet": "magazine-art-6",
+    "tile": 0,
+    "columns": 2,
+    "rows": 2
+  },
+  "De la neige sur l’équateur": {
+    "sheet": "magazine-art-6",
+    "tile": 1,
+    "columns": 2,
+    "rows": 2
+  },
+  "Le drapeau": {
+    "sheet": "magazine-art-6",
+    "tile": 2,
+    "columns": 2,
+    "rows": 2
+  },
+  "Capitale": {
+    "sheet": "magazine-art-6",
+    "tile": 3,
+    "columns": 2,
+    "rows": 2
+  },
+  "Superficie": {
+    "sheet": "magazine-art-7",
+    "tile": 0,
+    "columns": 2,
+    "rows": 2
+  },
+  "Provinces": {
+    "sheet": "magazine-art-7",
+    "tile": 1,
+    "columns": 2,
+    "rows": 2
+  },
+  "Habitants": {
+    "sheet": "magazine-art-7",
+    "tile": 2,
+    "columns": 2,
+    "rows": 2
+  },
+  "9 pays voisins": {
+    "sheet": "magazine-art-7",
+    "tile": 3,
+    "columns": 2,
+    "rows": 2
+  },
+  "Point le plus haut": {
+    "sheet": "magazine-art-8",
+    "tile": 0,
+    "columns": 2,
+    "rows": 2
+  },
+  "Plus long fleuve": {
+    "sheet": "magazine-art-8",
+    "tile": 1,
+    "columns": 2,
+    "rows": 2
+  },
+  "Côte sur l’océan": {
+    "sheet": "magazine-art-8",
+    "tile": 2,
+    "columns": 2,
+    "rows": 2
+  },
+  "Langues": {
+    "sheet": "magazine-art-8",
+    "tile": 3,
+    "columns": 2,
+    "rows": 2
+  },
+  "Indépendance": {
+    "sheet": "magazine-art-9",
+    "tile": 0,
+    "columns": 1,
+    "rows": 1
+  }
+}

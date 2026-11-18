@@ -303,7 +303,11 @@ fun ProfileView() {
                 PickerMenu(s.goal, Game.goals.map { it to "$it XP" }) { AppStore.setGoal(it) }
             }
             ToggleRow(L("Effets sonores", "Sound effects"), s.sound) { AppStore.toggleSound() }
-            ToggleRow(L("Musique de fond", "Background music"), Music.enabled) { Music.toggle() }
+            ToggleRow(L("Couper tous les sons", "Mute all audio"), Music.mutedAll) { Music.toggleMute() }
+            SettingRow(L("Ambiance musicale", "Music style"), sub = L("Chansons de chez nous ou mélodies sans paroles.", "Songs from home or tunes without vocals.")) {
+                PickerMenu(Music.style, listOf("traditional" to L("Traditionnelles", "Traditional songs"), "instrumental" to L("Instrumentales", "Game instrumentals"))) { Music.chooseStyle(it) }
+            }
+            ToggleRow(L("Musique (fond et chansons)", "Music (background & songs)"), Music.enabled) { Music.toggle() }
             ToggleRow(L("Enregistrements audio", "Audio recordings"), s.voice) { AppStore.toggleVoice() }
             ToggleRow(L("Rappel du soir (19 h)", "Evening reminder (7 pm)"), reminder) { scope.launch { reminder = Reminder.set(!reminder) } }
         }

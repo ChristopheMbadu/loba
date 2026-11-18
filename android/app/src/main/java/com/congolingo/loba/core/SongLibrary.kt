@@ -20,6 +20,8 @@ data class LibrarySong(val id: String, val title: String) {
     val artwork: Int get() = id.toByteArray(Charsets.UTF_8).fold(0) { sum, c -> (sum + c.toInt()) % 6 }
 }
 class SongLibrary {
+    private var foregrounded = true
+    private var speaking = false
     var songs by mutableStateOf<List<LibrarySong>>(emptyList()); private set
     var selected by mutableStateOf<LibrarySong?>(null); private set
     var playing by mutableStateOf(false); private set
@@ -41,9 +43,10 @@ class SongLibrary {
     private val noisy = object : BroadcastReceiver() { override fun onReceive(context: Context?, intent: Intent?) { pause() } }
 
     suspend fun open() {
-        if (opened) return
+        Music.library(true)
+        if (opened) { if (songs.isEmpty()) load(); return }
         opened = true
-        Voice.stop(); Music.library(true)
+        Voice.stop()
         if (Build.VERSION.SDK_INT >= 33) appContext.registerReceiver(noisy, IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY), Context.RECEIVER_NOT_EXPORTED)
         else @Suppress("DEPRECATION") appContext.registerReceiver(noisy, IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY))
         scope.launch {
@@ -78,7 +81,8 @@ class SongLibrary {
     }
     private fun release() { try { player?.release() } catch (_: Exception) {}; player = null; ready = false }
     fun play(song: LibrarySong) {
-        if (!opened) return
+        if (!opened || !Music.enabled || Music.mutedAll) return
+        Music.library(true)
         release(); selected = song; error = false; elapsed = 0f; duration = 0f; buffering = true; playing = true
         try {
             val p = MediaPlayer(); player = p
@@ -102,6 +106,7 @@ class SongLibrary {
         } catch (_: Exception) { pause(); release(); error = true }
     }
     private fun start() {
+        if (!foregrounded || speaking || !Music.enabled || Music.mutedAll) return
         try {
             if (manager.requestAudioFocus(focus) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) { player?.start(); playing = true }
             else { playing = false; buffering = false }
@@ -109,6 +114,8 @@ class SongLibrary {
     }
     fun pause() { playing = false; buffering = false; try { if (ready) player?.pause() } catch (_: Exception) {} }
     fun toggle() {
+        if (!Music.enabled || Music.mutedAll) return
+        Music.library(true)
         if (playing) pause()
         else if (selected != null) { if (error || player == null) play(selected!!) else if (ready) start() else { playing = true; buffering = true } }
         else songs.firstOrNull()?.let(::play)
@@ -120,11 +127,18 @@ class SongLibrary {
         play(songs[(current + direction + songs.size) % songs.size])
     }
     fun surprise() { (if (songs.size > 1) songs.filter { it.id != selected?.id } else songs).randomOrNull()?.let(::play) }
+    fun leave() { if (selected == null) Music.library(false) }
+    fun foreground(value: Boolean) { foregrounded = value; syncPlayback() }
+    fun voice(value: Boolean) { speaking = value; syncPlayback() }
+    private fun syncPlayback() {
+        if (playing && foregrounded && !speaking && ready) start()
+        else if (ready) try { player?.pause() } catch (_: Exception) {}
+    }
     fun close() {
         if (!opened) return
         opened = false; pause(); release(); scope.cancel(); manager.abandonAudioFocusRequest(focus)
         try { appContext.unregisterReceiver(noisy) } catch (_: Exception) {}
         Music.library(false)
     }
-    companion object { fun clock(seconds: Float): String { val s=if(seconds.isFinite())seconds.toInt().coerceAtLeast(0) else 0;return "%d:%02d".format(s/60,s%60) } }
+    companion object { val shared by lazy { SongLibrary() }; fun clock(seconds: Float): String { val s=if(seconds.isFinite())seconds.toInt().coerceAtLeast(0) else 0;return "%d:%02d".format(s/60,s%60) } }
 }
