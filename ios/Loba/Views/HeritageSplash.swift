@@ -26,8 +26,17 @@ struct SplashView: View {
                     Text("Loba").font(.display(44)).foregroundStyle(Color.ink)
                     Text(L("Les langues du Congo", "The languages of Congo"))
                         .font(.text(15, .bold)).foregroundStyle(Color.muted)
-                    CongoFlagBadge()
-                        .frame(width: 40, height: 30)
+                    TimelineView(.animation(minimumInterval: 1.0 / 30, paused: reduceMotion)) { timeline in
+                        let seconds = timeline.date.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: 2)
+                        CongoFlagBadge()
+                            .frame(width: 50, height: 37.5)
+                            .padding(.vertical, 3)
+                            .distortionEffect(
+                                ShaderLibrary.flagWave(.float(Float(seconds * .pi))),
+                                maxSampleOffset: CGSize(width: 0, height: 3),
+                                isEnabled: !reduceMotion
+                            )
+                    }
                         .padding(.top, 6)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
