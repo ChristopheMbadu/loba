@@ -236,7 +236,7 @@ struct Confetti: View {
     @State private var start = Date()
 
     var body: some View {
-        TimelineView(.animation) { timeline in
+        TimelineView(ambient()) { timeline in
             Canvas { ctx, size in
                 let t = timeline.date.timeIntervalSince(start)
                 for p in pieces {

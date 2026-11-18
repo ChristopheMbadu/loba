@@ -170,14 +170,16 @@ private struct UnitSection: View {
             path.stroke(Color.sand, style: StrokeStyle(lineWidth: 84, lineCap: .butt, lineJoin: .round))
             path.stroke(unlocked ? Color(hex: "d5ebfb") : Color(hex: "ecebf0"), style: StrokeStyle(lineWidth: 68, lineCap: .butt, lineJoin: .round))
             // The current: dashes that drift downstream, and a second, fainter set that moves slower.
-            TimelineView(.animation(paused: !unlocked)) { timeline in
-                let t = timeline.date.timeIntervalSinceReferenceDate
-                ZStack {
-                    path.stroke(.white.opacity(0.9), style: StrokeStyle(lineWidth: 3, lineCap: .round, dash: [12, 22], dashPhase: -t * 26))
-                    path.offsetBy(dx: 15, dy: 0).stroke(.white.opacity(0.45), style: StrokeStyle(lineWidth: 2, lineCap: .round, dash: [5, 44], dashPhase: -t * 15))
-                    path.offsetBy(dx: -17, dy: 0).stroke(.white.opacity(0.45), style: StrokeStyle(lineWidth: 2, lineCap: .round, dash: [7, 58], dashPhase: -t * 19))
+            // Drawn in one canvas: as three animated shapes this was the most expensive thing in the app.
+            TimelineView(ambient(paused: !unlocked)) { timeline in
+                Canvas { ctx, _ in
+                    let t = timeline.date.timeIntervalSinceReferenceDate
+                    ctx.stroke(path, with: .color(.white.opacity(0.9)), style: StrokeStyle(lineWidth: 3, lineCap: .round, dash: [12, 22], dashPhase: -t * 26))
+                    ctx.stroke(path.offsetBy(dx: 15, dy: 0), with: .color(.white.opacity(0.45)), style: StrokeStyle(lineWidth: 2, lineCap: .round, dash: [5, 44], dashPhase: -t * 15))
+                    ctx.stroke(path.offsetBy(dx: -17, dy: 0), with: .color(.white.opacity(0.45)), style: StrokeStyle(lineWidth: 2, lineCap: .round, dash: [7, 58], dashPhase: -t * 19))
                 }
             }
+            .allowsHitTesting(false)
         }
     }
 }

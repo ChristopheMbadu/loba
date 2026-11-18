@@ -234,7 +234,7 @@ struct PuzzleGame: View {
                     ribbon(selection, side: side, center: center).stroke(Color.sun, style: StrokeStyle(lineWidth: side * 0.78, lineCap: .round))
                 }
                 if let hint {
-                    TimelineView(.animation) { timeline in
+                    TimelineView(ambient()) { timeline in
                         let beat = (sin(timeline.date.timeIntervalSinceReferenceDate * 7) + 1) / 2
                         Circle().strokeBorder(Color.sun, lineWidth: 4).background(Circle().fill(Color.sunTint))
                             .frame(width: side * (0.8 + beat * 0.14), height: side * (0.8 + beat * 0.14)).position(center(hint))

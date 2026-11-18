@@ -10,6 +10,10 @@ iOS 17 and later. No third-party packages.
 - **Same rules.** `Core/Rules.swift`, `Core/Exercises.swift` are ports of `learn/src/game/*.ts`
   (hearts, streaks, XP, spaced repetition, lesson building, grading). When a rule changes on the web, change it here too.
 - **Lessons** come from `/api/v1/lessons`; `Resources/lessons.json` (a copy of `data/lessons.json`) is the offline fallback.
+- **The map game** (Mboka na biso) uses the website's own content file: it downloads `/api/v1/map` at launch and uses it from the
+  next launch; `Resources/drc-map.json` is a copy of `data/drc-map.json` for the first launch and offline. Edit facts in
+  `data/drc-map.json` only. The satellite image needs a public Mapbox token in `Resources/Mapbox.txt` (not committed);
+  without it the map is drawn plain.
 - **Works without an account** ("Later, without an account"): progress stays on the phone until the learner signs up.
 
 ## Layout

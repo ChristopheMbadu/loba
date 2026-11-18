@@ -12,7 +12,7 @@ struct LobaView: View {
     @State private var born = Date()
 
     var body: some View {
-        TimelineView(.animation) { timeline in
+        TimelineView(ambient()) { timeline in
             Canvas { ctx, canvas in
                 ctx.scaleBy(x: canvas.width / 200, y: canvas.height / 200)
                 LobaArt.draw(&ctx, mood: mood, t: timeline.date.timeIntervalSince(born))

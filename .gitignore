@@ -8,3 +8,6 @@ coverage/
 
 # iOS app
 dist-ios/
+
+# A public Mapbox token for the map game, kept out of the repository
+ios/Loba/Resources/Mapbox.txt

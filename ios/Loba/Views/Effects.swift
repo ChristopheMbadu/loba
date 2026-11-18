@@ -43,7 +43,7 @@ struct NightSky: View {
     private let flies: [(x: Double, y: Double, p: Double, s: Double)] = (0..<14).map { _ in (.random(in: 0.05...0.95), .random(in: 0.35...0.92), .random(in: 0...6), .random(in: 0.4...1)) }
 
     var body: some View {
-        TimelineView(.animation) { timeline in
+        TimelineView(ambient()) { timeline in
             Canvas { ctx, size in
                 let t = timeline.date.timeIntervalSinceReferenceDate
                 for s in stars {
@@ -68,7 +68,7 @@ struct NightSky: View {
 /// Daytime sky life: clouds sliding past and a pair of birds crossing.
 struct DaySky: View {
     var body: some View {
-        TimelineView(.animation) { timeline in
+        TimelineView(ambient()) { timeline in
             Canvas { ctx, size in
                 let t = timeline.date.timeIntervalSinceReferenceDate
                 for (i, c) in [(0.16, 0.06, 1.0), (0.3, 0.035, 0.7), (0.1, 0.05, 0.55)].enumerated() {
@@ -100,7 +100,7 @@ struct DaySky: View {
 /// Sunbeams turning slowly behind the sun.
 struct SunRays: View {
     var body: some View {
-        TimelineView(.animation) { timeline in
+        TimelineView(ambient()) { timeline in
             Canvas { ctx, size in
                 let t = timeline.date.timeIntervalSinceReferenceDate
                 ctx.translateBy(x: size.width / 2, y: size.height / 2)
@@ -153,4 +153,14 @@ struct WeekStrip: View {
             }
         }
     }
+}
+
+/// The clock for decorative motion (Loba breathing, clouds, the river): 30 frames a second is plenty,
+/// and it stops when the learner asked iOS to reduce motion.
+func ambient(paused: Bool = false) -> AnimationTimelineSchedule {
+    .animation(minimumInterval: 1.0 / 30, paused: paused || Motion.still)
+}
+
+enum Motion {
+    static let still = UIAccessibility.isReduceMotionEnabled || ProcessInfo.processInfo.arguments.contains("-still")
 }

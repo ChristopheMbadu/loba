@@ -240,7 +240,7 @@ private struct StoryStage: View {
         ZStack {
             Image("story-back-\(page)").resizable().scaledToFill()
             if night { NightSky() } else { DaySky().opacity(dusk ? 0.6 : 1) }
-            TimelineView(.animation) { timeline in
+            TimelineView(ambient()) { timeline in
                 let t = timeline.date.timeIntervalSinceReferenceDate
                 Image("story-cast-\(page)").resizable().scaledToFill()
                     .offset(y: sin(t * 2.2) * 2.2 + (hop ? -16 : 0))

@@ -37,6 +37,7 @@ struct PracticeView: View {
     @State private var mode: LessonBuilder.PracticeMode?
     @State private var story = false
     @State private var puzzle = false
+    @State private var map = false
 
     var body: some View {
         let s = store.state, pool = Rules.unlockedWords(s, store.units)
@@ -61,6 +62,18 @@ struct PracticeView: View {
                              text: L("Trouve les mots cachés : chacun révèle son sens et une phrase.", "Find the hidden words: each reveals its meaning and a sentence."))
                 }
                 .buttonStyle(.plain)
+                Button { map = true } label: {
+                    HStack(spacing: 16) {
+                        Text("🗺️").font(.system(size: 36)).frame(width: 68, height: 68).background(RoundedRectangle(cornerRadius: 18).fill(Color.leafTint))
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text(L("Mboka na biso · La carte du Congo", "Mboka na biso · The map of Congo")).font(.text(19, .heavy)).foregroundStyle(Color.ink).multilineTextAlignment(.leading)
+                            Text(L("Remets les 26 provinces à leur place et découvre le pays.", "Put the 26 provinces back in place and discover the country.")).font(.text(15)).foregroundStyle(Color.muted).multilineTextAlignment(.leading)
+                        }
+                        Spacer(minLength: 0)
+                    }
+                    .padding(16).card()
+                }
+                .buttonStyle(.plain)
                 Button { story = true } label: {
                     TileCard(art: "book", tint: .sunTint, title: L("Masapo · Contes du Congo", "Masapo · Tales of Congo"),
                              text: L("Un conte illustré, avec des mots de ta langue.", "An illustrated folktale with words from your language."))
@@ -72,6 +85,7 @@ struct PracticeView: View {
         .fullScreenCover(item: $mode) { LessonView(mode: .practice($0)) }
         .fullScreenCover(isPresented: $story) { StoryView() }
         .fullScreenCover(isPresented: $puzzle) { PuzzleHub() }
+        .fullScreenCover(isPresented: $map) { MapGameView() }
     }
 }
 

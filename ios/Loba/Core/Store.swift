@@ -111,6 +111,7 @@ final class AppStore {
         let ui = state.ui
         update { $0 = GameState(); $0.ui = ui }
         PuzzleScores.clear()
+        MapProgress.clear()
     }
 
     // MARK: account
