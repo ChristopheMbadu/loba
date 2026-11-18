@@ -368,7 +368,12 @@ final class GoogleSignIn: NSObject, ASWebAuthenticationPresentationContextProvid
                         else if (error as? ASWebAuthenticationSessionError)?.code == .canceledLogin {
                             self?.finish(request.state, .failure(CancellationError()))
                         } else {
-                            self?.finish(request.state, .failure(error ?? GoogleAuthRequest.Failure.invalidCallback))
+                            // Record only the system error category; never log callback URLs or credentials.
+                            if let error {
+                                let systemError = error as NSError
+                                print("[GoogleSignIn] browser failure: \(systemError.domain) / \(systemError.code)")
+                            }
+                            self?.finish(request.state, .failure(APIError(status: 400, message: L("Le navigateur n’a pas terminé la connexion. Réessaie. [GOOGLE-BROWSER]", "The browser could not finish signing in. Try again. [GOOGLE-BROWSER]"))))
                         }
                     }
                 }
@@ -376,7 +381,7 @@ final class GoogleSignIn: NSObject, ASWebAuthenticationPresentationContextProvid
                 session = active
                 active.presentationContextProvider = self
                 active.prefersEphemeralWebBrowserSession = false
-                if !active.start() { finish(request.state, .failure(GoogleAuthRequest.Failure.invalidCallback)) }
+                if !active.start() { finish(request.state, .failure(APIError(status: 400, message: L("Impossible d’ouvrir la connexion Google. [GOOGLE-START]", "Could not open Google sign-in. [GOOGLE-START]")))) }
             }
         } onCancel: {
             Task { @MainActor in
@@ -386,7 +391,13 @@ final class GoogleSignIn: NSObject, ASWebAuthenticationPresentationContextProvid
         try Task.checkCancellation()
         let code: String
         do { code = try request.code(from: callback) }
-        catch GoogleAuthRequest.Failure.provider(let reason) {
+        catch GoogleAuthRequest.Failure.invalidCallback {
+            throw APIError(status: 400, message: L("Le lien de retour de connexion est invalide. Réessaie. [GOOGLE-CALLBACK]", "The sign-in return link is invalid. Try again. [GOOGLE-CALLBACK]"))
+        } catch GoogleAuthRequest.Failure.invalidState {
+            throw APIError(status: 400, message: L("Cette tentative de connexion a expiré ou ne correspond pas. Réessaie. [GOOGLE-STATE]", "This sign-in attempt expired or did not match. Try again. [GOOGLE-STATE]"))
+        } catch GoogleAuthRequest.Failure.invalidCode {
+            throw APIError(status: 400, message: L("Le code de connexion reçu est invalide. Réessaie. [GOOGLE-CODE]", "The received sign-in code is invalid. Try again. [GOOGLE-CODE]"))
+        } catch GoogleAuthRequest.Failure.provider(let reason) {
             if reason == "google_cancelled" { throw CancellationError() }
             throw APIError(status: 400, message: reason == "google_existing"
                 ? L("Un compte existe déjà avec cette adresse. Connecte-toi avec ton mot de passe, puis relie Google depuis le site.", "An account already exists with this email. Sign in with your password, then link Google from the website.")

@@ -13,6 +13,10 @@ import Foundation
         let valid = "loba://auth?code=\(code)&state=\(request.state)"
         let parsed = try request.code(from: URL(string: valid)!)
         precondition(parsed == code)
+        // Both root-path spellings are accepted, without relaxing host/state/proof checks.
+        let rootCallback = valid.replacingOccurrences(of: "//auth?", with: "//auth/?")
+        let rootParsed = try request.code(from: URL(string: rootCallback)!)
+        precondition(rootParsed == code)
         for value in [
             valid.replacingOccurrences(of: "loba:", with: "https:"),
             valid.replacingOccurrences(of: "//auth?", with: "//wrong?"),
@@ -20,11 +24,16 @@ import Foundation
             valid.replacingOccurrences(of: request.state, with: second.state),
             valid + "&state=\(request.state)", valid + "&code=\(code)",
             valid + "&error=google_failed", valid + "#fragment",
+            valid.replacingOccurrences(of: "//auth?", with: "//user@auth?"),
+            valid.replacingOccurrences(of: "//auth?", with: "//auth:443?"),
+            rootCallback.replacingOccurrences(of: request.state, with: second.state),
             valid.replacingOccurrences(of: code, with: "short"),
             "loba://auth?code=\(code)", "loba://auth?state=\(request.state)"
         ] {
             do { _ = try request.code(from: URL(string: value)!); preconditionFailure("Accepted invalid callback") }
             catch GoogleAuthRequest.Failure.invalidCallback {}
+            catch GoogleAuthRequest.Failure.invalidState {}
+            catch GoogleAuthRequest.Failure.invalidCode {}
         }
         do {
             _ = try request.code(from: URL(string: "loba://auth?error=google_cancelled&state=\(request.state)")!)

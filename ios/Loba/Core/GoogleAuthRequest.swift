@@ -3,7 +3,7 @@ import CryptoKit
 
 /// Per-attempt proof and callback state. No Google client secret belongs in the app.
 struct GoogleAuthRequest {
-    enum Failure: Error { case invalidCallback, provider(String) }
+    enum Failure: Error { case invalidCallback, invalidState, invalidCode, provider(String) }
     let verifier: String
     let state: String
 
@@ -30,20 +30,20 @@ struct GoogleAuthRequest {
     }
 
     func code(from url: URL) throws -> String {
-        guard url.scheme == "loba", url.host == "auth", url.path.isEmpty,
+        guard url.scheme == "loba", url.host == "auth", (url.path.isEmpty || url.path == "/"),
               url.user == nil, url.password == nil, url.port == nil, url.fragment == nil,
               let items = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems else { throw Failure.invalidCallback }
         func unique(_ name: String) -> String? {
             let matches = items.filter { $0.name == name }
             return matches.count == 1 ? matches[0].value : nil
         }
-        guard unique("state") == state else { throw Failure.invalidCallback }
+        guard unique("state") == state else { throw Failure.invalidState }
         if items.contains(where: { $0.name == "error" }) {
             guard let reason = unique("error"), !items.contains(where: { $0.name == "code" }) else { throw Failure.invalidCallback }
             throw Failure.provider(reason)
         }
         guard let code = unique("code"), code.count == 43,
-              code.range(of: "^[A-Za-z0-9_-]{43}$", options: .regularExpression) != nil else { throw Failure.invalidCallback }
+              code.range(of: "^[A-Za-z0-9_-]{43}$", options: .regularExpression) != nil else { throw Failure.invalidCode }
         return code
     }
 }
