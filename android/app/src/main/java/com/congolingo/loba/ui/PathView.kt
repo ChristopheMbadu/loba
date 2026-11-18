@@ -131,6 +131,8 @@ fun TabsView() {
     val s = AppStore.state
     val claimable = Rules.dailyQuests(s, AppStore.today).count { it.done && it.id.raw !in s.daily.claimed }
     val pick = { next: Int -> if (next != tab) { tab = next; Sfx.play(Sfx.Cue.TAP); Haptic.tap() } }
+    // The tune plays on the home screens, and steps aside for a lesson, a story or anything else laid over them.
+    GameMusic(active = LocalCoverHost.current?.stack?.isEmpty() ?: true)
 
     val page: @Composable () -> Unit = {
         // Each tab keeps its scroll position while another one is shown.

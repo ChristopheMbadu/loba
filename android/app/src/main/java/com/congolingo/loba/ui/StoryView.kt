@@ -81,6 +81,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.congolingo.loba.core.AppStore
@@ -171,8 +172,10 @@ fun StoryView(onClose: () -> Unit) {
 
     val sky by animateColorAsState(Tale.skies[min(page, Tale.skies.size - 1)], tween(600, easing = EaseInOut), label = "sky")
     val glass = RoundedCornerShape(13.dp)
+    // A tablet held sideways opens the book flat: the picture on the left page, the words on the right.
+    val wide = LocalConfiguration.current.let { it.screenWidthDp >= 840 && it.screenWidthDp > it.screenHeightDp }
     Column(
-        Modifier.fillMaxSize().background(sky).systemBarsPadding().readable(min(680, (LocalConfiguration.current.screenHeightDp * 0.62f).toInt()).dp)
+        Modifier.fillMaxSize().background(sky).systemBarsPadding().readable(if (wide) 1240.dp else min(680, (LocalConfiguration.current.screenHeightDp * 0.62f).toInt()).dp)
             .pointerInput(Unit) {
                 var dx = 0f
                 var dy = 0f
@@ -208,9 +211,10 @@ fun StoryView(onClose: () -> Unit) {
                 .padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
+            val stage: @Composable (Modifier) -> Unit = { place ->
             AnimatedContent(
                 min(page, 7),
-                Modifier.fillMaxWidth().aspectRatio(330f / 264f).clip(leafShape).border(3.dp, Cocoa, leafShape),
+                place.aspectRatio(330f / 264f).clip(leafShape).border(3.dp, Cocoa, leafShape),
                 transitionSpec = { (fadeIn(tween(600, easing = EaseInOut)) + scaleIn(tween(600, easing = EaseInOut), initialScale = 1.04f)) togetherWith fadeOut(tween(600, easing = EaseInOut)) },
                 label = "stage",
             ) { p ->
@@ -219,9 +223,10 @@ fun StoryView(onClose: () -> Unit) {
                     if (p == 0) StoryCover(Modifier.align(Alignment.TopCenter))
                 }
             }
-            KubaBand(Modifier.clip(CircleShape), height = 12.dp)
+            }
+            val words: @Composable (Modifier) -> Unit = { place ->
             Box(
-                Modifier.weight(1f).fillMaxWidth().clip(leafShape).background(Paper)
+                place.clip(leafShape).background(Paper)
                     .drawWithContent {
                         drawContent()
                         val inset = 9.dp.toPx()
@@ -252,6 +257,17 @@ fun StoryView(onClose: () -> Unit) {
                         }
                     }
                 }
+            }
+            }
+            if (wide) {
+                Row(Modifier.weight(1f).fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Box(Modifier.weight(1.2f).fillMaxHeight(), contentAlignment = Alignment.Center) { stage(Modifier.fillMaxWidth()) }
+                    words(Modifier.weight(1f).fillMaxHeight())
+                }
+            } else {
+                stage(Modifier.fillMaxWidth())
+                KubaBand(Modifier.clip(CircleShape), height = 12.dp)
+                words(Modifier.weight(1f).fillMaxWidth())
             }
         }
 

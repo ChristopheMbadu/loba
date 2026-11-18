@@ -315,10 +315,14 @@ fun StatsBar(modifier: Modifier = Modifier) {
     Row(
         modifier.fillMaxWidth().background(Color.White)
             .drawBehind { drawRect(Line, Offset(0f, size.height - 2.dp.toPx()), Size(size.width, 2.dp.toPx())) }
-            .padding(horizontal = 20.dp, vertical = 10.dp),
+            .padding(horizontal = 20.dp, vertical = 5.dp),
         horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically,
     ) {
-        LangBadge(s.lang, hexColor(AppStore.language?.color ?: "1c9bef"))
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
+            LangBadge(s.lang, hexColor(AppStore.language?.color ?: "1c9bef"))
+            // The tune on the home screens, on or off. 44dp to touch, drawn smaller.
+            Box(Modifier.size(44.dp, 36.dp), contentAlignment = Alignment.Center) { MusicToggle(size = 36.dp) }
+        }
         Stat(if (streak > 0) "flame" else "flameOff", "$streak", if (streak > 0) SunShade else Muted)
         Stat("gem", "${s.gems}", Sky)
         Stat(if (s.hearts > 0) "heart" else "heartOff", "${s.hearts}", Coral)
@@ -394,27 +398,27 @@ fun Bubble(modifier: Modifier = Modifier, content: @Composable BoxScope.() -> Un
 
 // MARK: - Game music
 
-/** Plays the games' tune for as long as this is on screen. */
+/** Plays the tune for as long as this is on screen and `active`. */
 @Composable
-fun GameMusic() {
-    DisposableEffect(Unit) {
-        Music.enter()
-        onDispose { Music.leave() }
+fun GameMusic(active: Boolean = true) {
+    DisposableEffect(active) {
+        if (active) Music.enter()
+        onDispose { if (active) Music.leave() }
     }
 }
 
 /** The button that turns the games' tune on or off, for a game's top bar. */
 @Composable
-fun MusicToggle(modifier: Modifier = Modifier) {
+fun MusicToggle(modifier: Modifier = Modifier, size: Dp = 42.dp) {
     val on = Music.enabled
     Box(
-        modifier.size(42.dp).clip(RoundedCornerShape(13.dp)).background(Surface).tappable { Sfx.play(Sfx.Cue.TAP); Music.toggle() },
+        modifier.size(size).clip(RoundedCornerShape(13.dp)).background(Surface).tappable { Sfx.play(Sfx.Cue.TAP); Music.toggle() },
         contentAlignment = Alignment.Center,
     ) {
         Icon(
             if (on) Icons.Rounded.MusicNote else Icons.Rounded.MusicOff,
             contentDescription = if (on) L("Couper la musique", "Turn the music off") else L("Remettre la musique", "Turn the music on"),
-            tint = if (on) Sky else Muted, modifier = Modifier.size(24.dp),
+            tint = if (on) Sky else Muted, modifier = Modifier.size(size * 0.57f),
         )
     }
 }
