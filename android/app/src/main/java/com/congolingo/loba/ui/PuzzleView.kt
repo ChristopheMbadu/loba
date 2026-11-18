@@ -555,6 +555,9 @@ private fun Discovery(entry: Puzzle.Entry, color: Color, ui: UiLang) {
                 verticalArrangement = Arrangement.spacedBy(2.dp),
             ) {
                 Text(highlighted(example.text, entry.word.term, color), style = textFont(17, W.BOLD), color = Ink)
+                entry.word.exampleAudio?.let { audio ->
+                    Text(L("Écouter la phrase", "Listen to the sentence"), modifier = Modifier.tappable { Voice.say(entry.word.copy(audio = audio)) }.padding(12.dp), style = textFont(14, W.BOLD), color = color)
+                }
                 Text(example.translation(ui), style = textFont(15), color = Muted)
             }
         }

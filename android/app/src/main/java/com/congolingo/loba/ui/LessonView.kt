@@ -189,7 +189,7 @@ fun LessonView(mode: LessonMode, onClose: () -> Unit) {
         } else {
             Sfx.play(Sfx.Cue.CORRECT, session.combo); Haptic.success()
             sparks += 1
-            if (k !is ExerciseKind.Listen) e.word?.let { Voice.say(it) }
+            if (k !is ExerciseKind.Listen) e.word?.let { Voice.say(it, automatic = true) }
         }
     }
 
@@ -436,7 +436,7 @@ private fun ExerciseView(exercise: Exercise, answer: Answer?, onAnswer: (Answer)
             }
             is ExerciseKind.Listen -> {
                 Title(L("Qu’entends-tu ?", "What do you hear?"))
-                LaunchedEffect(k.word) { Voice.say(k.word) }
+                LaunchedEffect(k.word) { Voice.say(k.word, automatic = true) }
                 Box(Modifier.fillMaxWidth().padding(vertical = 8.dp), contentAlignment = Alignment.Center) {
                     Box(
                         Modifier.size(110.dp)
@@ -457,7 +457,7 @@ private fun ExerciseView(exercise: Exercise, answer: Answer?, onAnswer: (Answer)
             }
             is ExerciseKind.Build -> {
                 Title(L("Traduis cette phrase", "Translate this sentence"))
-                Prompt(k.sentence.prompt(ui), null)
+                Prompt(k.sentence.prompt(ui), Word(k.sentence.answer, k.sentence.fr, k.sentence.en, k.sentence.audio))
                 TileBoard(k.tiles, locked) { onAnswer(Answer.Tiles(it)) }
             }
             is ExerciseKind.Type -> {
@@ -483,7 +483,7 @@ private fun Title(text: String) = Text(text, style = displayFont(25), color = In
 
 @Composable
 private fun Prompt(text: String, word: Word?) {
-    LaunchedEffect(word) { word?.let { Voice.say(it) } }
+    LaunchedEffect(word) { word?.let { Voice.say(it, automatic = true) } }
     Row(horizontalArrangement = Arrangement.spacedBy(2.dp), verticalAlignment = Alignment.CenterVertically) {
         LobaView(mood = Mood.IDLE, size = 84.dp)
         Bubble(Modifier.weight(1f, fill = false).tappable(enabled = word != null) { word?.let { Voice.say(it) } }) {

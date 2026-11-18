@@ -29,11 +29,12 @@ data class Word(
     val example: String = "",
     val exampleFr: String = "",
     val exampleEn: String = "",
+    val exampleAudio: String? = null,
 ) {
     fun meaning(ui: UiLang): String = if (ui == UiLang.EN && en.isNotEmpty()) en else fr
 }
 
-data class Sentence(val fr: String, val en: String, val answer: String, val distractors: List<String>) {
+data class Sentence(val fr: String, val en: String, val answer: String, val distractors: List<String>, val audio: String? = null) {
     fun prompt(ui: UiLang): String = if (ui == UiLang.EN && en.isNotEmpty()) en else fr
 }
 
@@ -97,7 +98,7 @@ object CatalogParser {
         val example = str(o.opt("example"), 300)
         return Word(
             term, fr, str(o.opt("en")), audio, o.opt("guessWord") as? Boolean ?: true, example,
-            if (example.isEmpty()) "" else str(o.opt("exampleFr"), 300), if (example.isEmpty()) "" else str(o.opt("exampleEn"), 300),
+            if (example.isEmpty()) "" else str(o.opt("exampleFr"), 300), if (example.isEmpty()) "" else str(o.opt("exampleEn"), 300), (o.opt("exampleAudio") as? String)?.takeIf { audioId.matches(it) },
         )
     }
 
@@ -107,7 +108,7 @@ object CatalogParser {
         val fr = str(o.opt("fr"))
         if (answer.isEmpty() || fr.isEmpty()) return null
         val distractors = o.optJSONArray("distractors").items().map { str(it, 60) }.filter { it.isNotEmpty() }
-        return Sentence(fr, str(o.opt("en")), answer, distractors)
+        return Sentence(fr, str(o.opt("en")), answer, distractors, (o.opt("audio") as? String)?.takeIf { audioId.matches(it) })
     }
 
     fun unit(id: String, v: Any?): LessonUnit? {

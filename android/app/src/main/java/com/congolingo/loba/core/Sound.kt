@@ -170,9 +170,9 @@ object Music {
 object Voice {
     private var player: MediaPlayer? = null
 
-    fun say(word: Word) {
+    fun say(word: Word, automatic: Boolean = false) {
         val id = word.audio
-        if (!AppStore.state.voice || id == null) return
+        if ((automatic && !AppStore.state.voice) || id == null) return
         stop()
         Music.voice(true)
         try {
