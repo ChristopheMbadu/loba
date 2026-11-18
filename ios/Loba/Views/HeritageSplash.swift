@@ -9,6 +9,10 @@ struct SplashView: View {
         GeometryReader { geometry in
             ZStack {
                 Color("LaunchBackground").ignoresSafeArea()
+                Image("RaffiaSplash")
+                    .resizable()
+                    .ignoresSafeArea()
+                    .accessibilityHidden(true)
                 VStack(spacing: 8) {
                     HeritageLottie(name: "owl-laughing", playing: !reduceMotion)
                         .frame(width: min(geometry.size.width * 0.78, 340),

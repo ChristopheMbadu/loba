@@ -42,7 +42,7 @@ struct RootView: View {
         .task {
             // Long enough to be seen. Someone already known to this phone goes straight in; otherwise wait
             // for the server's answer (a session may exist), but never more than a few seconds.
-            try? await Task.sleep(for: .seconds(DebugFlags.quick ? 0 : 1.1))
+            try? await Task.sleep(for: .seconds(DebugFlags.quick ? 0 : 3.6))
             for _ in 0..<30 where !store.admitted && !store.ready { try? await Task.sleep(for: .seconds(0.1)) }
             withAnimation(.easeInOut(duration: 0.4)) { launched = true }
         }

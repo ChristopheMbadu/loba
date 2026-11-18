@@ -73,9 +73,9 @@ Debug builds accept launch arguments for screenshots:
 
 The app icon uses the supplied Loba mascot, adapted to a 1024×1024 opaque square.
 The splash uses the user's `Owl Laughing.lottie`, extracted without visual changes
-into `owl-laughing.json`, on a plain white background with the Loba name.
+into `owl-laughing.json`, over a Kuba raffia-inspired background with the Loba name.
 Playback uses the native Lottie Swift package (pinned to 4.6.1); no web view
-or runtime network request is used. Reduce Motion stops playback. Startup timing is unchanged.
+or runtime network request is used. Reduce Motion stops playback. The 3.6-second minimum allows one full laugh.
 
 This branch preserves Claude's local launch/session changes captured before the
 branding work. Preserve any newer local edits when integrating it.
