@@ -23,6 +23,15 @@ struct SplashView: View {
                     HeritageLottie(name: "owl-laughing", playing: !reduceMotion)
                         .frame(width: min(geometry.size.width * 0.78, 340),
                                height: min(geometry.size.width * 0.78, 340))
+                        .overlay(alignment: .topTrailing) {
+                            Bubble {
+                                Text("Mbote!")
+                                    .font(.text(16, .bold))
+                                    .foregroundStyle(Color.ink)
+                            }
+                            .fixedSize()
+                            .offset(x: 5, y: -15)
+                        }
                     Text("Loba").font(.display(44)).foregroundStyle(Color.ink)
                     Text(L("Les langues du Congo", "The languages of Congo"))
                         .font(.text(15, .bold)).foregroundStyle(Color.muted)
@@ -52,7 +61,7 @@ struct SplashView: View {
             }
         }
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(L("Loba. Chargement. Les langues du Congo.", "Loba. Loading. The languages of Congo."))
+        .accessibilityLabel(L("Mbote! Loba. Chargement. Les langues du Congo.", "Mbote! Loba. Loading. The languages of Congo."))
     }
 }
 
