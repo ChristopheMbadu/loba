@@ -1,0 +1,16 @@
+*.iml
+.gradle
+.kotlin
+/local.properties
+/.idea
+.DS_Store
+build/
+/captures
+.externalNativeBuild
+.cxx
+# A public Mapbox token for the map game, kept out of the repository
+app/src/main/assets/Mapbox.txt
+# Signing
+*.jks
+*.keystore
+keystore.properties
