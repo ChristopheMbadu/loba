@@ -20,6 +20,9 @@ struct SplashView: View {
                     Text("Loba").font(.display(44)).foregroundStyle(Color.ink)
                     Text(L("Les langues du Congo", "The languages of Congo"))
                         .font(.text(15, .bold)).foregroundStyle(Color.muted)
+                    CongoFlagBadge()
+                        .frame(width: 40, height: 30)
+                        .padding(.top, 6)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .padding(.horizontal, 24)
@@ -64,5 +67,33 @@ struct HeritageLottie: UIViewRepresentable {
 
     static func dismantleUIView(_ view: UIView, coordinator: ()) {
         (view.subviews.first as? LottieAnimationView)?.stop()
+    }
+}
+
+/// A jersey-style flag patch, drawn in a fixed 4:3 coordinate space.
+private struct CongoFlagBadge: View {
+    var body: some View {
+        Canvas { context, size in
+            context.scaleBy(x: size.width / 40, y: size.height / 30)
+            let field = CGRect(x: 0, y: 0, width: 40, height: 30)
+            context.fill(Path(field), with: .color(Color(red: 0, green: 0.50, blue: 1)))
+            let gold = Color(red: 1, green: 0.84, blue: 0)
+            var stripe = Path()
+            stripe.move(to: CGPoint(x: -8, y: 36))
+            stripe.addLine(to: CGPoint(x: 48, y: -6))
+            context.stroke(stripe, with: .color(gold), lineWidth: 9)
+            context.stroke(stripe, with: .color(Color(red: 0.81, green: 0.13, blue: 0.17)), lineWidth: 6)
+            var star = Path()
+            for i in 0..<10 {
+                let angle = Double(i) * .pi / 5 - .pi / 2
+                let radius = i.isMultiple(of: 2) ? 6.0 : 2.3
+                let point = CGPoint(x: 7 + cos(angle) * radius, y: 7 + sin(angle) * radius)
+                if i == 0 { star.move(to: point) } else { star.addLine(to: point) }
+            }
+            star.closeSubpath()
+            context.fill(star, with: .color(gold))
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 2))
+        .accessibilityHidden(true)
     }
 }
