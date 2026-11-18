@@ -44,11 +44,11 @@ struct GuessWordGame: View {
         }
         .background(backdrop.ignoresSafeArea())
         .onAppear { loadBook() }
-        .sheet(isPresented: $editBook, onDismiss: loadBook) { PhrasebookView(key: notebook) }
+        .fullScreenCover(isPresented: $editBook, onDismiss: loadBook) { PhrasebookView(key: notebook, words: words, ui: ui) }
     }
 
     private func loadBook() {
-        personal = Notebook.read(notebook).filter { !$0.sentence }.map {
+        personal = Notebook.read(notebook).map {
             Word(term: $0.term, fr: $0.translation, en: $0.translation, audio: nil)
         }
     }
@@ -77,13 +77,25 @@ struct GuessWordGame: View {
                 Text(L("Devine le mot", "Guess the word")).font(.display(32))
                 Text(L("Tiens le téléphone contre ton front, écran vers ton partenaire. Ton partenaire décrit le mot sans le dire. Devine-le dans la langue que tu apprends.", "Hold the phone to your forehead with the screen facing your partner. They describe the word without saying it. Guess it aloud in the language you’re learning."))
                 Text(L("Incline l’écran vers le sol si tu trouves, vers le ciel pour passer. Tu peux aussi toucher les boutons.", "Tilt the screen toward the floor for correct or toward the ceiling to pass. You can also tap the buttons."))
-                Picker(L("Paquet", "Deck"), selection: $source) {
-                    Text("Studio").tag(0)
-                    Text(L("Mes mots", "My words")).tag(1)
-                    Text(L("Mixte", "Mixed")).tag(2)
-                }.pickerStyle(.segmented)
-                if source != 0 && personal.isEmpty {
-                    Button(L("Ajouter mes mots", "Add my words")) { editBook = true }
+                HStack {
+                    ForEach(0..<3) { slot in
+                        Button {
+                            source = slot
+                            Sfx.play(.tile, slot)
+                        } label: {
+                            VStack {
+                                Art(name: ["cards", "book", "word"][slot], size: 28)
+                                Text(["Studio", L("Mon carnet", "My cards"), L("Mixte", "Mixed")][slot])
+                                    .font(.text(14, .heavy))
+                            }
+                            .frame(maxWidth: .infinity).padding(.vertical, 8)
+                            .background(source == slot ? Color.sunTint : .white, in: RoundedRectangle(cornerRadius: 16))
+                            .overlay(RoundedRectangle(cornerRadius: 16).stroke(source == slot ? Color.sun : Color.line, lineWidth: 2))
+                        }.buttonStyle(.plain).accessibilityAddTraits(source == slot ? .isSelected : [])
+                    }
+                }
+                if source != 0 {
+                    Button(L("Choisir ou écrire mes cartes", "Pick or write my cards")) { editBook = true }
                 }
                 if source != 1 && words.isEmpty {
                     Text(L("Aucun mot Studio disponible pour ce jeu.", "No Studio words available for this game."))

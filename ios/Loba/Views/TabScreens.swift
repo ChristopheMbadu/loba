@@ -97,7 +97,7 @@ struct PracticeView: View {
         .fullScreenCover(isPresented: $story) { StoryView() }
         .fullScreenCover(isPresented: $puzzle) { PuzzleHub() }
         .fullScreenCover(isPresented: $guessing) { GuessWordGame(words: pool.filter(\.guessWord), ui: s.ui, notebook: Notebook.key(store)) }
-        .sheet(isPresented: $phrasebook) { PhrasebookView(key: Notebook.key(store)) }
+        .fullScreenCover(isPresented: $phrasebook) { PhrasebookView(key: Notebook.key(store), words: pool.filter(\.guessWord), ui: s.ui) }
         .fullScreenCover(isPresented: $map) { MapGameView() }
     }
 }
