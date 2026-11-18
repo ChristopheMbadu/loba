@@ -4,6 +4,18 @@ import CoreMotion
 struct GuessWordGame: View {
     let words: [Word]
     let ui: UiLang
+    let notebook: String
+    @State private var source = 0
+    @State private var editBook = false
+    @State private var personal: [Word] = []
+
+    private var chosen: [Word] {
+        switch source {
+        case 1: return personal
+        case 2: return Array(personal.shuffled().prefix(4)) + Array(words.shuffled().prefix(4))
+        default: return words
+        }
+    }
     @Environment(\.dismiss) private var dismiss
     @Environment(\.scenePhase) private var scenePhase
     @State private var deck: [Word] = []
@@ -31,6 +43,14 @@ struct GuessWordGame: View {
                 .position(x: geo.size.width / 2, y: geo.size.height / 2)
         }
         .background(backdrop.ignoresSafeArea())
+        .onAppear { loadBook() }
+        .sheet(isPresented: $editBook, onDismiss: loadBook) { PhrasebookView(key: notebook) }
+    }
+
+    private func loadBook() {
+        personal = Notebook.read(notebook).filter { !$0.sentence }.map {
+            Word(term: $0.term, fr: $0.translation, en: $0.translation, audio: nil)
+        }
     }
 
     private var backdrop: Color {
@@ -57,7 +77,19 @@ struct GuessWordGame: View {
                 Text(L("Devine le mot", "Guess the word")).font(.display(32))
                 Text(L("Tiens le téléphone contre ton front, écran vers ton partenaire. Ton partenaire décrit le mot sans le dire. Devine-le dans la langue que tu apprends.", "Hold the phone to your forehead with the screen facing your partner. They describe the word without saying it. Guess it aloud in the language you’re learning."))
                 Text(L("Incline l’écran vers le sol si tu trouves, vers le ciel pour passer. Tu peux aussi toucher les boutons.", "Tilt the screen toward the floor for correct or toward the ceiling to pass. You can also tap the buttons."))
-                Button(L("Jouer", "Play")) { start(words) }.buttonStyle(.chunky(.green))
+                Picker(L("Paquet", "Deck"), selection: $source) {
+                    Text("Studio").tag(0)
+                    Text(L("Mes mots", "My words")).tag(1)
+                    Text(L("Mixte", "Mixed")).tag(2)
+                }.pickerStyle(.segmented)
+                if source != 0 && personal.isEmpty {
+                    Button(L("Ajouter mes mots", "Add my words")) { editBook = true }
+                }
+                if source != 1 && words.isEmpty {
+                    Text(L("Aucun mot Studio disponible pour ce jeu.", "No Studio words available for this game."))
+                }
+                Button(L("Jouer", "Play")) { start(chosen) }.buttonStyle(.chunky(.green))
+                    .disabled(chosen.isEmpty || (source == 2 && (words.isEmpty || personal.isEmpty)))
             case .positioning:
                 Image(systemName: "rotate.right").font(.largeTitle)
                 Text(L("Tourne ton téléphone à l’horizontale, écran vers ton partenaire.", "Turn the phone sideways with the screen facing your partner."))
@@ -108,7 +140,7 @@ struct GuessWordGame: View {
                     }
                     Button(L("Rejouer les mots passés", "Retry passed words")) { start(missed) }.buttonStyle(.chunky(.green))
                 }
-                Button(L("Nouvelle manche", "New round")) { start(words) }.buttonStyle(.chunky(.outline))
+                Button(L("Nouvelle manche", "New round")) { start(chosen) }.buttonStyle(.chunky(.outline))
             }
             Spacer()
         }

@@ -12,6 +12,7 @@ struct Word: Hashable {
     /// Id of a teacher's recording, played from /api/v1/audio/:id.
     let audio: String?
     /// A sentence using the word, written in Studio, with its translations. Shown in the word puzzle.
+    var guessWord = true
     var example = ""
     var exampleFr = ""
     var exampleEn = ""
@@ -91,7 +92,7 @@ enum CatalogParser {
         guard !term.isEmpty, !fr.isEmpty else { return nil }
         let audio = (o["audio"] as? String).flatMap { matches($0, "^[0-9a-f-]{36}$") ? $0 : nil }
         let example = str(o["example"], 300)
-        return Word(term: term, fr: fr, en: str(o["en"]), audio: audio, example: example,
+        return Word(term: term, fr: fr, en: str(o["en"]), audio: audio, guessWord: o["guessWord"] as? Bool ?? true, example: example,
                     exampleFr: example.isEmpty ? "" : str(o["exampleFr"], 300), exampleEn: example.isEmpty ? "" : str(o["exampleEn"], 300))
     }
 
