@@ -102,6 +102,7 @@ fun PracticeView() {
     var guessing by remember { mutableStateOf(false) }
     var phrasebook by remember { mutableStateOf(false) }
     var map by remember { mutableStateOf(false) }
+    var songs by remember { mutableStateOf(false) }
 
     val s = AppStore.state
     val pool = Rules.unlockedWords(s, AppStore.units)
@@ -110,6 +111,10 @@ fun PracticeView() {
     val listen = s.voice && pool.count { it.audio != null } >= 4
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).readable(720.dp).padding(20.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
         PageHead(L("Pratique", "Practice"), L("La pratique ne coûte jamais de cœurs. Les mots ratés reviennent plus souvent.", "Practice never costs hearts. Words you miss come back more often."))
+        TileCard(
+            "headphones", SunTint, L("Le jardin des chansons", "The Song Garden"),
+            L("Écoute, danse et retrouve les chansons de chez nous.", "Listen, dance and discover the songs we grew up with."),
+        ) { songs = true }
         TileCard(
             "cards", LeafTint, L("Révision intelligente", "Smart review"),
             if (seen) L("$due mots à revoir aujourd’hui", "$due words to review today") else L("Termine une leçon pour débloquer la révision.", "Finish a lesson to unlock review."),
@@ -146,6 +151,7 @@ fun PracticeView() {
     }
 
     mode?.let { m -> FullScreenCover(onDismiss = { mode = null }) { LessonView(LessonMode.Practice(m), onClose = { mode = null }) } }
+    if (songs) FullScreenCover(onDismiss = { songs = false }) { SongGarden(onClose = { songs = false }) }
     if (story) FullScreenCover(onDismiss = { story = false }) { StoryView(onClose = { story = false }) }
     if (puzzle) FullScreenCover(onDismiss = { puzzle = false }) { PuzzleHub(onClose = { puzzle = false }) }
     if (guessing) {

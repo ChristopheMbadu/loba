@@ -68,3 +68,11 @@ adb shell am start -n com.congolingo.loba/.MainActivity --ez demo true --ez quic
 - Google sign-in needs the same backend as iOS (`/api/learn/auth-options` reporting `google`, `app` and
   `appProtocol: 2`); the button stays hidden otherwise. Verify it on a real device after deploying.
 - The launcher icon is the iOS icon as a plain bitmap; make an adaptive icon before release.
+
+## Song Garden (2026-11-18)
+
+Practice now opens a full-screen Song Garden backed by the Studio `/api/v1/music` catalog. It includes native record-sleeve artwork, the animated Loba stage, a persistent Now Playing bar, favorites saved on this device, play/pause/seek/previous/next, repeat-one and Surprise Me. An enabled song in Studio is available in the library; no per-song app release is needed. New tracks use a deterministic color without requiring bundled artwork. Lyrics and offline downloads are not implemented.
+
+Explicit listening suppresses the ambient playlist and does not depend on the background-music toggle. It stops on closing the library and pauses on backgrounding, audio interruptions or disconnected headphones. Motion is reduced when system animations are disabled. Catalog failures and empty/favorites-only states have dedicated UI.
+
+Validation: iOS app sources passed Swift type-checking. Android app Kotlin/Compose sources compiled directly with the installed Kotlin 2.2.10 and Compose compiler, Android SDK and cached dependencies. Full Gradle APK packaging was blocked by the environment’s local socket restriction. Native visual/device playback checks and installation remain pending; compilation is not proof of runtime behavior.

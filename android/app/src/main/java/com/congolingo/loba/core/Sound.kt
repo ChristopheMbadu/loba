@@ -83,6 +83,7 @@ object Music {
     private var games = 0
     private var front = true
     private var speaking = false
+    private var inLibrary = false
     private var interrupted = false
     private var tracks = listOf<String>()
     private val remaining = mutableListOf<String>()
@@ -103,7 +104,7 @@ object Music {
         loaded = true
         on = Prefs.store.getBoolean(key, true)
     }
-    private fun wanted() = on && games > 0 && front && !speaking && !interrupted
+    private fun wanted() = on && games > 0 && front && !inLibrary && !speaking && !interrupted
     private fun refresh() {
         if (System.currentTimeMillis() - fetched < 60_000) return
         fetched = System.currentTimeMillis()
@@ -161,6 +162,7 @@ object Music {
     fun enter() { games += 1; refresh(); sync() }
     fun leave() { games = maxOf(0,games-1); sync() }
     fun foreground(now: Boolean) { front = now; if(now)refresh(); sync() }
+    fun library(now: Boolean) { inLibrary = now; sync() }
     fun voice(now: Boolean) { speaking = now; sync() }
 }
 
