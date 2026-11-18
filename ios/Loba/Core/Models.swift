@@ -16,6 +16,7 @@ struct Word: Hashable {
     var example = ""
     var exampleFr = ""
     var exampleEn = ""
+    var exampleAudio: String? = nil
 
     func meaning(_ ui: UiLang) -> String { ui == .en && !en.isEmpty ? en : fr }
 }
@@ -25,6 +26,7 @@ struct Sentence: Hashable {
     let en: String
     let answer: String
     let distractors: [String]
+    var audio: String? = nil
 
     func prompt(_ ui: UiLang) -> String { ui == .en && !en.isEmpty ? en : fr }
 }
@@ -93,7 +95,7 @@ enum CatalogParser {
         let audio = (o["audio"] as? String).flatMap { matches($0, "^[0-9a-f-]{36}$") ? $0 : nil }
         let example = str(o["example"], 300)
         return Word(term: term, fr: fr, en: str(o["en"]), audio: audio, guessWord: o["guessWord"] as? Bool ?? true, example: example,
-                    exampleFr: example.isEmpty ? "" : str(o["exampleFr"], 300), exampleEn: example.isEmpty ? "" : str(o["exampleEn"], 300))
+                    exampleFr: example.isEmpty ? "" : str(o["exampleFr"], 300), exampleEn: example.isEmpty ? "" : str(o["exampleEn"], 300), exampleAudio: (o["exampleAudio"] as? String).flatMap { UUID(uuidString: $0) == nil ? nil : $0 })
     }
 
     static func sentence(_ v: Any) -> Sentence? {
@@ -101,7 +103,7 @@ enum CatalogParser {
         let answer = str(o["answer"]), fr = str(o["fr"])
         guard !answer.isEmpty, !fr.isEmpty else { return nil }
         let distractors = (o["distractors"] as? [Any] ?? []).map { str($0, 60) }.filter { !$0.isEmpty }
-        return Sentence(fr: fr, en: str(o["en"]), answer: answer, distractors: distractors)
+        return Sentence(fr: fr, en: str(o["en"]), answer: answer, distractors: distractors, audio: (o["audio"] as? String).flatMap { UUID(uuidString: $0) == nil ? nil : $0 })
     }
 
     static func unit(id: String, _ v: Any?) -> Unit? {

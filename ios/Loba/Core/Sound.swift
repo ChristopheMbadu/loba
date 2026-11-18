@@ -64,8 +64,8 @@ enum Voice {
     private static var statusObservation: NSKeyValueObservation?
     private static var player: AVPlayer?
 
-    static func say(_ word: Word) {
-        guard AppStore.shared.state.voice, let id = word.audio else { return }
+    static func say(_ word: Word, automatic: Bool = false) {
+        guard (!automatic || AppStore.shared.state.voice), let id = word.audio else { return }
         stop()
         BackgroundMusic.shared.voice(true)
         let item = AVPlayerItem(url: API.audioURL(id))

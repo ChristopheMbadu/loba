@@ -197,7 +197,7 @@ struct LessonView: View {
         } else {
             Sfx.play(.correct, session.combo); Haptic.success()
             sparks += 1
-            if case .listen = e.kind {} else if let w = e.word { Voice.say(w) }
+            if case .listen = e.kind {} else if let w = e.word { Voice.say(w, automatic: true) }
         }
     }
 
@@ -246,14 +246,14 @@ private struct ExerciseView: View {
                         .background(RoundedRectangle(cornerRadius: 28).fill(Color.sky)).background(RoundedRectangle(cornerRadius: 28).fill(Color.skyShade).offset(y: 6))
                 }
                 .frame(maxWidth: .infinity).padding(.vertical, 8)
-                .onAppear { Voice.say(w) }
+                .onAppear { Voice.say(w, automatic: true) }
                 choices(options, answer: w) { $0.term }
             case .match(let pairs):
                 title(L("Relie les paires", "Match the pairs"))
                 MatchBoard(pairs: pairs) { answer = .matched; submit() }
             case .build(let s, let tiles):
                 title(L("Traduis cette phrase", "Translate this sentence"))
-                prompt(s.prompt(ui), word: nil)
+                prompt(s.prompt(ui), word: Word(term: s.answer, fr: s.fr, en: s.en, audio: s.audio))
                 TileBoard(tiles: tiles, locked: locked) { answer = .tiles($0) }
             case .type(let w):
                 title(L("Écris en \(store.language?.name(ui) ?? "")", "Type it in \(store.language?.name(ui) ?? "")"))
@@ -277,7 +277,7 @@ private struct ExerciseView: View {
             }
             .onTapGesture { if let word { Voice.say(word) } }
         }
-        .onAppear { if let word { Voice.say(word) } }
+        .onAppear { if let word { Voice.say(word, automatic: true) } }
     }
 
     private func choices(_ options: [Word], answer correct: Word, label: @escaping (Word) -> String) -> some View {

@@ -296,6 +296,7 @@ struct PuzzleGame: View {
             if let example = entry.example {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(highlighted(example.text, entry.word.term, color)).font(.text(17, .bold)).fixedSize(horizontal: false, vertical: true)
+                    if let audio = entry.word.exampleAudio { Button { Voice.say(Word(term: example.text, fr: "", en: "", audio: audio)) } label: { Label(L("Écouter la phrase", "Listen to the sentence"), systemImage: "speaker.wave.2.fill").font(.text(14, .bold)) } }
                     Text(example.translation(ui)).font(.text(15)).foregroundStyle(Color.muted).fixedSize(horizontal: false, vertical: true)
                 }
                 .padding(.leading, 12).overlay(alignment: .leading) { Capsule().fill(color.opacity(0.5)).frame(width: 4) }
