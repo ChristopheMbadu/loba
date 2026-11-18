@@ -37,6 +37,7 @@ struct PracticeView: View {
     @State private var mode: LessonBuilder.PracticeMode?
     @State private var story = false
     @State private var puzzle = false
+    @State private var guessing = false
     @State private var map = false
 
     var body: some View {
@@ -62,6 +63,11 @@ struct PracticeView: View {
                              text: L("Trouve les mots cachés : chacun révèle son sens et une phrase.", "Find the hidden words: each reveals its meaning and a sentence."))
                 }
                 .buttonStyle(.plain)
+                Button { guessing = true } label: {
+                    TileCard(art: "cards", tint: .sunTint, title: L("Devine le mot", "Guess the word"),
+                             text: L("À deux, fais deviner les mots de tes leçons.", "Play with a partner and guess words from your lessons."))
+                }
+                .buttonStyle(.plain).disabled(pool.isEmpty).opacity(pool.isEmpty ? 0.55 : 1)
                 Button { map = true } label: {
                     HStack(spacing: 16) {
                         Text("🗺️").font(.system(size: 36)).frame(width: 68, height: 68).background(RoundedRectangle(cornerRadius: 18).fill(Color.leafTint))
@@ -85,6 +91,7 @@ struct PracticeView: View {
         .fullScreenCover(item: $mode) { LessonView(mode: .practice($0)) }
         .fullScreenCover(isPresented: $story) { StoryView() }
         .fullScreenCover(isPresented: $puzzle) { PuzzleHub() }
+        .fullScreenCover(isPresented: $guessing) { GuessWordGame(words: pool, ui: s.ui) }
         .fullScreenCover(isPresented: $map) { MapGameView() }
     }
 }
