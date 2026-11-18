@@ -28,14 +28,22 @@ struct SplashView: View {
                         .font(.text(15, .bold)).foregroundStyle(Color.muted)
                     TimelineView(.animation(minimumInterval: 1.0 / 30, paused: reduceMotion)) { timeline in
                         let seconds = timeline.date.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: 2)
-                        CongoFlagBadge()
-                            .frame(width: 50, height: 37.5)
-                            .padding(.vertical, 3)
-                            .distortionEffect(
-                                ShaderLibrary.flagWave(.float(Float(seconds * .pi))),
-                                maxSampleOffset: CGSize(width: 0, height: 3),
-                                isEnabled: !reduceMotion
-                            )
+                        Canvas { context, size in
+                            guard let flag = context.resolveSymbol(id: 0) else { return }
+                            let width = size.width / 50
+                            for index in 0..<50 {
+                                let fraction = CGFloat(index) / 49
+                                let lift = reduceMotion ? 0 : 2.5 * fraction * sin(6 * fraction - seconds * .pi)
+                                var strip = context
+                                strip.clip(to: Path(CGRect(x: CGFloat(index) * width, y: 0,
+                                                          width: width, height: size.height)),
+                                           style: FillStyle(antialiased: false))
+                                strip.draw(flag, at: CGPoint(x: size.width / 2, y: size.height / 2 + lift))
+                            }
+                        } symbols: {
+                            CongoFlagBadge().frame(width: 50, height: 37.5).tag(0)
+                        }
+                        .frame(width: 50, height: 44)
                     }
                         .padding(.top, 6)
                 }
