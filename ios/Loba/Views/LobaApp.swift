@@ -59,37 +59,6 @@ enum DebugFlags {
     static let quick = ProcessInfo.processInfo.arguments.contains("-quick")
 }
 
-/// The loading screen. It starts exactly like the system launch screen (the icon on white), then comes alive
-/// while the app fetches the learner's account and the latest lessons.
-struct SplashView: View {
-    @State private var alive = false
-    var body: some View {
-        ZStack {
-            Color.white.ignoresSafeArea()
-            // The icon sits dead centre, where the launch screen drew it.
-            Image("launch-icon").resizable().frame(width: 132, height: 132)
-                .shadow(color: Color.skyShade.opacity(alive ? 0.28 : 0), radius: 18, y: 10)
-                .scaleEffect(alive ? 1.06 : 1).rotationEffect(.degrees(alive ? -3 : 0))
-                .animation(.easeInOut(duration: 0.9).repeatForever(autoreverses: true), value: alive)
-            VStack(spacing: 10) {
-                Text("Loba").font(.display(44)).foregroundStyle(Color.ink)
-                Text(L("Les langues du Congo", "The languages of Congo")).font(.text(16, .bold)).foregroundStyle(Color.muted)
-                HStack(spacing: 8) {
-                    ForEach(Array([Color.sky, .sun, .coral].enumerated()), id: \.offset) { i, color in
-                        Circle().fill(color).frame(width: 11, height: 11).offset(y: alive ? -7 : 3)
-                            .animation(.easeInOut(duration: 0.45).repeatForever(autoreverses: true).delay(Double(i) * 0.15), value: alive)
-                    }
-                }
-                .padding(.top, 14)
-            }
-            .offset(y: 160).opacity(alive ? 1 : 0).animation(.easeOut(duration: 0.35), value: alive)
-            VStack { Spacer(); KubaBand(height: 14).ignoresSafeArea(edges: .bottom) }.opacity(alive ? 1 : 0).animation(.easeOut(duration: 0.5), value: alive)
-        }
-        .onAppear { alive = true }
-        .accessibilityLabel("Loba")
-    }
-}
-
 #if DEBUG
 /// For screenshots while developing: `-demo` skips sign-in and onboarding, `-screen story|lesson|practice` opens that screen.
 struct DebugLaunch: ViewModifier {
