@@ -54,6 +54,7 @@ struct LessonView: View {
         .background(Color.white)
         .overlay(alignment: .bottom) { Burst(trigger: sparks).frame(height: 420).padding(.bottom, 60) }
         .onAppear(perform: begin)
+        .onDisappear { Voice.stop() }
         #if DEBUG
         .task {
             // `-autoplay` answers every exercise correctly (and `-autoplay wrong` misses the second one), for screenshots.

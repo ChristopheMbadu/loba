@@ -244,6 +244,7 @@ struct ProfileView: View {
                         }
                         .tint(.sky)
                     }
+                    toggle(L("Musique de fond", "Background music"), BackgroundMusic.shared.enabled) { BackgroundMusic.shared.toggle() }
                     toggle(L("Effets sonores", "Sound effects"), s.sound) { store.toggleSound() }
                     toggle(L("Enregistrements audio", "Audio recordings"), s.voice) { store.toggleVoice() }
                     toggle(L("Rappel du soir (19 h)", "Evening reminder (7 pm)"), reminder) { Task { reminder = await Reminder.set(!reminder) } }

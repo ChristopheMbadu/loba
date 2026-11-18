@@ -16,6 +16,7 @@ struct LobaApp: App {
                 .task { Sfx.warmUp(); await store.start() }
                 .task { await DRC.refresh() }
                 .onChange(of: phase) { _, new in
+                    BackgroundMusic.shared.foreground(new == .active)
                     if new == .active { store.tick() } else if new == .background { store.flush() }
                 }
         }

@@ -19,6 +19,8 @@ struct TabsView: View {
             tabPage(ShopView(), "navShop", L("Boutique", "Shop"), 3)
             tabPage(ProfileView(), "navProfile", L("Profil", "Profile"), 4)
         }
+        .onAppear { BackgroundMusic.shared.browse(true) }
+        .onDisappear { BackgroundMusic.shared.browse(false) }
         .onChange(of: tab) { Sfx.play(.tap); Haptic.tap() }
     }
 
