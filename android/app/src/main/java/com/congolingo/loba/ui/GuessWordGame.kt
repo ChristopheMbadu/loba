@@ -156,7 +156,7 @@ fun GuessWordGame(words: List<Word>, ui: UiLang, notebook: String, onClose: () -
         }
         onDispose {
             if (horizontal) {
-                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                activity?.requestedOrientation = Screen.restOrientation
                 view.keepScreenOn = false
             }
         }

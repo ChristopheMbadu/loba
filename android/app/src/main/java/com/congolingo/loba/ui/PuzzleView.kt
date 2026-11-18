@@ -146,10 +146,12 @@ fun PuzzleHub(autostart: Boolean = false, onClose: () -> Unit) {
     val ui = AppStore.state.ui
     val open = units.indexOfFirst { scores[it.id] == null }.let { if (it < 0) units.size else it }
 
-    Column(Modifier.fillMaxSize().background(Color.White).systemBarsPadding()) {
+    GameMusic()
+    Column(Modifier.fillMaxSize().background(Color.White).systemBarsPadding().readable(720.dp)) {
         Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
             CloseButton(onClose)
             Spacer(Modifier.weight(1f))
+            MusicToggle(Modifier.padding(end = 10.dp))
             Row(
                 Modifier.clip(CircleShape).background(SunTint).padding(horizontal = 12.dp, vertical = 8.dp),
                 horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically,
@@ -309,7 +311,7 @@ fun PuzzleGame(unit: LessonUnit, leave: (LessonUnit?) -> Unit) {
         if (i >= 0 && i + 1 < units.size) units[i + 1] else null
     }
 
-    Box(Modifier.fillMaxSize().background(Color.White).systemBarsPadding(), contentAlignment = Alignment.Center) {
+    Box(Modifier.fillMaxSize().background(Color.White).systemBarsPadding().readable(680.dp), contentAlignment = Alignment.Center) {
         if (puzzle != null) {
             Crossfade(play.finished && play.reward != null, Modifier.fillMaxSize(), animationSpec = tween(350), label = "done") { done ->
                 val reward = play.reward

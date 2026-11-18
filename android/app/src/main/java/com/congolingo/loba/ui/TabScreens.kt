@@ -54,6 +54,7 @@ import com.congolingo.loba.core.AppStore
 import com.congolingo.loba.core.Game
 import com.congolingo.loba.core.Haptic
 import com.congolingo.loba.core.L
+import com.congolingo.loba.core.Music
 import com.congolingo.loba.core.PracticeMode
 import com.congolingo.loba.core.Reminder
 import com.congolingo.loba.core.Rules
@@ -107,7 +108,7 @@ fun PracticeView() {
     val due = Rules.reviewWords(s, s.lang, pool, Game.now()).size
     val seen = s.words.keys.any { it.startsWith("${s.lang}:") }
     val listen = s.voice && pool.count { it.audio != null } >= 4
-    Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(20.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+    Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).readable(720.dp).padding(20.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
         PageHead(L("Pratique", "Practice"), L("La pratique ne coûte jamais de cœurs. Les mots ratés reviennent plus souvent.", "Practice never costs hearts. Words you miss come back more often."))
         TileCard(
             "cards", LeafTint, L("Révision intelligente", "Smart review"),
@@ -162,7 +163,7 @@ fun PracticeView() {
 fun QuestsView() {
     val quests = Rules.dailyQuests(AppStore.state, AppStore.today)
     val art = mapOf("xp" to "bolt", "lessons" to "book", "combo" to "flame", "perfect" to "target")
-    Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(20.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+    Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).readable(720.dp).padding(20.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
         PageHead(L("Quêtes du jour", "Daily quests"), L("De nouvelles quêtes chaque matin. Les gemmes s’échangent à la boutique.", "New quests every morning. Spend your gems in the shop."))
         for (q in quests) {
             val claimed = q.id.raw in AppStore.state.daily.claimed
@@ -207,7 +208,7 @@ private fun questTitle(q: Rules.Quest): String = when (q.id) {
 @Composable
 fun ShopView() {
     val s = AppStore.state
-    Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(20.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+    Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).readable(720.dp).padding(20.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
         PageHead(L("Boutique", "Shop"), L("Dépense tes gemmes pour protéger ta série ou aller plus vite.", "Spend gems to protect your streak or go faster."))
         ShopRow(Rules.ShopItem.REFILL, "heart", CoralTint, L("Recharge de cœurs", "Heart refill"), L("Retrouve tes 5 cœurs tout de suite.", "Get all 5 hearts back right away."))
         ShopRow(
@@ -258,7 +259,7 @@ fun ProfileView() {
     val s = AppStore.state
     val ui = s.ui
     val learner = AppStore.learner
-    Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(20.dp), verticalArrangement = Arrangement.spacedBy(18.dp)) {
+    Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).readable(720.dp).padding(20.dp), verticalArrangement = Arrangement.spacedBy(18.dp)) {
         Row(
             Modifier.fillMaxWidth().tappable { editing = true },
             horizontalArrangement = Arrangement.spacedBy(16.dp), verticalAlignment = Alignment.CenterVertically,
@@ -296,6 +297,7 @@ fun ProfileView() {
                 PickerMenu(s.goal, Game.goals.map { it to "$it XP" }) { AppStore.setGoal(it) }
             }
             ToggleRow(L("Effets sonores", "Sound effects"), s.sound) { AppStore.toggleSound() }
+            ToggleRow(L("Musique des jeux", "Game music"), Music.enabled) { Music.toggle() }
             ToggleRow(L("Enregistrements audio", "Audio recordings"), s.voice) { AppStore.toggleVoice() }
             ToggleRow(L("Rappel du soir (19 h)", "Evening reminder (7 pm)"), reminder) { scope.launch { reminder = Reminder.set(!reminder) } }
         }

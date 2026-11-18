@@ -12,12 +12,14 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import com.congolingo.loba.core.AppStore
+import com.congolingo.loba.core.Music
 import com.congolingo.loba.core.Reminder
 import com.congolingo.loba.core.appContext
 import com.congolingo.loba.ui.CoverStack
 import com.congolingo.loba.ui.DebugFlags
 import com.congolingo.loba.ui.GoogleSignIn
 import com.congolingo.loba.ui.RootView
+import com.congolingo.loba.ui.Screen
 
 class LobaApplication : Application() {
     override fun onCreate() {
@@ -39,6 +41,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge(SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT), SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT))
         super.onCreate(savedInstanceState)
         DebugFlags.read(intent)
+        // Phones stay upright; tablets turn freely.
+        Screen.tablet = resources.configuration.smallestScreenWidthDp >= 600
+        requestedOrientation = Screen.restOrientation
         Reminder.askPermission = { done ->
             if (Build.VERSION.SDK_INT >= 33) {
                 notificationAnswer = done
@@ -51,11 +56,13 @@ class MainActivity : ComponentActivity() {
     override fun onStart() {
         super.onStart()
         AppStore.tick()
+        Music.foreground(true)
     }
 
     override fun onStop() {
         super.onStop()
         AppStore.flush()
+        Music.foreground(false)
     }
 
     override fun onResume() {

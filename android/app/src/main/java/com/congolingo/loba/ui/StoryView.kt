@@ -80,6 +80,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withLink
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.congolingo.loba.core.AppStore
@@ -171,7 +172,7 @@ fun StoryView(onClose: () -> Unit) {
     val sky by animateColorAsState(Tale.skies[min(page, Tale.skies.size - 1)], tween(600, easing = EaseInOut), label = "sky")
     val glass = RoundedCornerShape(13.dp)
     Column(
-        Modifier.fillMaxSize().background(sky).systemBarsPadding()
+        Modifier.fillMaxSize().background(sky).systemBarsPadding().readable(min(680, (LocalConfiguration.current.screenHeightDp * 0.62f).toInt()).dp)
             .pointerInput(Unit) {
                 var dx = 0f
                 var dy = 0f

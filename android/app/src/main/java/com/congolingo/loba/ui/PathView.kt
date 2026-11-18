@@ -97,6 +97,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.width
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -123,45 +132,61 @@ fun TabsView() {
     val claimable = Rules.dailyQuests(s, AppStore.today).count { it.done && it.id.raw !in s.daily.claimed }
     val pick = { next: Int -> if (next != tab) { tab = next; Sfx.play(Sfx.Cue.TAP); Haptic.tap() } }
 
-    Column(Modifier.fillMaxSize().background(Color.White).statusBarsPadding()) {
-        Box(Modifier.weight(1f).fillMaxWidth()) {
-            // Each tab keeps its scroll position while another one is shown.
-            pages.SaveableStateProvider(tab) {
-                Column(Modifier.fillMaxSize().background(Color.White)) {
-                    StatsBar()
-                    when (tab) {
-                        0 -> PathView()
-                        1 -> PracticeView()
-                        2 -> QuestsView()
-                        3 -> ShopView()
-                        else -> ProfileView()
-                    }
+    val page: @Composable () -> Unit = {
+        // Each tab keeps its scroll position while another one is shown.
+        pages.SaveableStateProvider(tab) {
+            Column(Modifier.fillMaxSize().background(Color.White)) {
+                StatsBar()
+                when (tab) {
+                    0 -> PathView()
+                    1 -> PracticeView()
+                    2 -> QuestsView()
+                    3 -> ShopView()
+                    else -> ProfileView()
                 }
             }
         }
-        // Built by hand, not a material NavigationBar: the artwork keeps its own colours.
-        Row(
-            Modifier.fillMaxWidth().background(Color.White)
-                .drawBehind { drawRect(Line, Offset.Zero, Size(size.width, 2.dp.toPx())) }
-                .navigationBarsPadding().padding(top = 4.dp, bottom = 2.dp),
-        ) {
-            TabItem("navLearn", L("Apprendre", "Learn"), tab == 0) { pick(0) }
-            TabItem("dumbbell", L("Pratique", "Practice"), tab == 1) { pick(1) }
-            TabItem("target", L("Quêtes", "Quests"), tab == 2, claimable) { pick(2) }
-            TabItem("navShop", L("Boutique", "Shop"), tab == 3) { pick(3) }
-            TabItem("navProfile", L("Profil", "Profile"), tab == 4) { pick(4) }
+    }
+    // Built by hand, not a material NavigationBar: the artwork keeps its own colours.
+    val items: @Composable (Modifier) -> Unit = { each ->
+        TabItem("navLearn", L("Apprendre", "Learn"), tab == 0, each) { pick(0) }
+        TabItem("dumbbell", L("Pratique", "Practice"), tab == 1, each) { pick(1) }
+        TabItem("target", L("Quêtes", "Quests"), tab == 2, each, claimable) { pick(2) }
+        TabItem("navShop", L("Boutique", "Shop"), tab == 3, each) { pick(3) }
+        TabItem("navProfile", L("Profil", "Profile"), tab == 4, each) { pick(4) }
+    }
+
+    if (LocalConfiguration.current.screenWidthDp >= 600) {
+        // Tablets: the tabs run down the left side, where a thumb holds the tablet.
+        Row(Modifier.fillMaxSize().background(Color.White).windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal))) {
+            Column(
+                Modifier.width(96.dp).fillMaxHeight()
+                    .drawBehind { drawRect(Line, Offset(size.width - 2.dp.toPx(), 0f), Size(2.dp.toPx(), size.height)) }
+                    .navigationBarsPadding().padding(vertical = 12.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+            ) { items(Modifier.fillMaxWidth().heightIn(min = 64.dp)) }
+            Box(Modifier.weight(1f).fillMaxHeight()) { page() }
+        }
+    } else {
+        Column(Modifier.fillMaxSize().background(Color.White).statusBarsPadding()) {
+            Box(Modifier.weight(1f).fillMaxWidth()) { page() }
+            Row(
+                Modifier.fillMaxWidth().background(Color.White)
+                    .drawBehind { drawRect(Line, Offset.Zero, Size(size.width, 2.dp.toPx())) }
+                    .navigationBarsPadding().padding(top = 4.dp, bottom = 2.dp),
+            ) { items(Modifier.weight(1f)) }
         }
     }
 }
 
 /** The artwork is drawn at 30 points, as in the iOS tab bar. */
 @Composable
-private fun RowScope.TabItem(art: String, label: String, selected: Boolean, badge: Int = 0, onClick: () -> Unit) {
+private fun TabItem(art: String, label: String, selected: Boolean, modifier: Modifier, badge: Int = 0, onClick: () -> Unit) {
     Column(
-        Modifier.weight(1f)
+        modifier
             .selectable(selected, remember { MutableInteractionSource() }, indication = null, role = Role.Tab, onClick = onClick)
             .padding(vertical = 4.dp),
-        horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(2.dp),
+        horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterVertically),
     ) {
         Box {
             Art(art, 30.dp)
@@ -200,7 +225,7 @@ fun PathView() {
     // The today card is the first row, so unit i is row i + 1.
     LaunchedEffect(Unit) { if (current > 0 && current < units.size) list.scrollToItem(current + 1) }
 
-    LazyColumn(Modifier.fillMaxSize(), state = list) {
+    LazyColumn(Modifier.fillMaxSize().readable(), state = list) {
         item(key = "loba-today") { TodayCard() }
         itemsIndexed(units, key = { _, unit -> unit.id }) { i, unit ->
             UnitSection(

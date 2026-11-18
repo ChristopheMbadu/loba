@@ -8,6 +8,10 @@ import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import com.congolingo.loba.R
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
 
@@ -62,6 +66,64 @@ object Sfx {
             if (id in ready) pool.play(id, 1f, 1f, 1, 0, 1f) else waiting += id
         }
     }
+}
+
+/**
+ * The tune that plays behind the games (the map, the word hunt). It loops while a game is on screen,
+ * stops when the app leaves the foreground, and the learner can turn it off: the choice stays on this phone.
+ */
+object Music {
+    private const val key = "loba-music"
+
+    var on by mutableStateOf(true)
+        private set
+    private var loaded = false
+    private var player: MediaPlayer? = null
+    /** How many game screens are showing, and whether the app is in front. */
+    private var games = 0
+    private var front = true
+
+    private fun load() {
+        if (loaded) return
+        loaded = true
+        on = Prefs.store.getBoolean(key, true)
+    }
+
+    private fun sync() {
+        load()
+        val wanted = on && games > 0 && front
+        try {
+            if (wanted) {
+                val p = player ?: MediaPlayer.create(appContext, R.raw.game_loop)?.apply {
+                    isLooping = true
+                    // Behind the game's own sounds, not over them.
+                    setVolume(0.32f, 0.32f)
+                }.also { player = it }
+                if (p != null && !p.isPlaying) p.start()
+            } else if (games == 0) {
+                player?.release()
+                player = null
+            } else {
+                player?.takeIf { it.isPlaying }?.pause()
+            }
+        } catch (_: Exception) {
+            player = null
+        }
+    }
+
+    /** Whether it is on, read before any game opens (for the settings switch). */
+    val enabled: Boolean get() { load(); return on }
+
+    fun toggle() {
+        load()
+        on = !on
+        Prefs.store.edit().putBoolean(key, on).apply()
+        sync()
+    }
+
+    fun enter() { games += 1; sync() }
+    fun leave() { games = maxOf(0, games - 1); sync() }
+    fun foreground(now: Boolean) { front = now; sync() }
 }
 
 /** A teacher's recording of a word. */

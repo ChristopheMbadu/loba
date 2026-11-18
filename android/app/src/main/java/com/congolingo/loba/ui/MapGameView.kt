@@ -87,6 +87,9 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
@@ -139,8 +142,10 @@ fun MapGameView(onClose: () -> Unit) {
     }
     LaunchedEffect(Unit) { Satellite.load() }
     BackHandler(enabled = screen != MapScreen.Hub) { go(MapScreen.Hub) }
+    GameMusic()
 
-    Column(Modifier.fillMaxSize().background(Color.White).systemBarsPadding()) {
+    // A tablet held sideways uses the whole width: the map on the left, the rest beside it.
+    Column(Modifier.fillMaxSize().background(Color.White).systemBarsPadding().readable(if (mapSideBySide()) 1240.dp else 720.dp)) {
         Row(
             Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically,
@@ -162,6 +167,7 @@ fun MapGameView(onClose: () -> Unit) {
                 Text("Mboka na biso", style = displayFont(20), color = Ink)
                 Text(L("La carte du Congo", "The map of Congo"), style = textFont(13, W.BOLD), color = Muted)
             }
+            MusicToggle()
             UiSwitch()
         }
 
@@ -177,6 +183,27 @@ fun MapGameView(onClose: () -> Unit) {
                 MapScreen.Book -> MapBook()
             }
         }
+    }
+}
+
+// MARK: - Sideways tablets
+
+/** Wide and low: a tablet in landscape. The map then sits on the left at full height, with everything else beside it. */
+@Composable
+private fun mapSideBySide(): Boolean {
+    val screen = LocalConfiguration.current
+    return screen.screenWidthDp >= 840 && screen.screenWidthDp > screen.screenHeightDp
+}
+
+/** The map on the left, as large as the height allows, and a scrolling column on the right. */
+@Composable
+private fun MapSplit(map: @Composable (Modifier) -> Unit, scrolls: Boolean = true, side: @Composable ColumnScope.() -> Unit) {
+    Row(Modifier.fillMaxSize().padding(horizontal = 16.dp).padding(bottom = 12.dp), horizontalArrangement = Arrangement.spacedBy(20.dp)) {
+        Box(Modifier.weight(1.05f).fillMaxHeight(), contentAlignment = Alignment.TopCenter) { map(Modifier) }
+        Column(
+            Modifier.weight(1f).fillMaxHeight().then(if (scrolls) Modifier.verticalScroll(rememberScrollState()) else Modifier),
+            verticalArrangement = Arrangement.spacedBy(12.dp), content = side,
+        )
     }
 }
 
@@ -373,11 +400,10 @@ private fun MapHub(go: (MapScreen) -> Unit) {
     val stamps = remember { MapProgress.stamps }
     val next = drc.regions.firstOrNull { stars[it.id] == null }
     val expertOpen = stars["hard"] != null || drc.regions.all { stars[it.id] != null }
-    Column(
-        Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = 16.dp).padding(bottom = 20.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp),
-    ) {
-        MapCanvas(tone = { if (it in stamps) MapTone.PLACED else MapTone.SLOT })
+    val wide = mapSideBySide()
+    val map: @Composable (Modifier) -> Unit = { m -> MapCanvas(m, tone = { if (it in stamps) MapTone.PLACED else MapTone.SLOT }) }
+    val rest: @Composable ColumnScope.() -> Unit = {
+        if (!wide) map(Modifier)
         Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically) {
             LobaView(mood = Mood.WAVE, size = 92.dp)
             Bubble(Modifier.weight(1f, fill = false)) {
@@ -437,6 +463,11 @@ private fun MapHub(go: (MapScreen) -> Unit) {
         }
         MapCredits()
     }
+    if (wide) MapSplit(map, side = rest)
+    else Column(
+        Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = 16.dp).padding(bottom = 20.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp), content = rest,
+    )
 }
 
 @Composable
@@ -598,8 +629,8 @@ private fun MapPuzzle(level: String, go: (MapScreen) -> Unit) {
     }
 
     Box(Modifier.fillMaxSize().onGloballyPositioned { game.box = it }) {
-        Column(Modifier.fillMaxSize().padding(horizontal = 14.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            if (finished) PuzzleDone(game, ui, go) else {
+        val wide = mapSideBySide()
+        val progress: @Composable () -> Unit = {
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         region?.name?.invoke(ui) ?: if (game.hard) L("Mode difficile", "Hard mode") else L("Le grand défi", "The big challenge"),
@@ -609,8 +640,10 @@ private fun MapPuzzle(level: String, go: (MapScreen) -> Unit) {
                     Meter(game.placed.size.toDouble() / max(1, ids.size).toDouble(), Modifier.weight(1f), color = Leaf, height = 12.dp)
                     Text("${game.placed.size}/${ids.size}", style = displayFont(18), color = LeafShade)
                 }
+        }
+        val map: @Composable (Modifier) -> Unit = { m ->
                 MapCanvas(
-                    modifier = Modifier.onGloballyPositioned { game.map = it; game.mapWidth = it.size.width },
+                    modifier = m.onGloballyPositioned { game.map = it; game.mapWidth = it.size.width },
                     window = game.window, outlines = region != null || game.hard,
                     labels = game.placed.filter { region != null || it == reveal }.toSet(),
                     onTap = { id ->
@@ -623,7 +656,8 @@ private fun MapPuzzle(level: String, go: (MapScreen) -> Unit) {
                         else if (id == current && hinted) MapTone.HINT else if (id in ids) MapTone.SLOT else MapTone.QUIET
                     },
                 )
-
+        }
+        val tray: @Composable () -> Unit = {
                 AnimatedContent(
                     if (reveal != null) "fact:$reveal" else current?.let { "tray:$it" },
                     Modifier.fillMaxWidth(),
@@ -642,7 +676,13 @@ private fun MapPuzzle(level: String, go: (MapScreen) -> Unit) {
                         }
                     } else PuzzleTray(game, drc.province(shown.removePrefix("tray:")), ui, lift)
                 }
-            }
+        }
+        if (finished) Box(Modifier.fillMaxSize().padding(horizontal = 14.dp)) { PuzzleDone(game, ui, go) }
+        else if (wide) MapSplit(map) { progress(); tray() }
+        else Column(Modifier.fillMaxSize().padding(horizontal = 14.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            progress()
+            map(Modifier)
+            tray()
         }
 
         // The piece in the hand, drawn at the map's own scale.
@@ -722,33 +762,39 @@ private fun PuzzleDone(game: PuzzleGame, ui: UiLang, go: (MapScreen) -> Unit) {
     val ids = game.ids
     val region = game.region
     val nextRegion = region?.let { r -> drc.regions.indexOfFirst { it.id == r.id }.let { if (it >= 0 && it + 1 < drc.regions.size) drc.regions[it + 1] else null } }
-    Box(Modifier.fillMaxSize()) {
-        Column(
-            Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(bottom = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp), horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
+    val wide = mapSideBySide()
+    val map: @Composable (Modifier) -> Unit = { m ->
             MapCanvas(
-                modifier = Modifier.heightIn(max = 300.dp), window = game.window, labels = if (ids.size <= 6) ids.toSet() else emptySet(),
+                modifier = m, window = game.window, labels = if (ids.size <= 6) ids.toSet() else emptySet(),
                 tone = { if (it in ids) MapTone.PLACED else MapTone.QUIET },
             )
-            Row(verticalAlignment = Alignment.CenterVertically) {
+    }
+    val rest: @Composable ColumnScope.() -> Unit = {
+            if (!wide) map(Modifier.heightIn(max = 300.dp))
+            Row(Modifier.align(Alignment.CenterHorizontally), verticalAlignment = Alignment.CenterVertically) {
                 LobaView(mood = Mood.CHEER, size = 96.dp)
                 MapStars(game.stars, 44.dp)
             }
             Text(
                 if (region != null) L("Région terminée !", "Region complete!") else L("Tu connais tout le Congo !", "You know all of Congo!"),
-                style = displayFont(28), color = Ink, textAlign = TextAlign.Center,
+                style = displayFont(28), color = Ink, textAlign = TextAlign.Center, modifier = Modifier.align(Alignment.CenterHorizontally),
             )
             Text(
                 "+${game.xp ?: 0} XP", style = displayFont(20), color = SunShade,
-                modifier = Modifier.background(SunTint, CircleShape).padding(horizontal = 18.dp, vertical = 6.dp),
+                modifier = Modifier.align(Alignment.CenterHorizontally).background(SunTint, CircleShape).padding(horizontal = 18.dp, vertical = 6.dp),
             )
             ChunkyButton(L("Petit quiz sur ces provinces", "Quick quiz on these provinces"), kind = Chunky.SUN) { go(MapScreen.Quiz(ids.shuffled().take(6))) }
             if (nextRegion != null) {
                 ChunkyButton("${L("Région suivante", "Next region")} · ${nextRegion.name(ui)}", kind = Chunky.GREEN) { go(MapScreen.Puzzle(nextRegion.id)) }
             }
             ChunkyButton(L("Retour à la carte", "Back to the map"), kind = Chunky.OUTLINE) { go(MapScreen.Hub) }
-        }
+    }
+    Box(Modifier.fillMaxSize()) {
+        if (wide) MapSplit(map, side = rest)
+        else Column(
+            Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(bottom = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp), content = rest,
+        )
         Confetti(Modifier.matchParentSize())
     }
 }
@@ -793,14 +839,16 @@ private fun MapQuiz(ids: List<String>, go: (MapScreen) -> Unit) {
         if (rest.isEmpty()) Sfx.play(Sfx.Cue.COMPLETE)
     }
 
+    val wide = mapSideBySide()
     Column(
-        Modifier.fillMaxSize().padding(horizontal = 14.dp),
+        Modifier.fillMaxSize().readable(if (wide && queue.isNotEmpty()) 1240.dp else 720.dp).padding(horizontal = 14.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp), horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         val q = queue.firstOrNull()
         val picked = answer
         if (q != null) {
             val p = drc.province(q.id)
+            val progress: @Composable () -> Unit = {
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     L("Quiz éclair", "Quick quiz"), style = textFont(14, W.HEAVY), color = Color.White,
@@ -809,15 +857,18 @@ private fun MapQuiz(ids: List<String>, go: (MapScreen) -> Unit) {
                 Meter(asked.toDouble() / max(1, total).toDouble(), Modifier.weight(1f), color = Leaf, height = 12.dp)
                 Text("${min(asked + 1, total)}/$total", style = displayFont(18), color = LeafShade)
             }
+            }
+            val map: @Composable (Modifier) -> Unit = { m ->
             MapCanvas(
-                labels = if (picked == null) emptySet() else setOf(q.id),
+                m, labels = if (picked == null) emptySet() else setOf(q.id),
                 onTap = if (q.find && picked == null) { id -> if (id != null) pick(id, q) } else null,
                 tone = { id ->
                     if (picked != null) (if (id == q.id) MapTone.RIGHT else if (id == picked) MapTone.WRONG else MapTone.OPEN)
                     else if (!q.find && id == q.id) MapTone.HINT else MapTone.OPEN
                 },
             )
-            Column(Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            }
+            val ask: @Composable ColumnScope.() -> Unit = {
                 Text(
                     buildAnnotatedString {
                         if (q.find) {
@@ -863,6 +914,17 @@ private fun MapQuiz(ids: List<String>, go: (MapScreen) -> Unit) {
                     }
                 }
             }
+            if (wide) Row(Modifier.weight(1f).fillMaxWidth().padding(bottom = 12.dp), horizontalArrangement = Arrangement.spacedBy(20.dp)) {
+                Box(Modifier.weight(1.05f).fillMaxHeight(), contentAlignment = Alignment.TopCenter) { map(Modifier) }
+                Column(Modifier.weight(1f).fillMaxHeight().verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    progress()
+                    ask()
+                }
+            } else {
+                progress()
+                map(Modifier)
+                Column(Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp), content = ask)
+            }
         } else if (total > 0) {
             Spacer(Modifier.weight(1f))
             LobaView(mood = if (score * 2 >= total) Mood.CHEER else Mood.HAPPY, size = 150.dp)
@@ -890,12 +952,10 @@ private fun MapAtlas() {
     val ui = AppStore.state.ui
     var id by remember { mutableStateOf<String?>(null) }
     val chosen = id
-    Column(
-        Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = 14.dp).padding(bottom = 20.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-    ) {
+    val wide = mapSideBySide()
+    val map: @Composable (Modifier) -> Unit = { m ->
         MapCanvas(
-            labels = if (chosen == null) emptySet() else setOf(chosen),
+            m, labels = if (chosen == null) emptySet() else setOf(chosen),
             onTap = { tapped ->
                 if (tapped != null) {
                     Sfx.play(Sfx.Cue.TILE, max(0, drc.ids.indexOf(tapped))); Haptic.tap()
@@ -904,6 +964,9 @@ private fun MapAtlas() {
             },
             tone = { if (it == chosen) MapTone.RIGHT else MapTone.PLACED },
         )
+    }
+    val rest: @Composable ColumnScope.() -> Unit = {
+        if (!wide) map(Modifier)
         if (chosen != null) FactCard(drc.province(chosen), full = true) else {
             Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically) {
                 LobaView(mood = Mood.THINK, size = 84.dp)
@@ -920,6 +983,11 @@ private fun MapAtlas() {
         }
         MapCredits()
     }
+    if (wide) MapSplit(map, side = rest)
+    else Column(
+        Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = 14.dp).padding(bottom = 20.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp), content = rest,
+    )
 }
 
 @Composable
@@ -927,7 +995,7 @@ private fun MapBook() {
     val drc = DRC.shared
     val ui = AppStore.state.ui
     var tab by remember { mutableIntStateOf(0) }
-    Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    Column(Modifier.fillMaxSize().readable(760.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         // The iOS segmented picker, drawn by hand.
         Row(
             Modifier.padding(horizontal = 16.dp).fillMaxWidth().background(Color(0x1F767680), RoundedCornerShape(9.dp)).padding(2.dp),

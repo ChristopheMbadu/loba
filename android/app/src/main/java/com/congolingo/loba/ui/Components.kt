@@ -1,6 +1,7 @@
 package com.congolingo.loba.ui
 
 import android.annotation.SuppressLint
+import android.content.pm.ActivityInfo
 import android.provider.Settings
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.Animatable
@@ -28,11 +29,17 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.MusicNote
+import androidx.compose.material.icons.rounded.MusicOff
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -79,6 +86,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.congolingo.loba.core.AppStore
 import com.congolingo.loba.core.Haptic
+import com.congolingo.loba.core.L
+import com.congolingo.loba.core.Music
 import com.congolingo.loba.core.Rules
 import com.congolingo.loba.core.Sfx
 import com.congolingo.loba.core.UiLang
@@ -122,6 +131,22 @@ fun rememberAmbient(paused: Boolean = false): State<Double> {
     }
     return seconds
 }
+
+// MARK: - Phones and tablets
+
+object Screen {
+    /** Set by MainActivity: the smallest side of the screen is at least 600dp. */
+    var tablet = false
+
+    /** The orientation the app rests in: upright on phones, whichever way a tablet is held. */
+    val restOrientation: Int get() = if (tablet) ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED else ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+}
+
+/**
+ * Keeps content at a comfortable width on tablets, centred, instead of stretching it across the screen.
+ * Put it after the background (which stays full width) and before the padding.
+ */
+fun Modifier.readable(max: Dp = 640.dp): Modifier = fillMaxWidth().wrapContentWidth(Alignment.CenterHorizontally).widthIn(max = max)
 
 // MARK: - Taps
 
@@ -365,6 +390,33 @@ fun UiSwitch(modifier: Modifier = Modifier) {
 fun Bubble(modifier: Modifier = Modifier, content: @Composable BoxScope.() -> Unit) {
     val shape = RoundedCornerShape(18.dp)
     Box(modifier.clip(shape).background(Color.White).border(2.dp, Line, shape).padding(horizontal = 18.dp, vertical = 14.dp), content = content)
+}
+
+// MARK: - Game music
+
+/** Plays the games' tune for as long as this is on screen. */
+@Composable
+fun GameMusic() {
+    DisposableEffect(Unit) {
+        Music.enter()
+        onDispose { Music.leave() }
+    }
+}
+
+/** The button that turns the games' tune on or off, for a game's top bar. */
+@Composable
+fun MusicToggle(modifier: Modifier = Modifier) {
+    val on = Music.enabled
+    Box(
+        modifier.size(42.dp).clip(RoundedCornerShape(13.dp)).background(Surface).tappable { Sfx.play(Sfx.Cue.TAP); Music.toggle() },
+        contentAlignment = Alignment.Center,
+    ) {
+        Icon(
+            if (on) Icons.Rounded.MusicNote else Icons.Rounded.MusicOff,
+            contentDescription = if (on) L("Couper la musique", "Turn the music off") else L("Remettre la musique", "Turn the music on"),
+            tint = if (on) Sky else Muted, modifier = Modifier.size(24.dp),
+        )
+    }
 }
 
 // MARK: - Text fields

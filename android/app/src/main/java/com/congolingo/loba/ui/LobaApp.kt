@@ -37,6 +37,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -68,6 +69,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.input.ImeAction
@@ -174,7 +176,7 @@ fun LandingView() {
             UiSwitch()
         }
 
-        Spacer(Modifier.weight(1f).heightIn(min = 12.dp))
+        val scene: @Composable () -> Unit = {
         Box(Modifier.graphicsLayer { val s = 0.85f + 0.15f * appear.value; scaleX = s; scaleY = s; alpha = appear.value.coerceIn(0f, 1f) }) {
             Box(Modifier.size(290.dp)) {
                 // The sky, the sun and the river, all inside the disc.
@@ -210,18 +212,20 @@ fun LandingView() {
                 }
             }
         }
+        }
 
-        Spacer(Modifier.weight(1f).heightIn(min = 12.dp))
-        Column(Modifier.padding(horizontal = 28.dp), verticalArrangement = Arrangement.spacedBy(10.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+        val pitch: @Composable () -> Unit = {
+        Column(Modifier.widthIn(max = 560.dp).padding(horizontal = 28.dp), verticalArrangement = Arrangement.spacedBy(10.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             Text(L("Parle enfin la langue de la famille.", "Finally speak the family language."), style = displayFont(32), color = Ink, textAlign = TextAlign.Center)
             Text(
                 L("Les langues du Congo, cinq minutes par jour. Gratuit, sans pub.", "The languages of Congo, five minutes a day. Free, no ads."),
                 style = textFont(17), color = Ink2, textAlign = TextAlign.Center,
             )
         }
+        }
 
-        Spacer(Modifier.weight(1f).heightIn(min = 16.dp))
-        Column(Modifier.padding(horizontal = 24.dp).padding(bottom = 12.dp), verticalArrangement = Arrangement.spacedBy(10.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+        val actions: @Composable () -> Unit = {
+        Column(Modifier.widthIn(max = 560.dp).padding(horizontal = 24.dp).padding(bottom = 12.dp), verticalArrangement = Arrangement.spacedBy(10.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             ChunkyButton(L("Commencer", "Get started")) { auth = AuthMode.SIGNUP }
             ChunkyButton(L("J’ai déjà un compte", "I already have an account"), kind = Chunky.OUTLINE) { auth = AuthMode.LOGIN }
             Row(Modifier.padding(top = 4.dp), horizontalArrangement = Arrangement.spacedBy(18.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -233,6 +237,26 @@ fun LandingView() {
                     Text(L("Plus tard, sans compte", "Later, without an account"), style = textFont(14, W.BOLD), color = Ink2)
                 }
             }
+        }
+        }
+
+        val screen = LocalConfiguration.current
+        if (screen.screenWidthDp >= 840 && screen.screenWidthDp > screen.screenHeightDp) {
+            // A tablet held sideways: Loba on the left, the words and the buttons on the right.
+            Row(Modifier.weight(1f).fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                Box(Modifier.weight(1f), contentAlignment = Alignment.Center) { scene() }
+                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(32.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                    pitch()
+                    actions()
+                }
+            }
+        } else {
+            Spacer(Modifier.weight(1f).heightIn(min = 12.dp))
+            scene()
+            Spacer(Modifier.weight(1f).heightIn(min = 12.dp))
+            pitch()
+            Spacer(Modifier.weight(1f).heightIn(min = 16.dp))
+            actions()
         }
     }
 
@@ -491,7 +515,7 @@ fun OnboardingView() {
     var goal by remember { mutableIntStateOf(AppStore.state.goal) }
     val ui = AppStore.state.ui
 
-    Column(Modifier.fillMaxSize().background(Color.White).systemBarsPadding()) {
+    Column(Modifier.fillMaxSize().background(Color.White).systemBarsPadding().readable()) {
         Row(Modifier.padding(horizontal = 20.dp, vertical = 12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             if (step == 1) {
                 Box(Modifier.size(44.dp).tappable { step = 0 }, contentAlignment = Alignment.Center) {

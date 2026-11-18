@@ -259,7 +259,7 @@ fun LessonView(mode: LessonMode, onClose: () -> Unit) {
                     contentKey = { it.id },
                     label = "exercise",
                 ) { shown ->
-                    Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(start = 20.dp, end = 20.dp, top = 8.dp, bottom = 24.dp)) {
+                    Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).readable().padding(start = 20.dp, end = 20.dp, top = 8.dp, bottom = 24.dp)) {
                         val live = session.current?.id == shown.id
                         ExerciseView(
                             exercise = shown, answer = if (live) answer else null,
@@ -324,7 +324,7 @@ fun LessonView(mode: LessonMode, onClose: () -> Unit) {
 private fun Header(session: LessonSession, hearts: Boolean, close: () -> Unit) {
     Box(Modifier.fillMaxWidth().zIndex(1f)) {
         // The close button is 44dp around a 24dp cross; the paddings keep the cross where iOS draws it.
-        Row(Modifier.fillMaxWidth().padding(start = 10.dp, end = 20.dp, top = 5.dp, bottom = 5.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(Modifier.readable().padding(start = 10.dp, end = 20.dp, top = 5.dp, bottom = 5.dp), verticalAlignment = Alignment.CenterVertically) {
             Box(Modifier.size(44.dp).tappable(onClick = close), contentAlignment = Alignment.Center) {
                 Icon(Icons.Rounded.Close, L("Quitter la leçon", "Leave the lesson"), Modifier.size(24.dp), tint = Muted)
             }
@@ -372,7 +372,7 @@ private fun Footer(session: LessonSession, exercise: Exercise, answer: Answer?, 
     Column(
         Modifier.fillMaxWidth().background(background)
             .drawBehind { if (answering) drawRect(Line, size = Size(size.width, 2.dp.toPx())) }
-            .navigationBarsPadding().imePadding()
+            .navigationBarsPadding().imePadding().readable()
             .animateContentSize(bouncy(0.3, 0.3))
             .padding(start = 20.dp, end = 20.dp, top = 14.dp, bottom = 8.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -669,7 +669,7 @@ private fun CompleteView(reward: Rules.Reward, accuracy: Int, combo: Int, practi
     }
 
     Box(Modifier.fillMaxSize().background(Color.White)) {
-        Column(Modifier.fillMaxSize().systemBarsPadding(), verticalArrangement = Arrangement.spacedBy(18.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(Modifier.fillMaxSize().systemBarsPadding().readable(560.dp), verticalArrangement = Arrangement.spacedBy(18.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             Spacer(Modifier.weight(1f))
             Box(Modifier.fillMaxWidth().height(250.dp), contentAlignment = Alignment.Center) {
                 Canvas(Modifier.requiredSize(340.dp)) {
